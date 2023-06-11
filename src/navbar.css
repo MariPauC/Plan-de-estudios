@@ -1,0 +1,49 @@
+.navbar{
+    height: 100px;
+    background-color: white;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: black;
+    padding-left: 70px;
+    padding-right: 70px;
+    border-bottom: 3px;
+    border-color: black;
+}
+
+#detalle{
+    height: 2px;
+    background-color: #979191;
+    border: none;
+    box-shadow: 4px 2px 5px #979191;
+}
+
+#privBar{
+    background-color: #182B57;
+    color: white;
+    border: none;
+}
+
+.program{
+    
+    font-size: 24px;
+}
+
+a{
+    width: 210px;
+    text-align: center;
+}
+
+.imgA {
+    width: 4.5%;
+    height: auto;
+}
+
+.imgB {
+    width: 110%;
+    height: auto;
+    cursor:pointer;
+    margin-top: 5%;
+    margin-left: -5%;
+}

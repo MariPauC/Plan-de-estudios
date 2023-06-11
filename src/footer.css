@@ -1,0 +1,50 @@
+.barra{
+    background-color: #182B57;
+    height: 5px;
+    border: none;
+    box-shadow: 2px 2px 5px gray;
+}
+
+.info{
+    background-color: white;
+    display: flex;
+    border-bottom: black;
+    justify-content: center;
+    justify-content: space-between;
+    font-size: 10px;
+    padding: 20px 70px 20px 70px;
+}
+
+.contenedor{
+    width: 400px;
+}
+
+.foot-mn{
+    height: 60px;
+    background-color: #182B57;
+    display: flex;
+    align-items: center;
+    border-bottom: black;
+    color:white;
+    font-size: 12px;
+    justify-content: center;
+}
+
+p{
+    margin-left: 1%;
+}
+
+img{
+    width: 50%;
+    height: auto;
+}
+
+ul{
+    display: flex;
+    list-style-type: none;
+    overflow: hidden;
+}
+
+ul li{
+    margin-right: 4%;
+}
