@@ -1,8 +1,7 @@
-.navbar{
+.header{
     height: 100px;
     background-color: white;
     display: flex;
-    flex-direction: row;
     justify-content: space-between;
     align-items: center;
     border-bottom: black;
@@ -10,13 +9,8 @@
     padding-right: 70px;
     border-bottom: 3px;
     border-color: black;
-}
-
-#detalle{
-    height: 2px;
-    background-color: #979191;
-    border: none;
     box-shadow: 4px 2px 5px #979191;
+    margin-bottom: 50px;
 }
 
 #privBar{
@@ -26,7 +20,6 @@
 }
 
 .program{
-    
     font-size: 24px;
 }
 

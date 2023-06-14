@@ -6,7 +6,7 @@ import Escudo from "./img/escudoLateral_umng.png"
 //Footer simple
 export function FootShort(){
     return <footer>
-        <div class="foot-mn"> 
+        <div className="foot-mn"> 
         <MdOutlineCopyright style={{color: 'white', fontSize: '120%'}}/>
         <p>2023 - Universidad Militar Nueva Granada</p>
         </div>
@@ -16,12 +16,12 @@ export function FootShort(){
 //Footer con información extra
 export function FootLg(){
     
-    const icon = { fontSize: '350%'};
+    const icon = { fontSize: '300%'};
     
     return <footer>
-        <hr class="barra"/>
-        <div class="info">
-            <div class="contenedor">
+        <hr className="barra"/>
+        <div className="info">
+            <div className="cont_footer">
                 <h4>Universidad Militar Nueva Granada</h4>
                 <p>
                 Conmutadores: (57+1) 650 0000 - (57+1) 634 3200 
@@ -41,39 +41,39 @@ export function FootLg(){
                 Formulario de peticiones, quejas y reclamos
                 </p>
             </div>
-            <div class="contenedor">
+            <div className="cont_footer">
                 <h4>Sede Bogotá</h4>
                 <p>
                 Carrera 11 n.° 101-80 (Bogotá, Colombia)
                 <br/>
-                Horario de atención: Lunes a viernes, de 8:00 a. m. a 5:00 p. m.
+                Horario de atención: Lunes a viernes, de 8:00 a.m. a 5:00 p.m.
                 <br/>
                 Facultad de Medicina y Ciencias de la Salud
                 <br/>
                 Transversal 3 n.° 49-00
                 <br/>
-                Horario de atención: Lunes a viernes, de 8:00 a. m. a 5:00 p. m.
+                Horario de atención: Lunes a viernes, de 8:00 a.m. a 5:00 p.m.
                 <br/><br/>
-                Sede Posgrados  calle 94 A # 13 - 54 Lunes a viernes, de 8:00 a. m. a 5:00 p. m.
+                Sede Posgrados  calle 94 A # 13 - 54 Lunes a viernes, de 8:00 a. m. a 5:00 p.m.
                 </p>
                 <h4>Sede Campus Nueva Granada</h4>
                 <p>
                 kilómetro 2, vía Cajicá-Zipaquirá<br/>
-                Horario de atención: Lunes a viernes, de 8:00 a. m. a 5:00 p. m.
+                Horario de atención: Lunes a viernes, de 8:00 a.m. a 5:00 p.m.
                 </p>
             </div>
-            <div class="contenedor">
-                <img  src={Escudo}></img> 
+            <div className="cont_footer">
+                <img  src={Escudo} alt="Escudo Universidad Militar Nueva Granada"></img> 
                 <ul>
-                    <li> < IoLogoFacebook style={icon}/> </li>
-                    <li> < IoLogoInstagram style={icon}/> </li>
-                    <li> < IoLogoLinkedin style={icon}/> </li>
+                    <li>  <a href="https://www.facebook.com/lamilitar">< IoLogoFacebook style={icon} /></a> </li>
+                    <li> <a href="https://www.instagram.com/unimilitar/">< IoLogoInstagram style={icon}/> </a></li>
+                    <li> <a href="https://www.linkedin.com/school/universidad-militar-nueva-granada/">< IoLogoLinkedin style={icon}/> </a></li>
                 </ul>
             </div>
         </div>
-        <div class="foot-mn"> 
-        < MdOutlineCopyright style={{color: 'white', fontSize: '140%'}} />
-        <p>2023 - Universidad Militar Nueva Granada</p>
+        <div className="foot-mn"> 
+            < MdOutlineCopyright style={{color: 'white', fontSize: '140%'}} />
+            <p>2023 - Universidad Militar Nueva Granada</p>
         </div>
     </footer>
 }

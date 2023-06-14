@@ -1,0 +1,7 @@
+.btn_bg{
+    border: none;
+}
+
+.btn_bg:hover{
+    background-color: #182B57;
+}
