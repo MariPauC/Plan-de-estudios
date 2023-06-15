@@ -1,10 +1,14 @@
+import { useState } from "react";
+import { MatPubModal } from "./Modal"
+import { createPortal } from 'react-dom';
 import "./materia.css"
 
 //Materia publica
 export function MatPublica({ area, horas, creditos, nombreMat, codigo, color}){
-    
-    return (
-    <div className="mat_pub" >
+    const [showModal, setShowModal] = useState(false);
+
+    return (<>
+    <div className="mat_pub" onClick={() => setShowModal(true)}>
         <div className="titulo_materia"> 
             <div>
                 <h4>Área:</h4> 
@@ -26,7 +30,13 @@ export function MatPublica({ area, horas, creditos, nombreMat, codigo, color}){
             <p>{ codigo }</p>
         </div>
     </div>
-    );
+
+    {showModal && createPortal(
+    <MatPubModal onClose={() => setShowModal(false)} hr= {horas} cds={creditos} nm={nombreMat} cl={color} cdg={codigo}/>,
+    document.body
+    )}
+
+    </>);
 }
 
 export function MatTotal({horas, creditos}){
