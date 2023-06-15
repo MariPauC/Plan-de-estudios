@@ -62,10 +62,10 @@ export function FootLg(){
                 Horario de atención: Lunes a viernes, de 8:00 a.m. a 5:00 p.m.
                 </p>
             </div>
-            <div className="cont_footer">
+            <div className="cont_footer" id="redes">
                 <img  src={Escudo} alt="Escudo Universidad Militar Nueva Granada"></img> 
                 <ul>
-                    <li>  <a href="https://www.facebook.com/lamilitar">< IoLogoFacebook style={icon} /></a> </li>
+                    <li> <a href="https://www.facebook.com/lamilitar">< IoLogoFacebook style={icon} /></a> </li>
                     <li> <a href="https://www.instagram.com/unimilitar/">< IoLogoInstagram style={icon}/> </a></li>
                     <li> <a href="https://www.linkedin.com/school/universidad-militar-nueva-granada/">< IoLogoLinkedin style={icon}/> </a></li>
                 </ul>

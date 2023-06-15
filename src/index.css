@@ -10,6 +10,14 @@ body {
     sans-serif;
 }
 
+.contProgam{
+  max-width: 1220px;
+  margin: auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;

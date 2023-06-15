@@ -3,7 +3,8 @@ import ReactDOM from 'react-dom/client';
 import { HeaderPub, HeaderPriv } from './Header'
 import { FootShort, FootLg } from "./Footer"
 import { MatPublica, MatTotal } from "./Materia"
-import { BtnBgSimple } from './Button';
+import { BtnBgSimple, BtnBgIcon} from './Button';
+import { MdSupervisorAccount, MdAddCircleOutline, MdSchool } from "react-icons/md";
 import './index.css';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -15,7 +16,7 @@ root.render(
                 <div className='contSemestre'>
                     <h3>SEMESTRE 1</h3>
                     <MatPublica area="CB" horas="5" creditos="4" nombreMat="Matematicas" codigo="100101" color="#FBF9C8"/>
-                    <MatPublica area="CB" horas="6" creditos="4" nombreMat="Religión" codigo="287101" color="#ADF8C2"/>
+                    <MatPublica area="CB" horas="6" creditos="4" nombreMat="Etica" codigo="287101" color="#ADF8C2"/>
                     
                 </div>
                 <div className='contSemestre'>
@@ -66,7 +67,14 @@ root.render(
                 </div>
             </div>
         </div>
-        <BtnBgSimple/>
+        
+        <div className='contProgam'>
+        <BtnBgSimple texto="Ingenieria en multimeda"/>
+        <BtnBgIcon texto="CREAR PLAN" icon={< MdAddCircleOutline style={{fontSize:"320%", marginRight:"2%"}}/>}/>
+        <BtnBgIcon texto="DIRECTORES" icon={< MdSupervisorAccount style={{fontSize:"350%", marginRight:"2%"}}/>}/>
+        </div>
+        
+        
         <FootLg/>
         </>
     

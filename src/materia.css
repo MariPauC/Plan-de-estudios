@@ -39,6 +39,11 @@
 .mat_pub{
     width: 280px;
     margin-top: 20px;
+    cursor: pointer;
+}
+
+.mat_pub:hover{
+    transform: scale(1.1);
 }
 
 .titulo_materia{
