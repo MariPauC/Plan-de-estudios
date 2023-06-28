@@ -1,5 +1,5 @@
 import "./footer.css"
-import { MdOutlineCopyright, MdFacebook } from "react-icons/md";
+import { MdOutlineCopyright } from "react-icons/md";
 import { IoLogoFacebook, IoLogoInstagram, IoLogoLinkedin } from "react-icons/io";
 import Escudo from "./img/escudoLateral_umng.png"
 

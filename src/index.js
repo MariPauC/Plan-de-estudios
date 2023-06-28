@@ -1,8 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import {PublicUser} from "./PublicUser"
-
-import { MatPublica, MatTotal } from "./Materia"
+import { PublicUser } from "./PublicUser";
+import { Login } from "./Login"
 
 import { MdSupervisorAccount, MdAddCircleOutline, MdSchool } from "react-icons/md";
 import './index.css';
@@ -10,9 +9,9 @@ import './index.css';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <>
-        <PublicUser/>
         
         
+        <Login/>
     </>
 );
 
