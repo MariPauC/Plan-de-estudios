@@ -2,7 +2,6 @@ import "./login.css"
 import { HeaderPriv } from "./Header";
 import { FootShort } from "./Footer";
 import Escudo from "./img/escudo_umng.png"
-import { FormLogin } from "./Form.jsx"
 
 export function Login(){
     return(
