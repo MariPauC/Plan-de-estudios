@@ -6,10 +6,11 @@ import { Login } from "./Login"
 import { MdSupervisorAccount, MdAddCircleOutline, MdSchool } from "react-icons/md";
 import './index.css';
 
+const typeUser = true;
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <>
-        <Login/>
+        {typeUser ? <Login/> : <PublicUser/> }
     </>
 );
 

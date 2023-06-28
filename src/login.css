@@ -7,28 +7,61 @@
     justify-content: space-between;
 }
 
-img{
-    width: 70%;
+.contIngreso img{
+    width: 65%;
+    margin-bottom: 27px;
 }
 
 .formLogin{
-    width: 440px;
     border-radius: 15px;
+    padding: 0 7%;
     display: flex;
-    align-items: center;
+    width: 300px;
     flex-direction: column;
     justify-content: center;
     box-shadow: 4px 2px 5px #979191;
     background-color: #182B57;
-}
-
-.formLogin h1{
     color: white;
 }
 
+.formLogin label{
+    text-align: left;
+    margin: 12px 0 5px 0 ;
+}
+
 .formLogin input{
-    height: 30px;
+    height: 35px;
     padding-left: 2%;
     border-style: none;
+    color: black;
     border-radius: 10px;
+}
+
+.formLogin button{
+    height: 35px;
+    font-size: 15px;
+    font-weight: bold;
+    margin-top: 24px;
+    border-style: none;
+    color: black;
+    border-radius: 10px;
+    cursor: pointer;
+    background-color: #e5b266;
+}
+
+.formLogin button:hover{
+    background-color: #DA9C3C;
+    color: white;
+    transform: scale(1.02);
+}
+
+.formLogin a{
+    text-align: left;
+    font-size: 14px;
+    margin-top: 30px;
+    font-weight: bold;
+}
+
+.formLogin a:hover{
+    color: #DA9C3C;
 }

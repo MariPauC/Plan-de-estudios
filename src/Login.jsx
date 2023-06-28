@@ -1,7 +1,8 @@
 import "./login.css"
 import { HeaderPriv } from "./Header";
 import { FootShort } from "./Footer";
-import Escudo from "./img/escudo_umng.png"
+import Escudo from "./img/escudo_umng.png";
+import { useHistory } from 'react-router-dom'
 
 export function Login(){
     return(
@@ -14,9 +15,12 @@ export function Login(){
             </div>
             <form className="formLogin">
                 <h1>INGRESO</h1>
-                <input type = "text" name= "username"></input>
-                <input type = "password" name= "username"></input>
-                <button type = "submit">Ingresar</button>
+                <label name="">Correo:</label>
+                <input type = "text" name= "username"/>
+                <label>Contraseña:</label>
+                <input type = "password" name= "username"/>
+                <button type = "submit">Acceder</button>
+                <a>¿Olvido su contraseña?</a>
             </form>
         </div>
         <FootShort/>
