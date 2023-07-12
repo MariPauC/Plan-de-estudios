@@ -1,16 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { PublicUser } from "./PublicUser";
+import { PrivateUser } from "./PrivateUser"
 import { Login } from "./Login"
-
-import { MdSupervisorAccount, MdAddCircleOutline, MdSchool } from "react-icons/md";
+import { InicioProg } from "./IniPrograma"
 import './index.css';
 
 const typeUser = true;
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <>
-        {typeUser ? <Login/> : <PublicUser/> }
+        {/*typeUser ? <PrivateUser/> : <PublicUser/> */}
+        <InicioProg/>
     </>
 );
 

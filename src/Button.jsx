@@ -1,5 +1,6 @@
 import "./button.css"
 import PropTypes from 'prop-types'
+import { MdSchool, MdLibraryBooks, MdSupervisorAccount} from "react-icons/md";
 
 //Boton grande sin iconos
 export function BtnBgSimple({texto}){
@@ -11,7 +12,7 @@ export function BtnBgSimple({texto}){
 //Boton grande con iconos
 export function BtnBgIcon({texto, icon}){
     return <button className="btn_bg">
-        {icon}<p>{texto}</p>
+        { icon }<p id="txtIcon">{texto}</p>
     </button>
 }
 

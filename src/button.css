@@ -12,6 +12,10 @@
     cursor: pointer;
 }
 
+#txtIcon{
+    margin-left: 15px;
+}
+
 .btn_bg:hover{
     background-color: #182B57;
     color:white;

@@ -10,8 +10,24 @@ body {
     sans-serif;
 }
 
+.contAdm{
+  width: 1200px;
+  min-height: 380px;
+  margin: auto;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 45px;
+}
+
+.infoAdmi{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  margin-top: 10px;
+}
+
 .contProgam{
-  max-width: 1220px;
+  max-width: 1200px;
   margin: auto;
   display: flex;
   flex-wrap: wrap;
