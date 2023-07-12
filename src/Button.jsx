@@ -15,6 +15,12 @@ export function BtnBgIcon({texto, icon}){
     </button>
 }
 
+export function Btnmin({texto, color}){
+    return <button className="btn_mn" style={{backgroundColor: color}}>
+        <p>{texto}</p>
+    </button>
+}
+
 BtnBgSimple.propTypes = {
     texto: PropTypes.string.isRequired
 }
