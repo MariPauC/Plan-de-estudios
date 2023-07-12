@@ -1,9 +1,3 @@
-.contInDec{
-    width: 1200px;
-    margin: auto;
-    padding-bottom: 30px;
-}
-
 .barraBusqueda{
     text-align: right;
     margin-top: 15px;
@@ -27,11 +21,6 @@
     height: 30px;
 }
 
-.progamas{
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-evenly;
-    margin-top: 10px;
-}
+
 
 

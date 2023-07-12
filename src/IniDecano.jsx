@@ -10,7 +10,7 @@ export function InicioDec(){
         <>
         <HeaderPriv/>
         <Titul_line titulo="Programas académicos" subt="Facultad ingeniería" />
-        <div className="contInDec">
+        <div className="contAdm">
             <div className="barraBusqueda">
                 <input 
                     type="text" 
@@ -26,13 +26,14 @@ export function InicioDec(){
                 <Btnmin texto="Crear programa" color="#182B57"/>
             </div>
             
-            <div className="progamas">
+            <div className="infoAdmi">
                 <BtnBgSimple texto="INGENIERÍA AMBIENTAL"/>
                 <BtnBgSimple texto="INGENIERÍA BIOMÉDICA"/>
                 <BtnBgSimple texto="INGENIERÍA CIVIL"/>
                 <BtnBgSimple texto="INGENIERÍA INDUSTRIAL"/>
                 <BtnBgSimple texto="INGENIERÍA EN MULTIMEDIA"/>
                 <BtnBgSimple texto="INGENIERÍA EN MECATRÓNICA"/>
+                <BtnBgSimple texto="TECNOLOGÍA EN ELECTRÓNICA Y COMUNICACIONES"/>
             </div>
                 
         </div>
