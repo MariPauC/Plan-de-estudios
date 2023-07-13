@@ -1,13 +1,11 @@
 import "./login.css"
-import { HeaderPriv } from "./Header";
-import { FootShort } from "./Footer";
 import Escudo from "./img/escudo_umng.png";
-import { useHistory } from 'react-router-dom'
+import { FootShort } from "./Footer";
+import { useHistory } from 'react-router-dom';
 
 export function Login(){
     return(
         <>
-        <HeaderPriv/>
         <div className="contIngreso">
             <div>
                 <img  src={Escudo} alt="Escudo Universidad Militar Nueva Granada"></img> 
@@ -25,6 +23,5 @@ export function Login(){
         </div>
         <FootShort/>
         </>
-        
     );
 }

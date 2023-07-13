@@ -63,8 +63,6 @@ export function PublicUser(){
                 </div>
             </div>
         </div>
-        
-        
         <FootLg/>
     </>
 }

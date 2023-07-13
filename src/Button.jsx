@@ -1,6 +1,6 @@
 import "./button.css"
 import PropTypes from 'prop-types'
-import { MdSchool, MdLibraryBooks, MdSupervisorAccount} from "react-icons/md";
+
 
 //Boton grande sin iconos
 export function BtnBgSimple({texto}){
@@ -16,6 +16,13 @@ export function BtnBgIcon({texto, icon}){
     </button>
 }
 
+//Boton mediano con iconos
+export function BtnMdIcon({texto, icon}){
+    return <button className="btn_md">
+        { icon }<p id="txtIcon">{texto}</p>
+    </button>
+}
+
 export function Btnmin({texto, color}){
     return <button className="btn_mn" style={{backgroundColor: color}}>
         <p>{texto}</p>
@@ -23,5 +30,9 @@ export function Btnmin({texto, color}){
 }
 
 BtnBgSimple.propTypes = {
+    texto: PropTypes.string.isRequired
+}
+
+Btnmin.propTypes = {
     texto: PropTypes.string.isRequired
 }

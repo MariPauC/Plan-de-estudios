@@ -1,0 +1,22 @@
+.tabla{
+    border: 2px solid #182B57;
+    background-color: #182B57;
+    border-radius: 15px 15px 0 0 ;
+    width: 100%;
+    margin:  20px 25px 0 0;
+}
+
+.tablaTtl{
+    height: 50px;
+    color: white;
+}
+
+.tabla td{
+    text-align: center;
+    background-color: white;
+    height: 45px;
+}
+
+.clmAccion{
+    width: 8%;
+}

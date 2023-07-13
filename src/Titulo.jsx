@@ -2,7 +2,7 @@ import "./titulo.css"
 
 export function Titul_line( {titulo, subt} ){
     return(
-        <div className="contTitul">
+        <div className="contTitulL">
             <h1> {titulo} </h1>
             <h2> {subt} </h2>
             <hr/>

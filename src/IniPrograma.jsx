@@ -1,4 +1,4 @@
-import "./iniprograma.css"
+import "./privateUser.css"
 import { HeaderPriv } from "./Header";
 import { Titul_line } from "./Titulo";
 import { BtnBgIcon } from "./Button"
@@ -6,7 +6,7 @@ import { FootShort } from "./Footer";
 import { MdSchool, MdLibraryBooks, MdSupervisorAccount} from "react-icons/md";
 
 export function InicioProg(){
-    const rol = true; 
+    const rol = false; 
     return(
         <>
         <HeaderPriv/>

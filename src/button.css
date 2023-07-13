@@ -12,11 +12,25 @@
     cursor: pointer;
 }
 
+.btn_md{
+    width: 520px;
+    height: 135px;
+    display: flex;
+    border: none;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    background-color: #E5E5E5;
+    border-radius: 15px;
+    margin-top: 20px;
+    cursor: pointer;
+}
+
 #txtIcon{
     margin-left: 15px;
 }
 
-.btn_bg:hover{
+.btn_bg:hover, .btn_md:hover{
     background-color: #182B57;
     color:white;
     box-shadow: 4px 2px 5px #979191;
@@ -31,8 +45,10 @@
     border: none;
     color: white;
     cursor: pointer;
+    margin-top: 25px;
 }
 
 .btn_mn:hover{
     box-shadow: 4px 2px 5px #979191;
 }
+

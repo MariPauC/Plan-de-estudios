@@ -1,8 +1,15 @@
 .contTitul{
     margin: auto;
+    padding: 15px 0 30px;
+    text-align: center;
+}
+
+.contTituL{
+    margin: auto;
     padding: 50px 50px 30px;
     text-align: center;
 }
+
 
 .contTitul h2{
     color: #707070;
