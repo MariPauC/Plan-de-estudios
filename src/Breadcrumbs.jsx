@@ -1,15 +1,17 @@
 import { MdKeyboardArrowRight } from "react-icons/md";
+import { Link } from "react-router-dom";
 
-export function PagAnterior({pagina}){ 
+export function PagAnterior({ruta, pagina}){ 
     return(
         <>
-            <h5 style={{color:"#A9A9A9", cursor:"pointer"}}
+            <Link  to={ruta}
+                style={{color:"#707070", cursor:"pointer"}}
                 onMouseOver={ e => e.target.style.color = "#182B57" }
-                onMouseLeave={ e => e.target.style.color = "#A9A9A9" }
+                onMouseLeave={ e => e.target.style.color = "#707070" }
             >
-                {pagina}
-            </h5>
-            <MdKeyboardArrowRight size="20px" style={{color:"#A9A9A9"}}/>
+                <h4>{pagina}</h4>
+            </Link>
+            <MdKeyboardArrowRight size="20px" style={{color:"#707070"}}/>
         </>
     )
 }
@@ -17,7 +19,7 @@ export function PagAnterior({pagina}){
 export function PagActual({pagina}){ 
     return(
         <>
-            <h5 style={{cursor:"default"}}>{pagina}</h5>
+            <h4 style={{cursor:"default"}}>{pagina}</h4>
         </>
     )
 }

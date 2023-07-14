@@ -1,16 +1,20 @@
 import "./privateUser.css"
-import { HeaderPriv } from "./Header";
+import { HeaderPriv } from "./Header"
 import { Titul } from "./Titulo";
 import { Tabla }from "./Table"
 import { BtnMdIcon,Btnmin } from "./Button"
-import { FootShort } from "./Footer";
 import { PagAnterior, PagActual} from "./Breadcrumbs"
 import { MdAddCircleOutline } from "react-icons/md";
+import { Link } from "react-router-dom"
+
+
 
 export function PlanEst(){ 
     var desarrollo = false;
+    var rol = false;
+
     const data = [
-            
+        { id: 1, nombre: "Juan", apellido: "Pérez", edad: "Martha Lucia Olivero Franco", estado: "En revisión" },
         ];
 
     const data2 = [
@@ -28,7 +32,8 @@ export function PlanEst(){
         <>
         <HeaderPriv/>
         <div className="contBread">
-            <PagAnterior pagina="Menú principal"/>
+            <PagAnterior ruta="/Inicio" pagina="Menú principal"/>
+            {rol ? <PagAnterior ruta="/InicioProg" pagina="Programa"/> : ""}
             <PagActual pagina="Planes de estudio"/>
         </div>
         <Titul titulo="Planes de estudio" subt="Ingeniería en Multimedia" />
@@ -43,9 +48,11 @@ export function PlanEst(){
             <Tabla data= {data2} estado="Aprobado por" accion="Ver"/>
             <h3>Versiones anteriores</h3>
             <Tabla data= {data2} estado="Aprobado por" accion="Ver"/>
-            <Btnmin texto="Atrás" color="#A9A9A9" />
+            {rol ? <Link to='/InicioProg'><Btnmin texto="Atrás" color="#707070"/></Link>
+                : <Link to='/Inicio'><Btnmin texto="Atrás" color="#707070"/></Link>}
+
+            
         </div>
-        <FootShort/>
         </>
     )
 }

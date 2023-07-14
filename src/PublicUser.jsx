@@ -1,8 +1,6 @@
-import { HeaderPub, HeaderPriv } from './Header'
-import { FootShort, FootLg } from "./Footer"
+import { HeaderPub } from './Header'
+import { FootLg } from "./Footer"
 import { MatPublica, MatTotal } from "./Materia"
-import { BtnBgSimple, BtnBgIcon} from './Button';
-import { MdSupervisorAccount, MdAddCircleOutline, MdSchool } from "react-icons/md";
 
 export function PublicUser(){
     return <>

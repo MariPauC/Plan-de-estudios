@@ -1,7 +1,5 @@
 import "./login.css"
 import Escudo from "./img/escudo_umng.png";
-import { FootShort } from "./Footer";
-import { useHistory } from 'react-router-dom';
 
 export function Login(){
     return(
@@ -21,7 +19,6 @@ export function Login(){
                 <a>¿Olvido su contraseña?</a>
             </form>
         </div>
-        <FootShort/>
         </>
     );
 }

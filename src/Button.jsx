@@ -1,7 +1,6 @@
 import "./button.css"
 import PropTypes from 'prop-types'
 
-
 //Boton grande sin iconos
 export function BtnBgSimple({texto}){
     return <button className="btn_bg">
@@ -10,11 +9,13 @@ export function BtnBgSimple({texto}){
 }
 
 //Boton grande con iconos
-export function BtnBgIcon({texto, icon}){
+export function BtnBgIcon({texto, icon }){
     return <button className="btn_bg">
         { icon }<p id="txtIcon">{texto}</p>
-    </button>
+        </button>
 }
+    
+    
 
 //Boton mediano con iconos
 export function BtnMdIcon({texto, icon}){

@@ -1,6 +1,6 @@
 .contAdm{
     width: 1200px;
-    min-height: 380px;
+    min-height: 370px;
     margin: auto;
     align-items: center;
     justify-content: center;
@@ -20,8 +20,14 @@
 
 .barraBusqueda{
     text-align: right;
-    margin-top: 15px;
+    margin-top: 10px;
     margin-right: 53px;
+}
+
+.contBoton{
+    text-align: right;
+    margin: -7px 53px 45px 0;
+
 }
 
 .textBuscar{
