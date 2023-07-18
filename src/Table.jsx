@@ -1,13 +1,16 @@
 import "./table.css"
 import { MdOutlineRemoveRedEye, MdOutlineMode, MdOutlineEditOff } from "react-icons/md";
 
-export function TablaDoble({numcol}){ 
+export function TablaSimple({titulo, contenido}){ 
     return(
-        <table>
-            <tr className="ttl">
-                <th className="unttl" style={{columnSpan: numcol}}></th>
-            </tr>
-        </table>
+        <div className="tabSimple">
+            <div className="tabSimpleTtl">
+                <h3>{titulo}</h3>
+            </div>
+            <div className="tabSimpleCont">
+                {contenido}
+            </div>
+        </div>
     )
 }
 

@@ -2,7 +2,7 @@ import "./button.css"
 import PropTypes from 'prop-types'
 
 //Boton grande sin iconos
-export function BtnBgSimple({texto}){
+export function BtnBgSimple({ texto }){
     return <button className="btn_bg">
         <p>{texto}</p>
     </button>

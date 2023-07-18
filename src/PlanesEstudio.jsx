@@ -38,15 +38,15 @@ export function PlanEst(){
         </div>
         <Titul titulo="Planes de estudio" subt="Ingeniería en Multimedia" />
         <div className="contAdm">
-            <h3>En desarrollo</h3>
+            <h3 className="ttlAdmi">En desarrollo</h3>
             {desarrollo ? <Tabla data= {data} estado="Modificado por" accion="Editar"/> 
                         : <div className="btnPlace">
                             <BtnMdIcon icon=<MdAddCircleOutline size="60px"/> texto="Crear plan"/>
                         </div>
             }
-            <h3>Actual</h3>
+            <h3 className="ttlAdmi">Actual</h3>
             <Tabla data= {data2} estado="Aprobado por" accion="Ver"/>
-            <h3>Versiones anteriores</h3>
+            <h3 className="ttlAdmi">Versiones anteriores</h3>
             <Tabla data= {data2} estado="Aprobado por" accion="Ver"/>
             {rol ? <Link to='/InicioProg'><Btnmin texto="Atrás" color="#707070"/></Link>
                 : <Link to='/Inicio'><Btnmin texto="Atrás" color="#707070"/></Link>}

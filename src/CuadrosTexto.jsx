@@ -1,29 +1,26 @@
 import "./cuadroTexto.css"
 
-export function InputMd({texto, valor}){
+export function InputMd({texto, valor, tipo}){
     return <div className="cont_md">
-        <label>{texto}
-        <input value={valor}></input>
-        </label>
+        <label> {texto} </label>
+        <input type={tipo} value={valor}></input>
     </div>
 }
 
-export function InputMd({texto, data}){
+export function SelectMd({texto, data}){
     return <div className="cont_md">
-        <label>
-            {texto}
-            <select>
-                <option value="">--Selecciona una opción--</option>
+        <label> {texto} </label>
+        <select>
+                <option className="opcionSelect" value="">Selecciona una opción</option>
                 {data.map((item) => ( <Opcion key={item.id} data={item}/> ))}
-            </select>
-        </label>
+        </select>
     </div>
 }
 
 export function Opcion ({ data }) {
     return (
-        <option value={data.nombe}>
-            {data.nombe}
+        <option className="opcionSelect" value={data.nombre}>
+            {data.nombre}
         </option>
     );
 };

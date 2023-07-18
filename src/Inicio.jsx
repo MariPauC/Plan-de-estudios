@@ -1,7 +1,7 @@
 import "./privateUser.css"
 import { HeaderPriv } from "./Header";
 import { PagAnterior, PagActual} from "./Breadcrumbs"
-import { Titul_line, Titul_line2 } from "./Titulo";
+import { TitulLine, TitulLine2 } from "./Titulo";
 import { BtnBgIcon, BtnBgSimple, Btnmin } from "./Button"
 import { Link } from "react-router-dom";
 import { MdSchool, MdLibraryBooks, MdSupervisorAccount, MdSearch} from "react-icons/md";
@@ -16,9 +16,9 @@ export function InicioProg(){
         {rol ?<><div className="contBread">
                 <PagAnterior ruta="/Inicio" pagina="Menú principal"/> 
                 <PagActual pagina="Programa"/>
-                </div><Titul_line2 titulo="Ingeniería en Multimedia" subt="Facultad ingeniería"/>
+                </div><TitulLine2 titulo="Ingeniería en Multimedia" subt="Facultad ingeniería"/>
             </>
-        : <Titul_line titulo="Ingeniería en Multimedia" subt="Facultad ingeniería"/>}
+        : <TitulLine titulo="Ingeniería en Multimedia" subt="Facultad ingeniería"/>}
         
         <div className="contAdm">
             <div className="infoAdmi" >
@@ -32,14 +32,25 @@ export function InicioProg(){
 }
 
 export function InicioDec(){
+    const programas =[
+        { id: 1, nombre: "Ingeniería Ambiental"  },
+        { id: 2, nombre: "Ingeniería Biomédica" },
+        { id: 3, nombre: "Ingeniería Civil" },
+        { id: 4, nombre: "Ingeniería Industrial"},
+        { id: 5, nombre: "Ingeniería en Mecatrónica" },
+        { id: 6, nombre: "Ingeniería en Multimedia" },
+        { id: 7, nombre: "Ingeniería en Telecomunicaciones" },
+        { id: 8, nombre: "Tecnología en Electrónica y Comunicaciones" },
+    ];
+    
     return(
         <>
         <HeaderPriv/>
-        <Titul_line titulo="Programas académicos" subt="Facultad ingeniería" />
+        <TitulLine titulo="Programas académicos" subt="Facultad ingeniería" />
         <div className="contAdm">
             <div className="barraBusqueda">
                 <input 
-                    type="text" 
+                    type="search"
                     placeholder="Buscar" 
                     name="busqueda"
                     className="textBuscar"
@@ -53,8 +64,7 @@ export function InicioDec(){
             </div>
             
             <div className="infoAdmi">
-                <Link to="/InicioProg"><BtnBgSimple texto="INGENIERÍA AMBIENTAL"/></Link>
-                
+                {programas.map((item) => ( <Link to="/InicioProg"><BtnBgSimple  key={item.id} texto={item.nombre}/></Link>))}
             </div>
                 
         </div>

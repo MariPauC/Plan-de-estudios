@@ -1,6 +1,6 @@
 import "./titulo.css"
 
-export function Titul_line( {titulo, subt} ){
+export function TitulLine( {titulo, subt} ){
     return(
         <div className="contTitulL">
             <h1> {titulo} </h1>
@@ -10,7 +10,7 @@ export function Titul_line( {titulo, subt} ){
     )
 }
 
-export function Titul_line2( {titulo, subt} ){
+export function TitulLine2( {titulo, subt} ){
     return(
         <div className="contTitulL2">
             <h1> {titulo} </h1>

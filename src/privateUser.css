@@ -1,5 +1,5 @@
 .contAdm{
-    width: 1200px;
+    width: 1100px;
     min-height: 370px;
     margin: auto;
     align-items: center;
@@ -7,7 +7,7 @@
     padding-bottom: 45px;
 }
 
-.contAdm h3{
+.ttlAdmi{
     margin-top: 35px;
 }
 
@@ -57,4 +57,9 @@
 
 .btnPlace{
     margin-left: 29.5%;
+}
+
+.dobleBtn{
+    display: flex;
+    justify-content: space-between;
 }
