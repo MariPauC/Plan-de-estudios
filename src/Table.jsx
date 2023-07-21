@@ -57,3 +57,4 @@ export function Columna ({ data }) {
         </tr>
     );
 };
+

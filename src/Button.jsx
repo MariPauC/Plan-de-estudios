@@ -14,13 +14,17 @@ export function BtnBgIcon({texto, icon }){
         { icon }<p id="txtIcon">{texto}</p>
         </button>
 }
-    
-    
 
 //Boton mediano con iconos
 export function BtnMdIcon({texto, icon}){
     return <button className="btn_md">
         { icon }<p id="txtIcon">{texto}</p>
+    </button>
+}
+
+export function BtnMd({texto, color}){
+    return <button className="btn_md" style={{backgroundColor: color}}>
+        <p>{texto}</p>
     </button>
 }
 

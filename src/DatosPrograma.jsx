@@ -8,7 +8,7 @@ import { Btnmin } from "./Button"
 import { Link } from "react-router-dom";
 
 export function DataProg(){
-    var rol = false;
+    var rol = true;
 
     const select1 = [
         { id: 1, nombre: "Diurna" },
@@ -18,11 +18,13 @@ export function DataProg(){
     return(
         <>
         <HeaderPriv/>
+        
         <div className="contBread">
-            <PagAnterior ruta="/Inicio" pagina="Menú principal"/>
-            {rol ? <PagAnterior ruta="/InicioProg" pagina="Programa"/> : ""}
-            <PagActual pagina="Datos del programa"/>
-        </div>
+                <PagAnterior ruta="/Inicio" pagina="Menú principal"/>
+                {rol ? <PagAnterior ruta="/InicioProg" pagina="Programa"/> : ""}
+                <PagActual pagina="Datos del programa"/>
+            </div>
+        
         <Titul titulo="Datos del progama" subt="Ingeniería en Multimedia" />
         <div className="contAdm">
             <form>

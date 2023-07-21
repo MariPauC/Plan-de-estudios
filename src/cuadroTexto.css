@@ -6,13 +6,21 @@
     padding: 5px 0;
 }
 
-.cont_md label{
+.cont_lg, .cont_lgArch{
+    display: flex;
+    align-items: center;
+    margin: 0 25px;
+    width: 80%;
+    padding: 5px 0;
+}
+
+.cont_md label, .cont_lg label, .cont_lgArch label {
     display: inline-block;
     font-weight: bold;
     min-width: 100px; 
 }
 
-.cont_md input{
+.cont_md input, .cont_lg input{
     border: 2px black solid;
     border-radius: 7px;
     height: 32px;
@@ -21,11 +29,26 @@
     font-size: 16px;
 }
 
-.cont_md input:hover{
+.cont_lg p{
+    height: 32px;
+    width: 100%;
+    padding-left: 10px;
+    font-size: 16px;
+}
+
+.cont_lgArch input{
+    height: 32px;
+    width: 100%;
+    padding-left: 10px;
+    font-size: 16px;
+}
+
+
+.cont_md input:hover, .cont_md select:hover, .cont_lg input:hover, .cont_lg select:hover{
     background-color: #E5E5E5;
 }
 
-.cont_md select{
+.cont_md select, .cont_lg select{
     border: 2px black solid;
     border-radius: 7px;
     width: 100%;
@@ -36,8 +59,5 @@
 	color: black;
 }
 
-.cont_md select:hover{
-    background-color: #E5E5E5;
-}
 
 

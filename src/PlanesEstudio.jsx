@@ -5,13 +5,13 @@ import { Tabla }from "./Table"
 import { BtnMdIcon,Btnmin } from "./Button"
 import { PagAnterior, PagActual} from "./Breadcrumbs"
 import { MdAddCircleOutline } from "react-icons/md";
-import { Link } from "react-router-dom"
+import { Link } from "react-router-dom";
 
 
 
 export function PlanEst(){ 
     var desarrollo = false;
-    var rol = false;
+    var rol = true;
 
     const data = [
         { id: 1, nombre: "Juan", apellido: "Pérez", edad: "Martha Lucia Olivero Franco", estado: "En revisión" },

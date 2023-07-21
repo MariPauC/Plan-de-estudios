@@ -2,6 +2,8 @@ import { Login } from "./Login"
 import { InicioProg, InicioDec } from "./Inicio"
 import { PlanEst } from "./PlanesEstudio"
 import { DataProg } from "./DatosPrograma"
+import { DirctProg } from "./DirectoresPrograma"
+import { UserPerfil } from "./Perfil"
 import { FootShort } from "./Footer";
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 
@@ -13,13 +15,15 @@ export function PrivateUser(){
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={<Login/>}/>    
-                { rol ? <Route path="/InicioProg" element={<InicioProg/>}/>
+                { rol ? <Route path="/inicioProg" element={<InicioProg/>}/>
                 :
-                <Route path="/Inicio" element={<InicioProg/>}/>}
-                { rol ? <Route path="/Inicio" element={<InicioDec/>}/>
+                <Route path="/inicio" element={<InicioProg/>}/>}
+                { rol ? <Route path="/inicio" element={<InicioDec/>}/>
                 :""}
-                <Route path="/PlanesEstudios" element={<PlanEst/>}/>
-                <Route path="/DatosPrograma" element={<DataProg/>}/>
+                <Route path="/planesEstudios" element={<PlanEst/>}/>
+                <Route path="/datosPrograma" element={<DataProg/>}/>
+                <Route path="/directoresPrograma" element={<DirctProg/>}/>
+                <Route path="/perfil" element={<UserPerfil/>}/>
             </Routes>
         </BrowserRouter>
         <FootShort/>

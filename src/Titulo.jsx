@@ -10,9 +10,9 @@ export function TitulLine( {titulo, subt} ){
     )
 }
 
-export function TitulLine2( {titulo, subt} ){
+export function TitulLineDec( {titulo, subt} ){
     return(
-        <div className="contTitulL2">
+        <div className="contTitulLDec">
             <h1> {titulo} </h1>
             <h2> {subt} </h2>
             <hr/>
