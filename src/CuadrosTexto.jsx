@@ -1,9 +1,22 @@
+import { isEditable } from "@testing-library/user-event/dist/utils"
 import "./cuadroTexto.css"
 
-export function InputMd({texto, valor, tipo}){
+export function TextMd({ texto, info}){
     return <div className="cont_md">
         <label> {texto} </label>
-        <input type={tipo} value={valor}></input>
+        <p>{info}</p>
+    </div>
+}
+
+export function InputMd({ name, texto, tipo, info, onChange }){
+    return <div className="cont_md">
+        <label name={name}> {texto} </label>
+        <input 
+            name={name} 
+            type={tipo} 
+            value={info} 
+            onChange = {onChange}
+        />
     </div>
 }
 
@@ -24,17 +37,27 @@ export function TextLg({texto, info}){
     </div>
 }
 
-export function InputLg({texto, valor, tipo}){
+export function InputLg({name, texto, tipo, info, onChange }){
     return <div className="cont_lg">
         <label> {texto} </label>
-        <input type={tipo} value={valor}></input>
+        <input 
+            name={name} 
+            type = {tipo} 
+            value ={info} 
+            onChange = {onChange}
+        />
     </div>
 }
 
-export function InputLgArch({texto, valor, tipo}){
+export function InputLgArch({name, texto, tipo, info, onChange}){
     return <div className="cont_lgArch">
         <label> {texto} </label>
-        <input type={tipo} value={valor}></input>
+        <input 
+            name={name}     
+            type = {tipo} 
+            value = {info}
+            onChange = {onChange}
+        />
     </div>
 }
 

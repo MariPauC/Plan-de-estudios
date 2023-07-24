@@ -9,27 +9,42 @@ export function BtnBgSimple({ texto }){
 }
 
 //Boton grande con iconos
-export function BtnBgIcon({texto, icon }){
-    return <button className="btn_bg">
+export function BtnBgIcon({texto, tipo, icon }){
+    return <button 
+                className="btn_bg"
+                type={tipo}
+            >
         { icon }<p id="txtIcon">{texto}</p>
         </button>
 }
 
 //Boton mediano con iconos
-export function BtnMdIcon({texto, icon}){
-    return <button className="btn_md">
+export function BtnMdIcon({texto, tipo, icon}){
+    return <button 
+                className="btn_md"
+                type={tipo}
+            >
         { icon }<p id="txtIcon">{texto}</p>
     </button>
 }
 
-export function BtnMd({texto, color}){
-    return <button className="btn_md" style={{backgroundColor: color}}>
+export function BtnMd({texto, tipo, color}){
+    return <button 
+                className="btn_md" 
+                type={tipo}
+                style={{backgroundColor: color}}
+            >
         <p>{texto}</p>
     </button>
 }
 
-export function Btnmin({texto, color}){
-    return <button className="btn_mn" style={{backgroundColor: color}}>
+export function Btnmin({texto, tipo, color, onClick}){
+    return <button 
+                className="btn_mn" 
+                type={tipo}
+                style={{backgroundColor: color}} 
+                onClick={onClick} 
+            >
         <p>{texto}</p>
     </button>
 }

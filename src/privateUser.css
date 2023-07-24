@@ -38,12 +38,10 @@
 .barraBusqueda{
     text-align: right;
     margin-top: 10px;
-    margin-right: 53px;
 }
 
 .contBoton{
     text-align: right;
-    margin: -7px 53px 45px 0;
 }
 
 .textBuscar{
@@ -70,4 +68,8 @@
 .dobleBtn{
     display: flex;
     justify-content: space-between;
+}
+
+.btnDerecha{
+    margin: -5px 0 5px 890px;
 }
