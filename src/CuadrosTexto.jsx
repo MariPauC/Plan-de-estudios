@@ -20,10 +20,13 @@ export function InputMd({ name, texto, tipo, info, onChange }){
     </div>
 }
 
-export function SelectMd({texto, data}){
+export function SelectMd({ name, texto, data, onChange }){
     return <div className="cont_md">
         <label> {texto} </label>
-        <select>
+        <select 
+            name={name} 
+            onChange = {onChange}
+        >
                 <option className="opcionSelect" value="">Selecciona una opción</option>
                 {data.map((item) => ( <Opcion key={item.id} data={item}/> ))}
         </select>
@@ -61,11 +64,13 @@ export function InputLgArch({name, texto, tipo, info, onChange}){
     </div>
 }
 
-export function SelectLg({texto, data}){
+export function SelectLg({ name, texto, data, onChange }){
     return <div className="cont_lg">
         <label> {texto} </label>
-        <select>
-                <option className="opcionSelect" value="">Selecciona una opción</option>
+        <select 
+            name={name}
+            onChange = {onChange}
+        >
                 {data.map((item) => ( <Opcion key={item.id} data={item}/> ))}
         </select>
     </div>
@@ -73,7 +78,10 @@ export function SelectLg({texto, data}){
 
 export function Opcion ({ data }) {
     return (
-        <option className="opcionSelect" value={data.nombre}>
+        <option 
+            className="opcionSelect" 
+            value={data.nombre}
+        >
             {data.nombre}
         </option>
     );
