@@ -49,6 +49,18 @@ export function Btnmin({texto, tipo, color, onClick}){
     </button>
 }
 
+export function BtnMinIcon({texto, tipo, icon}){
+    return <div 
+                className="btn_mnIcon"
+                type={tipo}
+            >
+        <div>
+        { icon }<p id="txtIcon">{texto}</p>
+        </div>
+        
+    </div>
+}
+
 BtnBgSimple.propTypes = {
     texto: PropTypes.string.isRequired
 }

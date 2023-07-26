@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { MatPubModal } from "./Modal"
+import { MatPubModal, MatPrivModal } from "./Modal"
 import { createPortal } from 'react-dom';
+import { MdInsertComment } from "react-icons/md";
 import "./materia.css"
 
 //Materia publica
@@ -55,4 +56,42 @@ export function MatTotal({horas, creditos}){
             </div>
         </div>
     );
+}
+
+//Materia privada
+export function MatPrivada({ data }){
+    const [showModal, setShowModal] = useState(false);
+    return (<>
+    <div className="contMat_priv">
+        <div className="mat_priv" onClick={() => setShowModal(true)}>
+            {data.comentario != null ? <div className="contIconComent"> <div className="iconComent">< MdInsertComment size="20px"/></div></div> : <></>}
+            <div className="titulo_materia"> 
+                <div>
+                    <h4>Área:</h4> 
+                    <p>{ data.area }</p>
+                </div>
+                <hr className="lateral"/>
+                <div>
+                    <h4>Horas:</h4>
+                    <p>{ data.horas }</p>
+                </div>
+                <hr className="lateral"/>
+                <div>
+                    <h4>Créditos:</h4>
+                    <p>{ data.creditos }</p>
+                </div>
+            </div>
+            <div className="info_materia"  style={{backgroundColor: data.color}}>
+                <h2>{ data.nombre }</h2>
+                <p>{ data.codigo }</p>
+            </div>
+        </div>
+    </div>
+
+    {showModal && createPortal(
+    <MatPrivModal onClose={() => setShowModal(false)} data={data}/>,
+    document.body
+    )}
+
+    </>);
 }

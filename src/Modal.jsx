@@ -1,4 +1,3 @@
-import { hover } from "@testing-library/user-event/dist/hover";
 import "./modal.css"
 
 export function MatPubModal({ onClose, nm, cl, hr, cds, cdg }){
@@ -49,5 +48,26 @@ export function MatPubModal({ onClose, nm, cl, hr, cds, cdg }){
             </div>
         </div>
     );
+};
 
+export function MatPrivModal({ onClose, nm, cl, hr, cds, cdg }){
+    return (
+        <div className="modalMatPub">
+            <div className="contModal">
+                <div className="ttlModal">
+                    <h3>Datos de la materia</h3>
+                </div>
+                <div className="infModal">
+                    
+                </div>
+                <button className="btnModal" style={{backgroundColor:cl}} 
+                    onMouseOver={ e => e.target.style.backgroundColor = "#E7E7E7" }
+                    onMouseLeave={ e => e.target.style.backgroundColor = cl }
+                    onClick={onClose}
+                >
+                    Cerrar
+                </button>
+            </div>
+        </div>
+    );
 };

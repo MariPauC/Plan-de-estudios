@@ -44,10 +44,10 @@ export function HeaderPriv(){
                     <MdPerson/>
                     <p>Perfil de usuario</p>
                 </div></Link>
-                <div className="list-object" id="objtectClose" >
+                <Link to="/"><div className="list-object" id="objtectClose" >
                     <MdLogout/>
                     <p>Cerrar sesión</p>
-                </div>
+                </div></Link>
             </div>
         </div>
     </header>

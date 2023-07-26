@@ -52,3 +52,25 @@
     box-shadow: 4px 2px 5px #979191;
 }
 
+.btn_mnIcon{
+    width: 33.3%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn_mnIcon div{
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    background-color: #E5E5E5;
+    width: 280px;
+    height: 130px;
+    margin-top: 20px;
+    border-radius: 15px;
+}
+
+.btn_mnIcon:hover{
+    transform: scale(1.1);
+}

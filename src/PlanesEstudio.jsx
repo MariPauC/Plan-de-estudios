@@ -8,7 +8,6 @@ import { MdAddCircleOutline } from "react-icons/md";
 import { Link } from "react-router-dom";
 
 
-
 export function PlanEst(){ 
     var desarrollo = false;
     var rol = true;
@@ -50,9 +49,8 @@ export function PlanEst(){
             <Tabla data= {data2} estado="Aprobado por" accion="Ver"/>
             {rol ? <Link to='/InicioProg'><Btnmin texto="Atrás" color="#707070"/></Link>
                 : <Link to='/Inicio'><Btnmin texto="Atrás" color="#707070"/></Link>}
-
-            
         </div>
         </>
     )
 }
+
