@@ -1,10 +1,48 @@
-import { isEditable } from "@testing-library/user-event/dist/utils"
 import "./cuadroTexto.css"
 
 export function TextMd({ texto, info}){
     return <div className="cont_md">
         <label> {texto} </label>
         <p>{info}</p>
+    </div>
+}
+
+export function InputSh({ name, texto, tipo, info, onChange, id }){
+    return <div className="cont_sh" id={id}>
+        <label name={name}> {texto} </label>
+        <input 
+            name={name} 
+            type={tipo} 
+            value={info} 
+            onChange = {onChange}
+        />
+    </div>
+}
+
+export function TextSh({ id, name, texto, tipo, info, onChange, row, cursor }){
+    return <div className="cont_sh" id={id}>
+        <label name={name}> {texto} </label>
+        <textarea
+            name={name} 
+            type={tipo} 
+            value={info} 
+            onChange = {onChange}
+            rows={row}    
+            cursor={cursor}
+            />
+    </div>
+}
+
+export function SelectSh({ name, texto, data, onChange, id }){
+    return <div className="cont_sh" id={id}>
+        <label> {texto} </label>
+        <select 
+            name={name} 
+            onChange = {onChange}
+        >
+                <option className="opcionSelect" value="">Selecciona una opción</option>
+                {data.map((item) => ( <Opcion key={item.id} data={item}/> ))}
+        </select>
     </div>
 }
 
