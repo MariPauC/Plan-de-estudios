@@ -1,11 +1,16 @@
 // Import required modules
 const express = require('express');
+const cors = require('cors');
 const mysql = require('mysql2');
-const apiRoutes = require('./routes/api')
+const apiRoutes = require('./routes/api');
+const authRoutes = require('./routes/auth');
 
 // Create the Express app
 const app = express();
-const port = process.env.PORT || 3000; // Use the specified port or default to 3000
+const port = process.env.PORT || 5000; // Use the specified port or default to 5000
+
+// Route to get all users
+app.use(cors());
 
 // Create a connection pool for MariaDB
 const pool = mysql.createPool({
@@ -25,7 +30,6 @@ pool.getConnection((err, connection) => {
   connection.release();
 });
 
-// Route to get all users
 app.get('/api/usuario', (req, res) => {
     pool.query('SELECT * FROM usuario', (err, results) => {
         if (err) {
@@ -40,4 +44,5 @@ app.listen(port, () => {
   console.log('Server is running on port'+port);
 });
 
-app.use('/api', apiRoutes)
+app.use('/api', apiRoutes);
+app.use('/api/auth', authRoutes);
