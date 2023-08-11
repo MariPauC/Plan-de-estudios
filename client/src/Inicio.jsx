@@ -14,7 +14,7 @@ export function InicioProg(){
         <>
         <HeaderPriv/>
         {rol ?<><div className="contBread">
-                <PagAnterior ruta="/Inicio" pagina="Menú principal"/> 
+                <PagAnterior ruta="/" pagina="Menú principal"/> 
                 <PagActual pagina="Programa"/>
                 </div><TitulLine titulo="Ingeniería en Multimedia" subt="Facultad ingeniería"/>
             </>

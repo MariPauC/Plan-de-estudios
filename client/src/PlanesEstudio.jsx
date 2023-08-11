@@ -31,7 +31,7 @@ export function PlanEst(){
         <>
         <HeaderPriv/>
         <div className="contBread">
-            <PagAnterior ruta="/Inicio" pagina="Menú principal"/>
+            <PagAnterior ruta="/" pagina="Menú principal"/>
             {rol ? <PagAnterior ruta="/InicioProg" pagina="Programa"/> : ""}
             <PagActual pagina="Planes de estudio"/>
         </div>

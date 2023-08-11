@@ -1,5 +1,6 @@
 import "./table.css"
 import { MdOutlineRemoveRedEye, MdOutlineMode, MdOutlineEditOff } from "react-icons/md";
+import { Link } from "react-router-dom";
 
 export function TablaSimple({titulo, contenido}){ 
     return(
@@ -37,7 +38,7 @@ export function Columna ({ data }) {
     let icono;
     switch (data.estado) {
         case "En desarrollo":
-            icono = <MdOutlineMode size={"25px"} style={{cursor:"pointer"}}/>;
+            icono = <Link to='/editarPlan'><MdOutlineMode size={"25px"} style={{cursor:"pointer"}}/></Link>;
             break;
         case "En revisión":
             icono = <MdOutlineEditOff size={"25px"} style={{color:"#BE0416", cursor:"no-drop"}}/>;

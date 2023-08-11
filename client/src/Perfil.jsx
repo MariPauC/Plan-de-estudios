@@ -5,7 +5,7 @@ import { PagActual, PagAnterior} from "./Breadcrumbs"
 import { TextLg, InputLg, SelectLg, InputLgArch } from "./CuadrosTexto"
 import { Btnmin } from "./Button"
 import { MdAccountCircle, MdOutlineImageNotSupported } from "react-icons/md";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export function UserPerfil(){
     const facultad = [
@@ -25,20 +25,26 @@ export function UserPerfil(){
         { id: 2, nombre: "Campus Nueva Granada" },
     ];
 
-    const usuario =[
-        {nombres: "Oscar Esteban", apellidos:"Ortiz Sanchez", correo:"osOrtiz@correo.com", documento:"45851521",
-        facultad: "Ingeniería", sede:"Calle 100", programa:"Ingeniería en Multimedia" }
-    ];
+    const [users, setUsers] = useState([]);
+
+    useEffect(() => {
+        // Fetch data from the backend API
+        fetch('/api/usuario')
+        .then((response) => response.json())
+        .then((data) => {
+            console.log(data); // Log the response data
+            setUsers(data);    // Update the state with the fetched data
+        })
+        .catch((error) => console.error('Error fetching data:', error));
+
+    }, []);
 
     const [estadoEditar, cambioEstadoEditar] = useState(false)
-
-    
-    var nombre = "Oscar Esteban";
 
     return <>
         <HeaderPriv/>
         <div className="contBread">
-            <PagAnterior ruta="/Inicio" pagina="Menú principal"/>
+            <PagAnterior ruta="/" pagina="Menú principal"/>
             <PagActual pagina="Perfil"/>
         </div>
         <div className="contAdmDoble">
@@ -55,11 +61,8 @@ export function UserPerfil(){
             <hr></hr>
             {console.log(estadoEditar)}
             <div className="formUsuario">
-                {estadoEditar?
-                    <FormularioUsuario programa={programa}sede={sede} facultad={facultad}/>
-                    :
-                    <InfousUsuario data={usuario}/>
-                }
+
+                    {users.map((item) => ( <Informacion key={item.id} data={item}/> ))}
                 
             </div>
 
@@ -67,15 +70,6 @@ export function UserPerfil(){
     </>
 
     
-}
-
-
-export function InfousUsuario({data}){ 
-    return(
-        <div>
-            {data.map((item) => ( <Informacion key={item.id} data={item}/> ))}
-        </div>
-    )
 }
 
 export function Informacion ({ data }) {

@@ -40,7 +40,7 @@ export function TextLg({texto, info}){
     </div>
 }
 
-export function InputLg({name, texto, tipo, info, onChange }){
+export function InputLg({name, texto, tipo, info, onChange, autocomplete }){
     return <div className="cont_lg">
         <label> {texto} </label>
         <input 
@@ -48,6 +48,7 @@ export function InputLg({name, texto, tipo, info, onChange }){
             type = {tipo} 
             value ={info} 
             onChange = {onChange}
+            autoComplete = {autocomplete}
         />
     </div>
 }
