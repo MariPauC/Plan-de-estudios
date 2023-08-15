@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
 
-// Register a new user
+// Registro
 router.post('/registro', async (req, res) => {
     try {
         const { nombre, apellido, correo, contrasena } = req.body;
@@ -12,7 +12,7 @@ router.post('/registro', async (req, res) => {
         console.log(hashedContrasena);
         pool.query( 'INSERT INTO usuario (usu_correo, usu_contrasena, usu_nombre, usu_apellido) VALUES (?,?,?,?)',
             [correo, hashedContrasena, nombre, apellido],
-            async (err, results) => {
+            async (err) => {
                 if (err) {
                     console.error('Error registering user:', err);
                     return res.status(500).json({ error: 'Error registering user' });
@@ -40,13 +40,12 @@ router.post('/login', async (req, res) => {
             if (err) {
                 return res.status(500).json({ error: 'Error retrieving data from the database' });
             }
-
             if (results.length > 0) {
               // Compara la contraseña ingresada con la almacenada
                 if (await bcrypt.compare(contrasena, results[0].usu_contrasena)) {
                     // Genera un token con el id del usuario
-                    const token = jwt.sign({ userId: results[0].idUsuario }, 'your_secret_key', { expiresIn: '1h' });
-                    res.json({ token, user: { id: results[0].idUsuario, email: results[0].usu_correo, rol: results[0].usu_rol } });
+                    const token = jwt.sign({ idUsuario: results[0].idUsuario }, 'your_secret_key', { expiresIn: '1h' });
+                    res.json({ usuario: { id: results[0].idUsuario, rol: results[0].usu_rol}, token });
                     console.log('Login successful');
                 } else {
                     return res.status(401).json({ error: 'Correo o contraseña incorrectos' });
@@ -61,5 +60,35 @@ router.post('/login', async (req, res) => {
     }
 });
 
+
+//Autenticacion
+router.get('/autenticacion', (req, res) => {
+    try {
+        const token = req.headers.authorization.split(' ')[1]; // Extraer el token del encabezado
+        console.log(token);
+        jwt.verify(token, 'your_secret_key', (err, decodedToken) => {
+            if (err) {
+                return res.status(401).json({ error: 'Token inválido' });
+            }
+
+            const usuarioId = decodedToken.idUsuario; // Ajusta esto según cómo hayas estructurado tu token
+            pool.query('SELECT idUsuario, usu_rol FROM usuario WHERE idUsuario = ?', [usuarioId], async (err, results) => {
+                if (err) {
+                    return res.status(500).json({ error: 'Error al obtener los datos del usuario' });
+                }
+
+                if (results.length === 0) {
+                    return res.status(404).json({ error: 'Usuario no encontrado' });
+                }
+
+                const usuario = results[0];
+                console.log(usuario)
+                res.json({ usuario });
+            });
+        });
+    } catch (error) {
+        return res.status(401).json({ error: 'Token no proporcionado o inválido' });
+    }
+});
 
 module.exports = router;

@@ -5,9 +5,15 @@ import { PagActual, PagAnterior} from "./Breadcrumbs"
 import { TextLg, InputLg, SelectLg, InputLgArch } from "./CuadrosTexto"
 import { Btnmin } from "./Button"
 import { MdAccountCircle, MdOutlineImageNotSupported } from "react-icons/md";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { AuthContext } from './AuthContext';
 
 export function UserPerfil(){
+    const { logout } = useContext(AuthContext);
+    const handleLogout = () => {
+        logout();
+    };
+    
     const facultad = [
         { id: 1, nombre: "Ciencias Económicas" },
         { id: 2, nombre: "Ciencias Básicas" },
@@ -55,7 +61,7 @@ export function UserPerfil(){
                 <Btnmin texto="Editar perfil" color="#182B57" />
                 </div>
                 <div>
-                <Btnmin texto="Cerrar sesión" color="#BE0416"/>
+                <Btnmin texto="Cerrar sesión" color="#BE0416" onClick={handleLogout}/>
                 </div>
             </div>
             <hr></hr>
@@ -76,10 +82,10 @@ export function Informacion ({ data }) {
     return (
         <>
             <h3 className="ttlAdmi">Información principal</h3>
-            <TextLg texto="Nombres:" info={data.nombres}/>   
-            <TextLg texto="Apellidos:" info={data.apellidos}/>
-            <TextLg texto="Correo:" info={data.correo}/>
-            <TextLg texto="Documento:" info={data.documento}/>    
+            <TextLg texto="Nombres:" info={data.usu_nombre}/>   
+            <TextLg texto="Apellidos:" info={data.usu_apellido}/>
+            <TextLg texto="Correo:" info={data.usu_correo}/>
+            <TextLg texto="Documento:" info={data.usu_documento}/>    
 
             <h3 className="ttlAdmi">Datos del programa</h3>
             <TextLg texto="Facultad:" info={data.facultad}/>

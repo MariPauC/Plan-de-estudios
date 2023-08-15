@@ -1,7 +1,6 @@
 // Import required modules
 const express = require('express');
 const cors = require('cors');
-const mysql = require('mysql2');
 const bodyParser = require('body-parser');
 const apiRoutes = require('./routes/api');
 const authRoutes = require('./routes/auth');

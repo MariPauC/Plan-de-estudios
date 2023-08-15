@@ -7,9 +7,7 @@ import { Link } from "react-router-dom";
 import { MdSchool, MdLibraryBooks, MdSupervisorAccount, MdSearch} from "react-icons/md";
 
 
-export function InicioProg(){
-    var rol = true;
-
+export function InicioProg({rol}){
     return(
         <>
         <HeaderPriv/>

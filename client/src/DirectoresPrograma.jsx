@@ -10,7 +10,6 @@ import { Link } from "react-router-dom";
 
 
 export function DirctProg(){ 
-    var rol = true;
     const data = [
         { id: 1, nombres: "Oscar Esteban", apellidos:"Ortiz Sanchez", correo:"osOrtiz@correo.com", sede:"Calle 100", estado:"Activo"},
         { id: 17, nombres: "Sandra", apellidos: "Gutierrez", correo: "Martha Lucia Olivero Franco", sede:"Campus cajica", estado:"Inactivo" },
@@ -20,7 +19,7 @@ export function DirctProg(){
         <HeaderPriv/>
         <div className="contBread">
             <PagAnterior ruta="/" pagina="Menú principal"/>
-            {rol ? <PagAnterior ruta="/InicioProg" pagina="Programa"/> : ""}
+            <PagAnterior ruta="/InicioProg" pagina="Programa"/> 
             <PagActual pagina="Directores"/>
         </div>
         <Titul titulo="Directores del programa" subt="Ingeniería en Multimedia" />
@@ -32,8 +31,8 @@ export function DirctProg(){
             </div>
             {data.map((item) => ( <InfoDirecto key={item.id} data={item}/> ))}
 
-            {rol ? <Link to='/InicioProg'><Btnmin texto="Atrás" color="#707070"/></Link>
-                : <Link to='/Inicio'><Btnmin texto="Atrás" color="#707070"/></Link>}
+            <Link to='/InicioProg'><Btnmin texto="Atrás" color="#707070"/></Link>
+                
             
         </div>
         </>
@@ -53,12 +52,6 @@ export function InfoDirecto({data}){
                     <TextMd texto="Apellidos:" info={data.apellidos}/>
                     <TextMd texto="Correo:" info={data.correo}/>
                     <TextMd texto="Sede:" info={data.sede}/>
-                    <div className="btnDerecha">
-                        {tipoBoton ? <Btnmin texto="Desactivar" color="#BE0416"/> 
-                        : <Btnmin texto="Activar" color="#182B57"/>}
-                    </div>
-                    
-                        
                 </>
             }
             />

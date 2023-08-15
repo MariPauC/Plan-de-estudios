@@ -1,45 +1,48 @@
 import React, { createContext, useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 export const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
     const [usuario, setUsuario] = useState(null);
     const [mensaje, setMensaje] = useState('');
+    let navigate = useNavigate();
 
-    const checkAuthentication = async () => {
+    const verificarAutenticacion = async (token) => {
         try {
-            const response = await axios.get('/api/auth/check-auth'); // Replace with your backend route to check authentication
+            const response = await axios.get('/api/auth/autenticacion', {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
             setUsuario(response.data.usuario);
-        }catch (error) {
+        } catch (error) {
             console.error('Error checking authentication:', error);
             setUsuario(null);
         }
     };
-    
+
     const registrar = async (nombre, apellido, correo, contrasena) => {
         try {
-        const response = await axios.post('/api/auth/registro', { nombre, apellido, correo, contrasena }); // Replace with your backend login route
-            setUsuario(response.data.usuario);
-            // Save the authentication token to localStorage or sessionStorage (optional)
-            localStorage.setItem('token', response.data.token);
+            const response = await axios.post('/api/auth/registro', { nombre, apellido, correo, contrasena }); // Replace with your backend login route
         } catch (error) {
             console.error('Error logging in:', error);
             setUsuario(null);
         }
     };
 
-  // Function to log in the user
     const login = async (correo, contrasena) => {
         try {
-        const response = await axios.post('/api/auth/login', { correo, contrasena }); // Replace with your backend login route
+        const response = await axios.post('/api/auth/login', { correo, contrasena });
+            setMensaje(null)
             setUsuario(response.data.usuario);
-            // Save the authentication token to localStorage or sessionStorage (optional)
             localStorage.setItem('token', response.data.token);
-            setMensaje('Inicio de sesión exitoso');
+            localStorage.setItem('usuario', JSON.stringify(response.data.usuario));
+
+            navigate('/')
         } catch (error) {
             console.error('Error logging in:', error);
-
             switch (error.response?.status) {
                 case 401:
                     setMensaje('Usuario o contraseña inválidos'); 
@@ -56,17 +59,18 @@ const AuthProvider = ({ children }) => {
             }
             setUsuario(null);
         }
+        
     };
 
     // Function to log out the usuario
     const logout = () => {
         setUsuario(null);
-        // Remove the authentication token from localStorage or sessionStorage (optional)
+        navigate('/login')
         localStorage.removeItem('token');
     };
 
     return (
-        <AuthContext.Provider value={{ usuario, login, logout, registrar, mensaje }}>
+        <AuthContext.Provider value={{ usuario, mensaje, login, logout, registrar, verificarAutenticacion }}>
         {children}
         </AuthContext.Provider>
     );

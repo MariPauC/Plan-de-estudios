@@ -1,18 +1,18 @@
+import React from 'react';
 import "./login.css"
 import Escudo from "./img/escudo_umng.png";
 import { useState, useContext } from 'react';
 import { AuthContext } from './AuthContext';
 
-
 export function Login(){
+    const { login, mensaje } = useContext(AuthContext);
+    
     var [valuesLogin, setValuesLogin] = useState({
         correo: "",
         contrasena: "",
-        error: "",
     });
-
-    const { login, mensaje } = useContext(AuthContext);
-
+    const [error, setError] = useState(false);
+    
     const handleInputChangeLog = (e) => {
         const { name, value } = e.target;
         setValuesLogin({
@@ -24,8 +24,9 @@ export function Login(){
     const handleLogin = (e) => {
         e.preventDefault();
         login(valuesLogin.correo, valuesLogin.contrasena);
-        console.log(valuesLogin);
     };
+
+    //localStorage.removeItem('token');
 
     return(
         <>

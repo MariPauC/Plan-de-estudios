@@ -31,12 +31,10 @@ export function RegistroUsuario(){
     const handleSubmit = (event) => {
         event.preventDefault();
         console.log(valuesRegistro);
+        
         if (valuesRegistro.contrasena === valuesRegistro.confirmacion) {
-        // Passwords match, proceed with registration logic
-        console.log('Passwords match');
-        registrar(valuesRegistro.nombre, valuesRegistro.apellido,valuesRegistro.correo, valuesRegistro.contrasena);
-        setContrasenasMatch(true);
-        // Perform registration logic here
+            registrar(valuesRegistro.nombre, valuesRegistro.apellido,valuesRegistro.correo, valuesRegistro.contrasena);
+            setContrasenasMatch(true);
         } else {
         setContrasenasMatch(false);
         }
@@ -45,7 +43,7 @@ export function RegistroUsuario(){
     const handleRegistro = async () => {
         try {
             const response = await axios.post('/api/auth/registro', {  });
-            setMensajeRegistro(response.data.message); 
+            setMensajeRegistro(response.data.message);
         } catch (error) {
             console.error('Error de registro:', error);
             setMensajeRegistro('Error al registrar el usuario');

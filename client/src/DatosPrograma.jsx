@@ -8,9 +8,7 @@ import { Btnmin } from "./Button"
 import { Link } from "react-router-dom";
 import { useState } from "react";
 
-export function DataProg(){
-    var rol = true;
-
+export function DataProg({rol}){
     const jornada = [
         { id: 1, nombre: "Diurna" },
         { id: 2, nombre: "Nocturna" },
