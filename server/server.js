@@ -19,6 +19,7 @@ app.get('/', (req, res) => {
 
 app.use('/api', apiRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/uploads', express.static("./uploads"));
 
 // Start the server
 const port = process.env.PORT || 5000; // Use the specified port or default to 5000

@@ -5,11 +5,15 @@ import { TablaSimple }from "./Table"
 import { TextMd } from "./CuadrosTexto"
 import { Btnmin } from "./Button"
 import { PagAnterior, PagActual} from "./Breadcrumbs"
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 
 
 export function DirctProg(){ 
+    const params = useParams();
+    const nombrePrograma = params.nombre;
+    const idPrograma = params.id;
+    
     const data = [
         { id: 1, nombres: "Oscar Esteban", apellidos:"Ortiz Sanchez", correo:"osOrtiz@correo.com", sede:"Calle 100", estado:"Activo"},
         { id: 17, nombres: "Sandra", apellidos: "Gutierrez", correo: "Martha Lucia Olivero Franco", sede:"Campus cajica", estado:"Inactivo" },
@@ -19,7 +23,7 @@ export function DirctProg(){
         <HeaderPriv/>
         <div className="contBread">
             <PagAnterior ruta="/" pagina="Menú principal"/>
-            <PagAnterior ruta="/InicioProg" pagina="Programa"/> 
+            <PagAnterior ruta={"/InicioProg/"+nombrePrograma+'/'+idPrograma} pagina="Programa"/> 
             <PagActual pagina="Directores"/>
         </div>
         <Titul titulo="Directores del programa" subt="Ingeniería en Multimedia" />
@@ -31,7 +35,7 @@ export function DirctProg(){
             </div>
             {data.map((item) => ( <InfoDirecto key={item.id} data={item}/> ))}
 
-            <Link to='/InicioProg'><Btnmin texto="Atrás" color="#707070"/></Link>
+            <Link to={"/InicioProg/"+nombrePrograma+'/'+idPrograma}><Btnmin texto="Atrás" color="#707070"/></Link>
                 
             
         </div>
@@ -39,12 +43,7 @@ export function DirctProg(){
     )
 }
 
-export function InfoDirecto({data}){
-    var tipoBoton = false
-    if (data.estado == "Activo"){
-        tipoBoton = true
-    }
-    
+export function InfoDirecto({data}){    
     return(
         <TablaSimple titulo= {"Director - "+ data.estado}
                 contenido = {<>

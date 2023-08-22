@@ -9,7 +9,6 @@ router.post('/registro', async (req, res) => {
     try {
         const { nombre, apellido, correo, contrasena } = req.body;
         const hashedContrasena = await bcrypt.hash(contrasena, 10);
-        console.log(hashedContrasena);
         pool.query( 'INSERT INTO usuario (usu_correo, usu_contrasena, usu_nombre, usu_apellido) VALUES (?,?,?,?)',
             [correo, hashedContrasena, nombre, apellido],
             async (err) => {
@@ -18,7 +17,6 @@ router.post('/registro', async (req, res) => {
                     return res.status(500).json({ error: 'Error registering user' });
                 }
                 console.log('Usuario registrado');
-                
                 // Envía una respuesta de éxito al cliente
                 res.status(200).json({ message: 'Usuario registrado exitosamente' });
             }
@@ -65,24 +63,19 @@ router.post('/login', async (req, res) => {
 router.get('/autenticacion', (req, res) => {
     try {
         const token = req.headers.authorization.split(' ')[1]; // Extraer el token del encabezado
-        console.log(token);
         jwt.verify(token, 'your_secret_key', (err, decodedToken) => {
             if (err) {
                 return res.status(401).json({ error: 'Token inválido' });
             }
-
             const usuarioId = decodedToken.idUsuario; // Ajusta esto según cómo hayas estructurado tu token
             pool.query('SELECT idUsuario, usu_rol FROM usuario WHERE idUsuario = ?', [usuarioId], async (err, results) => {
                 if (err) {
                     return res.status(500).json({ error: 'Error al obtener los datos del usuario' });
                 }
-
                 if (results.length === 0) {
                     return res.status(404).json({ error: 'Usuario no encontrado' });
                 }
-
                 const usuario = results[0];
-                console.log(usuario)
                 res.json({ usuario });
             });
         });

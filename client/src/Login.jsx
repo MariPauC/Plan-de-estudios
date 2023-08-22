@@ -11,7 +11,6 @@ export function Login(){
         correo: "",
         contrasena: "",
     });
-    const [error, setError] = useState(false);
     
     const handleInputChangeLog = (e) => {
         const { name, value } = e.target;
@@ -25,8 +24,6 @@ export function Login(){
         e.preventDefault();
         login(valuesLogin.correo, valuesLogin.contrasena);
     };
-
-    //localStorage.removeItem('token');
 
     return(
         <>

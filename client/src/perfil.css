@@ -17,3 +17,14 @@
     width: 350px;
     height: 170px;
 }
+
+.foto{
+    margin: 20px 0;
+    width: 350px;
+    height: 170px;
+}
+
+.errorArchivo{
+    color: red;
+    font-size: 15px;
+}

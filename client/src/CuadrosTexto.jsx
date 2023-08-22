@@ -40,7 +40,7 @@ export function TextLg({texto, info}){
     </div>
 }
 
-export function InputLg({name, texto, tipo, info, onChange, autocomplete }){
+export function InputLg({name, texto, tipo, info, onChange, autocomplete, required}){
     return <div className="cont_lg">
         <label> {texto} </label>
         <input 
@@ -49,17 +49,32 @@ export function InputLg({name, texto, tipo, info, onChange, autocomplete }){
             value ={info} 
             onChange = {onChange}
             autoComplete = {autocomplete}
+            required = {required}
         />
     </div>
 }
 
-export function InputLgArch({name, texto, tipo, info, onChange}){
+export function InputLgBlock({name, texto, tipo, info }){
+    return <div className="cont_lg">
+        <label> {texto} </label>
+        <input 
+            name={name} 
+            type = {tipo} 
+            value ={info} 
+            style={{backgroundColor:"#E5E5E5", cursor:"no-drop"}}
+            readOnly
+        />
+    </div>
+}
+
+export function InputLgArch({name, texto, tipo, info, accept, onChange}){
     return <div className="cont_lgArch">
         <label> {texto} </label>
         <input 
             name={name}     
             type = {tipo} 
             value = {info}
+            accept ={accept}
             onChange = {onChange}
         />
     </div>

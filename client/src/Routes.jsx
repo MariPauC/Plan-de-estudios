@@ -27,13 +27,13 @@ export function UserRoutes(){
         <Routes>
             <Route path="/login" element={<Login/>}/>    
             <Route path="/registro" element={<RegistroUsuario/>}/>  
-            { rol ?  <Route path="/inicioProg" element={<ProtectedRoute><InicioProg rol={rol}/></ProtectedRoute>}/>
+            { rol ?  <Route path="/inicioProg/:nombre/:id" element={<ProtectedRoute><InicioProg rol={rol}/></ProtectedRoute>}/>
             : <Route path="/" element={<ProtectedRoute><InicioProg rol={rol} /></ProtectedRoute>}/>}
             { rol && <Route path="/" element={<ProtectedRoute><InicioDec rol={rol}/></ProtectedRoute>}/>}
-            <Route path="/planesEstudios" element={<ProtectedRoute><PlanEst rol={rol}/></ProtectedRoute>}/>
+            <Route path="/planesEstudios/:nombre/:id" element={<ProtectedRoute><PlanEst rol={rol}/></ProtectedRoute>}/>
             <Route path="/editarPlan" element={<ProtectedRoute><EditarPlanEst rol={rol}/></ProtectedRoute>}/>
-            <Route path="/datosPrograma" element={<ProtectedRoute><DataProg rol={rol}/></ProtectedRoute>}/>
-            <Route path="/directoresPrograma" element={<ProtectedRoute><DirctProg/></ProtectedRoute>}/>
+            <Route path="/datosPrograma/:accion/:nombre?/:id?" element={<ProtectedRoute><DataProg rol={rol}/></ProtectedRoute>}/>
+            <Route path="/directoresPrograma/:nombre/:id" element={<ProtectedRoute><DirctProg/></ProtectedRoute>}/>
             <Route path="/perfil" element={<ProtectedRoute><UserPerfil rol={rol}/></ProtectedRoute>}/>
         </Routes>
     );

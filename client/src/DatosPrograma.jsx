@@ -5,10 +5,16 @@ import { PagActual, PagAnterior } from "./Breadcrumbs"
 import { TablaSimple } from "./Table"
 import { InputMd, SelectMd } from "./CuadrosTexto"
 import { Btnmin } from "./Button"
-import { Link } from "react-router-dom";
-import { useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import { useState, useEffect} from "react";
+import axios from "axios";
 
 export function DataProg({rol}){
+    const params = useParams();
+    const accion = params.accion;
+    const nombrePrograma = params.nombre;
+    const idPrograma = params.id;
+    
     const jornada = [
         { id: 1, nombre: "Diurna" },
         { id: 2, nombre: "Nocturna" },
@@ -48,8 +54,29 @@ export function DataProg({rol}){
 
     const handleFormD = (e) =>{
         e.preventDefault();
+        if(accion === "editar"){
+            console.log("Modificando datos")
+        }
+        else{
+            console.log('Crear nuevo programa')
+        }
+
         console.log(valuesProgram)
     };
+    
+    useEffect(() => {
+        if (accion === "editar") {
+            axios.get(`/dataPrograma/${idPrograma}`)
+            .then(response => {
+                const data = response.data;
+                console.log(data)
+            })
+            .catch(error => {
+                console.error('Error fetching programa details:', error);
+              // Manejar el error
+            });
+        }
+    }, [accion, params.id]);
     
     return(
         <>
@@ -57,11 +84,14 @@ export function DataProg({rol}){
         
         <div className="contBread">
                 <PagAnterior ruta="/" pagina="Menú principal"/>
-                {rol ? <PagAnterior ruta="/InicioProg" pagina="Programa"/> : ""}
+                {rol && accion === "editar"  ? <PagAnterior ruta={"/InicioProg/"+nombrePrograma+'/'+idPrograma} pagina="Programa"/> : ""}
                 <PagActual pagina="Datos del programa"/>
             </div>
         
-        <Titul titulo="Datos del progama" subt="Ingeniería en Multimedia" />
+        {accion === "editar" ? <Titul titulo="Datos del progama" subt={nombrePrograma.replace(/-/g,' ')} /> 
+        : <Titul titulo="Datos del programa" subt="Nuevo programa" />}
+        
+        
         <div className="contAdm">
             <form onSubmit={handleFormD} >
                 <TablaSimple titulo="Información basica" 
@@ -92,7 +122,7 @@ export function DataProg({rol}){
                 }
                 />
                 <div className="dobleBtn">
-                    {rol ? <Link to='/InicioProg'><Btnmin texto="Atrás" color="#707070"/></Link>
+                    {rol ? <Link to={"/InicioProg/"+nombrePrograma+'/'+idPrograma}><Btnmin texto="Atrás" color="#707070"/></Link>
                         : <Link to='/Inicio'><Btnmin texto="Atrás" color="#707070"/></Link>}
                         <Btnmin texto="Guardar" color="#182B57" tipo="submit"/>
                 </div>
