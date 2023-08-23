@@ -15,8 +15,8 @@ export function EditarPlanEst(){
         <>
         <HeaderPriv/>
         <div className="contBread">
-            <PagAnterior ruta="/Inicio" pagina="Menú principal"/>
-            {rol ? <PagAnterior ruta="/InicioProg" pagina="Programa"/> : ""}
+            <PagAnterior ruta="/" pagina="Menú principal"/>
+            {rol && <PagAnterior ruta="/InicioProg" pagina="Programa"/>}
             <PagAnterior ruta="/planesEstudios" pagina="Planes de estudio"/>
             <PagActual pagina="Edición plan"/>
         </div>

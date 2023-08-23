@@ -70,6 +70,10 @@
     justify-content: space-between;
 }
 
+#dobleBtnAjuste{
+    margin-top: -15px;
+}
+
 .btnDerecha{
     margin: -5px 0 5px 890px;
 }

@@ -46,7 +46,7 @@ export function SelectSh({ name, texto, data, onChange, id }){
     </div>
 }
 
-export function InputMd({ name, texto, tipo, info, onChange }){
+export function InputMd({ name, texto, tipo, info, onChange, required }){
     return <div className="cont_md">
         <label name={name}> {texto} </label>
         <input 
@@ -54,11 +54,12 @@ export function InputMd({ name, texto, tipo, info, onChange }){
             type={tipo} 
             value={info} 
             onChange = {onChange}
+            required = {required}
         />
     </div>
 }
 
-export function SelectMd({ name, texto, data, onChange }){
+export function SelectMd({ name, texto, data, selectedValue, onChange  }){
     return <div className="cont_md">
         <label> {texto} </label>
         <select 
@@ -66,7 +67,7 @@ export function SelectMd({ name, texto, data, onChange }){
             onChange = {onChange}
         >
                 <option className="opcionSelect" value="">Selecciona una opción</option>
-                {data.map((item) => ( <Opcion key={item.id} data={item}/> ))}
+                {data.map((item) => ( <Opcion key={item.id} data={item} selectedValue= {selectedValue}/> ))}
         </select>
     </div>
 }
@@ -78,7 +79,7 @@ export function TextLg({texto, info}){
     </div>
 }
 
-export function InputLg({name, texto, tipo, info, onChange }){
+export function InputLg({name, texto, tipo, info, onChange, autocomplete, required}){
     return <div className="cont_lg">
         <label> {texto} </label>
         <input 
@@ -86,17 +87,33 @@ export function InputLg({name, texto, tipo, info, onChange }){
             type = {tipo} 
             value ={info} 
             onChange = {onChange}
+            autoComplete = {autocomplete}
+            required = {required}
         />
     </div>
 }
 
-export function InputLgArch({name, texto, tipo, info, onChange}){
+export function InputLgBlock({name, texto, tipo, info }){
+    return <div className="cont_lg">
+        <label> {texto} </label>
+        <input 
+            name={name} 
+            type = {tipo} 
+            value ={info} 
+            style={{backgroundColor:"#E5E5E5", cursor:"no-drop"}}
+            readOnly
+        />
+    </div>
+}
+
+export function InputLgArch({name, texto, tipo, info, accept, onChange}){
     return <div className="cont_lgArch">
         <label> {texto} </label>
         <input 
             name={name}     
             type = {tipo} 
             value = {info}
+            accept ={accept}
             onChange = {onChange}
         />
     </div>
@@ -114,13 +131,14 @@ export function SelectLg({ name, texto, data, onChange }){
     </div>
 }
 
-export function Opcion ({ data }) {
+export function Opcion({ data, selectedValue }) {
     return (
-        <option 
-            className="opcionSelect" 
+        <option
+            className="opcionSelect"
             value={data.nombre}
+            selected={data.nombre === selectedValue} // Marcar como seleccionada si el valor coincide
         >
             {data.nombre}
         </option>
     );
-};
+}

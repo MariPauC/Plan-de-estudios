@@ -5,13 +5,15 @@ import { Tabla }from "./Table"
 import { BtnMdIcon,Btnmin } from "./Button"
 import { PagAnterior, PagActual} from "./Breadcrumbs"
 import { MdAddCircleOutline } from "react-icons/md";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 
-export function PlanEst(){ 
+export function PlanEst({rol}){ 
+    const params = useParams();
+    const nombrePrograma = params.nombre;
+    const idPrograma = params.id;
+
     var desarrollo = false;
-    var rol = true;
-
     const data = [
         { id: 1, nombre: "Juan", apellido: "Pérez", edad: "Martha Lucia Olivero Franco", estado: "En revisión" },
         ];
@@ -23,7 +25,7 @@ export function PlanEst(){
             { id: 4, nombre: "Samantha", apellido: "Villa", edad: 25, estado: "Antiguo" },
         ];
     
-    if (data != ""){
+    if (data !== ""){
         desarrollo = true;
     }
 
@@ -31,8 +33,8 @@ export function PlanEst(){
         <>
         <HeaderPriv/>
         <div className="contBread">
-            <PagAnterior ruta="/Inicio" pagina="Menú principal"/>
-            {rol ? <PagAnterior ruta="/InicioProg" pagina="Programa"/> : ""}
+            <PagAnterior ruta="/" pagina="Menú principal"/>
+            {rol ? <PagAnterior ruta={"/InicioProg/"+nombrePrograma+'/'+idPrograma} pagina="Programa"/> : ""}
             <PagActual pagina="Planes de estudio"/>
         </div>
         <Titul titulo="Planes de estudio" subt="Ingeniería en Multimedia" />
@@ -47,7 +49,7 @@ export function PlanEst(){
             <Tabla data= {data2} estado="Aprobado por" accion="Ver"/>
             <h3 className="ttlAdmi">Versiones anteriores</h3>
             <Tabla data= {data2} estado="Aprobado por" accion="Ver"/>
-            {rol ? <Link to='/InicioProg'><Btnmin texto="Atrás" color="#707070"/></Link>
+            {rol ? <Link to={"/InicioProg/"+nombrePrograma+'/'+idPrograma}><Btnmin texto="Atrás" color="#707070"/></Link>
                 : <Link to='/Inicio'><Btnmin texto="Atrás" color="#707070"/></Link>}
         </div>
         </>
