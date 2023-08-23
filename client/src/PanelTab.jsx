@@ -22,7 +22,7 @@ export function PanelTab() {
         { id: 2, nombre: "Catedra", semestre: "1", color:"#FBF9C8", creditos:"3", horas:"6"},
         { id: 3, nombre: "Etica", semestre: "4", color:"#FBF9C8", creditos:"1", horas:"2"},
         { id: 4, nombre: "Programación I", semestre: "1", color:"#FBF9C8", creditos:"2", horas:"4" },
-        { id: 5, nombre: "Programación II", semestre: "3", color:"#FBF9C8", creditos:"3", horas:"3", cometario:"" },
+        { id: 5, nombre: "Programación II", semestre: "3", color:"#FBF9C8", creditos:"3", codigo:"785123", horas:"3", comentario:"yfgd" },
     ];
 
     const sumCreditos = materias.reduce((acumulador, materia) => acumulador + parseInt(materia.creditos), 0);
