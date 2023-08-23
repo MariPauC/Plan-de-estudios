@@ -143,9 +143,8 @@ export function FormularioUsuario ({ data, modoEdicion, setModoEdicion, setShowM
             const response = await axios.put(`/api/usuario/${data.idUsuario}`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
-                }
-            });
-            console.log('Usuario actualizado con éxito:', response.data);
+                }});
+            console.log('Usuario actualizado con éxito:');
             setModoEdicion(false);
             setShowMessage(true);
         } catch (error) {
