@@ -46,7 +46,7 @@ export function Login(){
                 <input 
                     type = "password" 
                     name= "contrasena"
-                    autocomplete="off"
+                    autoComplete="off"
                     value={valuesLogin.contrasena}
                     onChange={handleInputChangeLog}
                     required

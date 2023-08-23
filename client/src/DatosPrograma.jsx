@@ -71,7 +71,6 @@ export function DataProg({rol}){
             const data = dataArray[0]; // Obtenemos el primer objeto del arreglo
             if(data.pro_fechaReg){
                 fechaRegistro = ajustarFecha(data.pro_fechaReg);
-                console.log(fechaRegistro);
             }
             if(data.pro_fechaCalidad){
                 fechaCalidad = ajustarFecha(data.pro_fechaCalidad);

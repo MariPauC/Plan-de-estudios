@@ -4,8 +4,9 @@ import { PagAnterior, PagActual} from "./Breadcrumbs"
 import { TitulLine, TitulLineDec } from "./Titulo";
 import { BtnBgIcon, BtnBgSimple, Btnmin } from "./Button"
 import { Link, useParams  } from "react-router-dom";
-import { MdSchool, MdLibraryBooks, MdSupervisorAccount, MdSearch} from "react-icons/md";
-import { useState } from "react";
+import { MdSchool, MdLibraryBooks, MdSupervisorAccount } from "react-icons/md";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 export function InicioProg({rol}){
     const params = useParams();
@@ -35,18 +36,18 @@ export function InicioProg({rol}){
 
 export function InicioDec(){
     const [search, setSearch] = useState("");
+    const [programas, setProgramas] = useState([]);
     
-    const programas =[
-        { id: 1, nombre: "Ingeniería Ambiental"  },
-        { id: 2, nombre: "Ingeniería Biomédica" },
-        { id: 3, nombre: "Ingeniería Civil" },
-        { id: 4, nombre: "Ingeniería Industrial"},
-        { id: 5, nombre: "Ingeniería en Mecatrónica" },
-        { id: 6, nombre: "Ingeniería en Multimedia" },
-        { id: 7, nombre: "Ingeniería en Telecomunicaciones" },
-        { id: 8, nombre: "Tecnología en Electrónica y Comunicaciones" },
-    ];
-
+    useEffect(() => {
+        axios.get(`/api/listaProgramas`)
+        .then(response => {
+            setProgramas(response.data) ;
+        })
+        .catch(error => {
+            console.error('Error buscando datos del usuario:', error);
+        });
+    }, []);
+    
     const busqueda = (e) =>{
         setSearch(e.target.value);
     }
@@ -59,7 +60,7 @@ export function InicioDec(){
         dato.nombre.toLowerCase().includes(search.toLocaleLowerCase())
         );
     }
-
+    console.log(resultBusqueda)
     return(
         <>
         <HeaderPriv/>
@@ -80,7 +81,7 @@ export function InicioDec(){
             </div>
             
             <div className="infoAdmi">
-                {resultBusqueda.map((item) => ( <Link to={"/InicioProg/"+item.nombre.replace(/ /g, '-')+'/'+item.id} key={item.id}><BtnBgSimple  key={item.id} texto={item.nombre}/></Link>))}
+                {resultBusqueda.map((item) => ( <Link to={"/InicioProg/"+item.pro_nombre.replace(/ /g, '-')+'/'+item.idPrograma} key={item.idPrograma}><BtnBgSimple  key={item.idPrograma} texto={item.pro_nombre}/></Link>))}
             </div>
                 
         </div>

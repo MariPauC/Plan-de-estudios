@@ -66,6 +66,21 @@ router.put('/usuario/:idUsuario', upload.single('archivoFirma'), (req, res) => {
 
 module.exports = router;
 
+router.get('/listaProgramas', (req, res) => {
+        try{
+                pool.query('SELECT idPrograma, pro_nombre FROM programa', (err, results) => {
+                        if (err) {
+                                return res.status(500).json({ error: 'Error retrieving data from the database' });
+                        }
+                        res.json(results);
+                });
+        }
+        catch{
+                console.error('Error identificando programa:', error);
+                res.status(500).json({ error: 'Ha ocurrido un error identificando el listado de programas' });
+        }
+});
+
 
 router.get('/programa/:idPrograma', (req, res) => {
         try{
