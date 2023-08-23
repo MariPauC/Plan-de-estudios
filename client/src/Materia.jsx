@@ -64,7 +64,7 @@ export function MatPrivada({ data }){
     return (<>
     <div className="contMat_priv">
         <div className="mat_priv" onClick={() => setShowModal(true)}>
-            {data.comentario != null ? <div className="contIconComent"> <div className="iconComent">< MdInsertComment size="20px"/></div></div> : <></>}
+            {data.comentario ? <div className="contIconComent"> <div className="iconComent">< MdInsertComment size="20px"/></div></div> : null}
             <div className="titulo_materia"> 
                 <div>
                     <h4>Área:</h4> 

@@ -5,6 +5,7 @@ import { TitulLine, TitulLineDec } from "./Titulo";
 import { BtnBgIcon, BtnBgSimple, Btnmin } from "./Button"
 import { Link, useParams  } from "react-router-dom";
 import { MdSchool, MdLibraryBooks, MdSupervisorAccount, MdSearch} from "react-icons/md";
+import { useState } from "react";
 
 export function InicioProg({rol}){
     const params = useParams();
@@ -33,6 +34,8 @@ export function InicioProg({rol}){
 }
 
 export function InicioDec(){
+    const [search, setSearch] = useState("");
+    
     const programas =[
         { id: 1, nombre: "Ingeniería Ambiental"  },
         { id: 2, nombre: "Ingeniería Biomédica" },
@@ -43,7 +46,20 @@ export function InicioDec(){
         { id: 7, nombre: "Ingeniería en Telecomunicaciones" },
         { id: 8, nombre: "Tecnología en Electrónica y Comunicaciones" },
     ];
+
+    const busqueda = (e) =>{
+        setSearch(e.target.value);
+    }
     
+    let resultBusqueda = []
+    if(!search){
+        resultBusqueda = programas;
+    }else{
+        resultBusqueda = programas.filter( (dato) =>
+        dato.nombre.toLowerCase().includes(search.toLocaleLowerCase())
+        );
+    }
+
     return(
         <>
         <HeaderPriv/>
@@ -55,17 +71,16 @@ export function InicioDec(){
                     placeholder="Buscar" 
                     name="busqueda"
                     className="textBuscar"
+                    value={search}
+                    onChange={busqueda}
                 />
-                <button type="button" className="btnBuscar">
-                    <MdSearch/>
-                </button>
             </div>
             <div className="contBoton">
                 <Link to={"/DatosPrograma/crear"} ><Btnmin texto="Crear programa" color="#182B57"/></Link>
             </div>
             
             <div className="infoAdmi">
-                {programas.map((item) => ( <Link to={"/InicioProg/"+item.nombre.replace(/ /g, '-')+'/'+item.id} key={item.id}><BtnBgSimple  key={item.id} texto={item.nombre}/></Link>))}
+                {resultBusqueda.map((item) => ( <Link to={"/InicioProg/"+item.nombre.replace(/ /g, '-')+'/'+item.id} key={item.id}><BtnBgSimple  key={item.id} texto={item.nombre}/></Link>))}
             </div>
                 
         </div>
