@@ -15,7 +15,7 @@ export function TablaSimple({titulo, contenido}){
     )
 }
 
-export function Tabla({ estado, accion, data}){ 
+export function Tabla({ estado, accion, progId, progNombre,  data }){ 
     return(
         <table className="tabla">
             <thead className="tablaTtl">
@@ -28,32 +28,37 @@ export function Tabla({ estado, accion, data}){
                 </tr>
             </thead>
             <tbody>
-                {data.map((item) => ( <Columna key={item.id} data={item}/> ))}
+                {data.map((item) => ( <Columna key={item.idPlanEstudios} data={item} progId={progId} progNombre={progNombre}/> ))}
             </tbody>
         </table>
     )
 }
 
-export function Columna ({ data }) {
+export function Columna ({ data, progId, progNombre }) {
     let icono;
-    switch (data.estado) {
-        case "En desarrollo":
-            icono = <Link to='/editarPlan'><MdOutlineMode size={"25px"} style={{cursor:"pointer"}}/></Link>;
-            break;
-        case "En revisión":
-            icono = <MdOutlineEditOff size={"25px"} style={{color:"#BE0416", cursor:"no-drop"}}/>;
-            break;
-        default:
-            icono = <MdOutlineRemoveRedEye size={"25px"} style={{cursor:"pointer"}} />;
-            break;
+    
+    function ajustarFecha(fecha) {
+        if(fecha){
+            const ajuste =  new Date(fecha);
+            const fechaModificada = `${ajuste.getFullYear()}-${(ajuste.getMonth() + 1).toString().padStart(2, '0')}-${ajuste.getDate().toString().padStart(2, '0')}`;
+            return fechaModificada;
+        }
+        else{
+            return "-";
+        }
+        
     }
 
+    data.pln_estado === "En desarrollo" 
+    ? icono = <Link to={'/datosPlan/'+progNombre +'/'+ progId+'/'+ data.idPlanEstudios}><MdOutlineMode  className="iconTable" /></Link>
+    : icono = <MdOutlineRemoveRedEye  className="iconTable" style={{cursor:"pointer"}} />;
+
     return (
-        <tr>
-            <td>{data.nombre}</td>
-            <td>{data.apellido}</td>
-            <td>{data.edad}</td>
-            <td>{data.estado}</td>
+        <tr key={data.idPlanEstudios}>
+            <td>{ajustarFecha(data.pln_fechaCreacion)}</td>
+            <td>{ajustarFecha(data.pln_fechaCambio)}</td>
+            <td>{data.pln_usuCambio}</td>
+            <td className="estadoColumn">{data.pln_estado}</td>
             <td>{icono}</td>
         </tr>
     );

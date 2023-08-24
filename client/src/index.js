@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { PrivateUser } from "./PrivateUser"
+import { App } from "./App"
 import './index.css';
 import axios from 'axios';
 
@@ -13,7 +13,7 @@ const typeUser = true;
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <React.StrictMode>
-        <PrivateUser/>
+        <App/>
     </React.StrictMode>
 );
 

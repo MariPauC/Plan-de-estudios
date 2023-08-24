@@ -40,3 +40,17 @@
 .clmAccion{
     width: 8%;
 }
+
+.estadoColumn{
+    width: 16%;
+}
+
+.iconTable{
+    cursor:"pointer";
+    font-size: 25px;
+    color: #636161;
+}
+
+.iconTable:hover{
+    color: #e5b266;
+}

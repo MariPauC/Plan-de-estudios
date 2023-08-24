@@ -4,7 +4,7 @@ import { BrowserRouter } from "react-router-dom";
 import { UserRoutes } from "./Routes"
 
 
-export function PrivateUser(){
+export function App(){
     return(
         <>
         <BrowserRouter>

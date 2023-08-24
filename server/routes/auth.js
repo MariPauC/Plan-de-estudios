@@ -43,7 +43,7 @@ router.post('/login', async (req, res) => {
                 if (await bcrypt.compare(contrasena, results[0].usu_contrasena)) {
                     // Genera un token con el id del usuario
                     const token = jwt.sign({ idUsuario: results[0].idUsuario }, 'your_secret_key', { expiresIn: '1h' });
-                    res.json({ usuario: { id: results[0].idUsuario, rol: results[0].usu_rol}, token });
+                    res.json({ usuario: { id: results[0].idUsuario, rol: results[0].usu_rol }, token });
                     console.log('Login successful');
                 } else {
                     return res.status(401).json({ error: 'Correo o contraseña incorrectos' });

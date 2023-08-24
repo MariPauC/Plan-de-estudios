@@ -60,7 +60,7 @@ export function InicioDec(){
         dato.nombre.toLowerCase().includes(search.toLocaleLowerCase())
         );
     }
-    console.log(resultBusqueda)
+
     return(
         <>
         <HeaderPriv/>

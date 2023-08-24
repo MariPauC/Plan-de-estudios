@@ -77,3 +77,14 @@
 .btnDerecha{
     margin: -5px 0 5px 890px;
 }
+
+.mnsPlan{
+    background-color: #e7e7e767;
+    border-radius: 5px;
+    font-size: 20px;
+    text-align: center;
+    padding: 10px;
+    width: 98%;
+    height: 30px;
+    margin-top: 20px;
+}

@@ -19,10 +19,11 @@ export function BtnBgIcon({texto, tipo, icon }){
 }
 
 //Boton mediano con iconos
-export function BtnMdIcon({texto, tipo, icon}){
+export function BtnMdIcon({texto, tipo, icon, onClick}){
     return <button 
                 className="btn_md"
                 type={tipo}
+                onClick={onClick}
             >
         { icon }<p id="txtIcon">{texto}</p>
     </button>

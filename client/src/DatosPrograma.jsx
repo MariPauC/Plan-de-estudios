@@ -7,7 +7,7 @@ import { InputMd, SelectMd } from "./CuadrosTexto"
 import { Btnmin } from "./Button"
 import { MensajeCorrecto } from "./Mensaje";
 import { Link, useParams } from "react-router-dom";
-import { useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 import { createPortal } from 'react-dom';
 import axios from "axios";
 
@@ -92,14 +92,10 @@ export function DataProg({rol}){
     })
     .catch(error => {
         console.error('Error fetching programa details:', error);
-    });
-
-        }
-    }, [accion, idPrograma]);
+    });}}, [accion, idPrograma]);
 
     const handleFormD = async (e) =>{
         e.preventDefault();
-
         if(accion === "editar"){
             try {
                 const response = await axios.put(`/api/programa/${idPrograma}`, { valuesProgram });

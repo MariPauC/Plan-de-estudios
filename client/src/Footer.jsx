@@ -71,9 +71,5 @@ export function FootLg(){
                 </ul>
             </div>
         </div>
-        <div className="foot-mn"> 
-            < MdOutlineCopyright style={{color: 'white', fontSize: '140%'}} />
-            <p>2023 - Universidad Militar Nueva Granada</p>
-        </div>
     </footer>
 }
