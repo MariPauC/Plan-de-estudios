@@ -3,7 +3,7 @@ import { HeaderPriv } from "./Header";
 import { Titul } from "./Titulo";
 import { PagActual, PagAnterior } from "./Breadcrumbs"
 import { TablaSimple } from "./Table"
-import { InputMd, SelectMd } from "./CuadrosTexto"
+import { InputMd, SelectMd, InputMdBlock } from "./CuadrosTexto"
 import { Btnmin } from "./Button"
 import { MensajeCorrecto } from "./Mensaje";
 import { Link, useParams } from "react-router-dom";
@@ -65,10 +65,10 @@ export function DataProg({rol}){
     useEffect(() => {
         if (accion === "editar") {
             axios.get(`api/programa/${idPrograma}`)
-        .then(response => {
-        const dataArray = response.data; // La respuesta es un arreglo
-        if (dataArray.length > 0) {
-            const data = dataArray[0]; // Obtenemos el primer objeto del arreglo
+            .then(response => {
+            const dataArray = response.data; // La respuesta es un arreglo
+            if (dataArray.length > 0) {
+                const data = dataArray[0]; // Obtenemos el primer objeto del arreglo
             if(data.pro_fechaReg){
                 fechaRegistro = ajustarFecha(data.pro_fechaReg);
             }
@@ -81,6 +81,7 @@ export function DataProg({rol}){
                 codigoP: data.pro_SNIES,
                 modalidadP: data.pro_modalidad,
                 jornadaP:data.pro_jornada,
+                semestresP: data.pro_semestres,
                 regisCal: data.pro_regAcreditacion,
                 regisfecha: fechaRegistro,
                 acreditacion:data.pro_altaCalidad,
@@ -114,7 +115,6 @@ export function DataProg({rol}){
                 console.error('Error al crear el programa:', error);
             }
         }
-        console.log(valuesProgram)
     };
     
     return(
@@ -135,10 +135,16 @@ export function DataProg({rol}){
             <form onSubmit={handleFormD} >
                 <TablaSimple titulo="Información basica" 
                     contenido = {<>
-                        <InputMd texto = "Nombre:" name="nombreP" info={valuesProgram.nombreP} onChange={handleInputChangeD} required = {"required"}/>
-                        <InputMd texto = "SNIES:" tipo="number" name="codigoP" info={valuesProgram.codigoP} onChange={handleInputChangeD} required = {"required"}/>
+                        {accion === "editar" ? <InputMdBlock name="nombreP" texto = "Nombre:"  info={valuesProgram.nombreP} />
+                        : <InputMd texto = "Nombre:" name="nombreP" info={valuesProgram.nombreP} onChange={handleInputChangeD} required = {"required"}/>}
+                        
+                        
+                        {accion === "editar" ? <InputMdBlock name="codigoP" texto = "SNIES:" tipo="number" info={valuesProgram.codigoP} />
+                        : <InputMd texto = "SNIES:" tipo="number" name="codigoP" info={valuesProgram.codigoP} onChange={handleInputChangeD} required = {"required"}/>}
+                        
                         <SelectMd texto = "Jornada:" name="jornadaP" data={jornada} selectedValue={valuesProgram.jornadaP} onChange={handleInputChangeD} required={"required"}/>
                         <SelectMd texto = "Modalidad:" name="modalidadP" data={modalidad} selectedValue={valuesProgram.modalidadP} onChange={handleInputChangeD} required = {"required"}/>
+                        <InputMd texto = "Semestres:" tipo="number" name="semestresP" info={valuesProgram.semestresP} onChange={handleInputChangeD} required = {"required"}/>
                     </>
                     }
                 />

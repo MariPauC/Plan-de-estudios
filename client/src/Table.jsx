@@ -1,5 +1,5 @@
 import "./table.css"
-import { MdOutlineRemoveRedEye, MdOutlineMode, MdOutlineEditOff } from "react-icons/md";
+import { MdOutlineRemoveRedEye, MdOutlineMode, MdOutlineDeleteForever } from "react-icons/md";
 import { Link } from "react-router-dom";
 
 export function TablaSimple({titulo, contenido}){ 
@@ -46,7 +46,6 @@ export function Columna ({ data, progId, progNombre }) {
         else{
             return "-";
         }
-        
     }
 
     data.pln_estado === "En desarrollo" 
@@ -57,10 +56,28 @@ export function Columna ({ data, progId, progNombre }) {
         <tr key={data.idPlanEstudios}>
             <td>{ajustarFecha(data.pln_fechaCreacion)}</td>
             <td>{ajustarFecha(data.pln_fechaCambio)}</td>
-            <td>{data.pln_usuCambio}</td>
+            <td className="nombColumn">{data.usu_nombre + " " + data.usu_apellido}</td>
             <td className="estadoColumn">{data.pln_estado}</td>
             <td>{icono}</td>
         </tr>
     );
 };
 
+export function TablaMat({ data, onclick }){ 
+    return(
+        <table className="tablaMat">
+            <tbody>
+                {data.map((item) => ( <ColumnaMT key={item.idPlanEstudios} data={item} onclick={onclick} /> ))}
+            </tbody>
+        </table>
+    )
+}
+
+export function ColumnaMT ({ data, onclick  }) {
+    return (
+        <tr key={data.idPlanEstudios}>
+            <td>{data.nombre}</td>
+            <td onclick ={onclick} id="eliminarMat"> <MdOutlineDeleteForever /> </td>
+        </tr>
+    );
+};

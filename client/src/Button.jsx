@@ -39,12 +39,25 @@ export function BtnMd({texto, tipo, color}){
     </button>
 }
 
-export function Btnmin({texto, tipo, color, onClick}){
+export function Btnmin({texto, tipo, color, onClick, id}){
     return <button 
                 className="btn_mn" 
+                id={id}
                 type={tipo}
                 style={{backgroundColor: color}} 
                 onClick={onClick} 
+            >
+        <p>{texto}</p>
+    </button>
+}
+
+export function BtnminDis({texto, tipo, color, id}){
+    return <button 
+                className="btn_mn" 
+                id={id}
+                type={tipo}
+                style={{backgroundColor: color, cursor:"no-drop"}}  
+                disabled
             >
         <p>{texto}</p>
     </button>

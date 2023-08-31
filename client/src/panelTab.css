@@ -4,7 +4,7 @@
     position: relative;
     width: 100%;
     min-height: 345px;
-    margin: 20px auto ;
+    margin: 20px auto 30px ;
     border-bottom: 2px solid black;
 }
 
@@ -45,13 +45,6 @@
     display: none;
 }
 
-.contMaterias{
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: left;
-    margin-top: 5px;
-}
-
 .active-content {
     display: block;
 }
@@ -59,9 +52,17 @@
 .contSumas{
     display: flex;
     justify-content: flex-end;
-    margin-top: -6px;
+    margin: 30px 0 20px;
 }
 .contSumas div{
     margin-left: 30px;
     text-align: right;
+}
+
+.contComent{
+    text-align: left;
+    background-color: #E7E7E7;
+    border-radius: 15px;
+    margin-bottom: 25px;
+    padding: 2% 3%;
 }

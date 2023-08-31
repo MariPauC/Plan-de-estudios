@@ -28,7 +28,7 @@ export function UserRoutes(){
         <Routes>
             <Route path="/login" element={<Login/>}/>    
             <Route path="/registro" element={<RegistroUsuario/>}/>  
-            <Route path="/PlanEstudios" element={<PublicUser/>}/>  
+            <Route path="/PlanEstudios/:nombre/:id/:idPlan" element={<PublicUser/>}/>  
             { rol ?  <Route path="/inicioProg/:nombre/:id" element={<ProtectedRoute><InicioProg rol={rol}/></ProtectedRoute>}/>
             : <Route path="/" element={<ProtectedRoute><InicioProg rol={rol} /></ProtectedRoute>}/>}
             { rol && <Route path="/" element={<ProtectedRoute><InicioDec rol={rol}/></ProtectedRoute>}/>}

@@ -41,6 +41,10 @@
     width: 8%;
 }
 
+.nombColumn{
+    width: 30%;
+}
+
 .estadoColumn{
     width: 16%;
 }
@@ -53,4 +57,29 @@
 
 .iconTable:hover{
     color: #e5b266;
+}
+
+.tablaMat{
+    border-radius: 5px ;
+    min-height: 15px;
+    width: 47%;
+    margin:  2px 0;
+    border-collapse: separate;
+    border-spacing: 0 5px;
+}
+
+.tablaMat td  {
+    border: 2px solid black;
+    border-radius: 5px;
+    padding-left: 10px;
+    height: 30px;
+}
+
+#eliminarMat{
+    background-color:rgba(211, 90, 90, 0.564);
+    cursor: pointer;
+    text-align: center;
+    padding-left: 0;
+    width: 12%;
+    font-size: 22px;
 }

@@ -74,3 +74,7 @@
 .btn_mnIcon:hover{
     transform: scale(1.1);
 }
+
+#mgnMN{
+    margin-top: 5px;
+}

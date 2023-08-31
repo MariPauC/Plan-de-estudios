@@ -22,7 +22,9 @@
 
 .contMaterias{
     display: flex;
-    justify-content: space-between;
+    flex-wrap: wrap;
+    justify-content: left;
+    margin-top: 5px;
 }
 
 .contSemestre{
@@ -43,12 +45,13 @@
     align-items: center;
 }
 
-.mat_pub, .mat_priv{
+.mat_pub ,.mat_priv{
     width: 280px;
     margin-top: 20px;
     cursor: pointer;
     position:relative;
 }
+
 
 .mat_pub:hover, .mat_priv:hover{
     transform: scale(1.1);
@@ -78,10 +81,18 @@
 }
 
 .info_materia{
-    padding: 8% 0 8% 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     text-align: center;
+    padding: 0 3%;
+    height: 90px;
     border-radius: 0 0 15px 15px;
     margin-bottom: 1.5%;
+}
+
+.info_materia p{
+    margin-top: 5px;
 }
 
 .total_materia{

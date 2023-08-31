@@ -1,8 +1,13 @@
 import "./modal.css"
 import { MdOutlineCancel } from "react-icons/md";
-import { InputSh, SelectSh, TextSh } from "./CuadrosTexto";
+import { InputSh, SelectSh, TextSh  } from "./CuadrosTexto";
 import { Btnmin } from "./Button";
-import { useState } from "react";
+import { TablaMat } from "./Table"
+import { MensajeCorrecto } from "./Mensaje";
+import { useState, useEffect, useContext } from "react";
+import { createPortal } from 'react-dom';
+import { AuthContext } from './AuthContext';
+import axios from "axios";
 
 export function MatPubModal({ onClose, nm, cl, hr, cds, cdg }){
     return (
@@ -54,14 +59,39 @@ export function MatPubModal({ onClose, nm, cl, hr, cds, cdg }){
     );
 };
 
-export function MatPrivModal({ onClose, data }){
+export function MatPrivModal({ onClose, idMateria, idPlan, numSemestres, accion, cargar, materias }){
+    const [showMessage, setShowMessage] = useState(false);
+    const [idPlanEstudios, setIdPlanEstudios] = useState(idPlan);
+    const [prerequisitos, setPrerequisitos] = useState([]);
+    const [correquisitos, setCorrequisitos] = useState([]);
+    const [valuesMateria, setValuesMateria] = useState({
+        nombre: "",
+        codigo: "",
+        semestre: "",
+        horas: "",
+        tipo: "",
+        creditos: "",
+        descripcion: "",
+        area: "",
+    });
+
+    const { usuario } = useContext(AuthContext);
+    const idUsuario = usuario.idUsuario;
+
+    const semestres = [];
+    const listadoPre = materias.map((materia) => ({ id: materia.idMateria, nombre: materia.mat_nombre }));;
+    const listadoCo = materias.map((materia) => ({ id: materia.idMateria, nombre: materia.mat_nombre }));;
+    var tablaPre = []
+    var tablaCo= [];
+
+    for (let i = 1; i <= numSemestres; i++) {
+    semestres.push({ id: i, nombre: i });
+    }
+
     const tipoAsignatura = [
-        { id: 1, nombre: "Ciencias basicas" },
-        { id: 2, nombre: "Ciencias de la ingeniería" },
-        { id: 3, nombre: "Ingeniería aplicada" },
-        { id: 4, nombre: "Economico administrativa" },
-        { id: 5, nombre: "Socio-Humanistica" },
-        { id: 6, nombre: "Complementaria" },
+        { id: 1, nombre: "Teórica" },
+        { id: 2, nombre: "Práctica" },
+        { id: 3, nombre: "Teórico-Práctica" },
     ]
     const area = [
         { id: 1, nombre: "Ciencias basicas" },
@@ -72,16 +102,50 @@ export function MatPrivModal({ onClose, data }){
         { id: 6, nombre: "Complementaria" },
     ]
 
-    var [valuesMateria, setValuesMateria] = useState({
-        nombre: data.nombre,
-        codigo: data.codigo,
-        horas: data.horas,
-        tipo: "Ingeniería aplicada",
-        creditos: data.creditos,
-        descripcion: data.descripcion,
-        comentario: data.comentario,
-    });
+    const prueba = [
+        { id: 1, nombre: "jeje" },
+        { id: 2, nombre: "de" },
+
+    ]
+    const prueba2 = [
+        { id: 1, nombre: "jeje" },
+        { id: 2, nombre: "de" },
+
+    ]
+
+   
     
+    useEffect(() => {
+        if (accion === "editar") {
+            axios.get(`api/materia/${idMateria}`)
+            .then(response => {
+            const dataArray = response.data; // La respuesta es un arreglo
+            if (dataArray.length > 0) {
+                const materia = dataArray[0]; // Obtenemos el primer objeto del arreglo
+                setValuesMateria({
+                    nombre: materia.mat_nombre,
+                    codigo: materia.mat_codigo,
+                    horas: materia.mat_horas,
+                    semestre:  materia.mat_semestre,
+                    tipo:  materia.mat_tipo,
+                    creditos:  materia.mat_creditos,
+                    descripcion:  materia.mat_descripcion,
+                    area: materia.area_id,
+                });
+                setIdPlanEstudios(materia.plan_id)
+                
+        } 
+    })
+    .catch(error => {
+        console.error('Error fetching materia details:', error);
+    });}}, [accion]);
+    
+    const closeModal = (e) => {
+        setShowMessage(false);
+        onClose(cargar);
+        onClose(onClose);
+    };
+
     const handleInputChangeM = (e) => {
         const { name, value } = e.target;
         setValuesMateria({
@@ -90,51 +154,99 @@ export function MatPrivModal({ onClose, data }){
         });
     };
 
-    const handleFormM = (e) =>{
-        e.preventDefault();
-        console.log(valuesMateria)
+    const handleSelectPre = (e) => {
+        const { value } = e.target;
+        console.log(value);
     };
+
+    const handleSelectCo = (e) => {
+        const { value } = e.target;
+        setCorrequisitos(correquisitos.concat(value))
+        
+        tablaCo = listadoCo.filter((materia) => correquisitos.includes(materia.id));
+
+        
+        
+    };
+
+    const handleFormM = async (e) =>{
+        e.preventDefault();
+        if(accion === "editar"){
+            try {
+                const response = await axios.put(`/api/materia/${idMateria}`, { valuesMateria });
+                console.log('Materia actualizada con éxito');
+                setShowMessage(true);
+            } catch (error) {
+                console.error('Error al actualizar la materia:', error);
+            }
+        }
+        else{
+            try {
+                const response = await axios.post(`/api/materia/${idPlanEstudios}`, { valuesMateria });
+                console.log('Materia creada con éxito');
+                setShowMessage(true);
+            } catch (error) {
+                console.error('Error al crear la materia:', error);
+            }
+        }
+        try {
+            const response = await axios.put(`/api/modificarPlan/${idPlanEstudios}`, { idUsuario });
+            console.log('Plan actualizado con éxito');
+        } catch (error) {
+            console.error('Error al actualizar el plan:', error);
+        }
+    };
+
+    const deleteMateria = async (e) =>{
+        e.preventDefault();
+        try {
+            const response = await axios.delete(`/api/materia/${idMateria}`);
+            console.log('Materia eliminada con éxito');
+        } catch (error) {
+            console.error('Error al actualizar el plan:', error);
+        }
+        onClose(cargar);
+        onClose(onClose);
+    }
     
     return (
+        <>
         <div className="modal" >
-            <div className="contModal">
-                <div className="ttlModal">
-                    <h2>Datos de la materia</h2>
-                    <MdOutlineCancel className="btnClose"  size="30px" onClick={onClose}/>
-                </div>
-                <form>
-                <div className="infModalPriv">
-                    <InputSh texto = "Nombre:" name="nombre" info={data.nombre} onChange={handleInputChangeM}/>
-                    <InputSh texto = "Código:" name="codigo" info={data.codigo} onChange={handleInputChangeM}/>
-                    <SelectSh texto = "Tipo asignatura:" name="tipo" data={tipoAsignatura} onChange={handleInputChangeM}/>
-                    <div className="dobleInput">
-                        <InputSh texto = "Créditos:" name="creditos" info={data.creditos} onChange={handleInputChangeM}/>
-                        <InputSh texto = "Horas:" name="horas" info={data.horas} onChange={handleInputChangeM}/>
-                    </div>
-                    <SelectSh texto = "Área conocimientos:" id="big" name="tipo" data={area} onChange={handleInputChangeM}/>
-                    <TextSh texto = "Descripción:" id="big" row="3" name="descripcion" info={data.descripcion} onChange={handleInputChangeM}/>
-                    <div className="dobleBtnModal">
-                        <Btnmin texto="Eliminar" tipo="button" color="#BE0416"/>
-                        <Btnmin texto="Guardar" color="#182B57" tipo="submit"/>
-                    </div>
-                </div>
-                {data.comentario ? 
-                <div className="contComent">
-                    <TextSh 
-                        texto = "Comentario:" 
-                        id="big" row="3" 
-                        name="comentario" 
-                        info={data.comentario} 
-                        onChange={handleInputChangeM} 
-                        cursor = "not-allowed"
-                        readonly/>
-                </div>
-                
-                : null}
-                
-                
-                </form>
-            </div>
+            {console.log(correquisitos)}
+            {console.log("datosTabla"+tablaCo)}
         </div>
+        <div className="contModal" id="modalPrivado">
+            <div className="ttlModal">
+                <h2>Datos de la materia</h2>
+                <MdOutlineCancel className="btnClose" style={{cursor:"pointer"}} size="30px" onClick={onClose}/>
+            </div>
+            <form onSubmit={handleFormM}>
+                <div className="infModalPriv">
+                    <InputSh texto = "Nombre:" name="nombre" info={valuesMateria.nombre} onChange={handleInputChangeM} required = {"required"}/>
+                    <InputSh texto = "Código:" name="codigo" info={valuesMateria.codigo} onChange={handleInputChangeM} tipo="number" required = {"required"}/>
+                    <SelectSh texto = "Tipo asignatura:" name="tipo" data={tipoAsignatura} selectedValue={valuesMateria.tipo} onChange={handleInputChangeM} required = {"required"}/>
+                    <SelectSh texto = "Semestre:" name="semestre" data={semestres} selectedValue={valuesMateria.semestre} onChange={handleInputChangeM} required = {"required"}/>
+                    <InputSh texto = "Créditos:" name="creditos" info={valuesMateria.creditos} onChange={handleInputChangeM} tipo="number" required = {"required"}/>
+                    <InputSh texto = "Horas:" name="horas" info={valuesMateria.horas} onChange={handleInputChangeM} tipo="number" required = {"required"}/>
+                    <SelectSh valueid={true} texto = "Prerequisito:"  name="pre" data={listadoPre} onChange={handleSelectPre} />
+                    <SelectSh valueid={true} texto = "Correquisito:"  name="co" data={listadoCo} onChange={handleSelectCo}/>
+                    <TablaMat data={prueba}/>
+                    <TablaMat data={tablaCo}/>
+                    <SelectSh valueid={true} texto = "Área conocimientos:" id="big" name="area" data={area} selectedValue={valuesMateria.area} onChange={handleInputChangeM} required = {"required"}/>
+                    <TextSh texto = "Descripción:" id="big" row="3" name="descripcion" info={valuesMateria.descripcion} onChange={handleInputChangeM} required = {"required"}/>
+                    <div className="dobleBtnModal">
+                        {accion === "editar" ? <Btnmin texto="Eliminar" tipo="button" color="#BE0416" onClick={deleteMateria}/> 
+                        : <Btnmin texto="Cancelar" tipo="button" color="#BE0416" onClick={onClose}/> }
+                    <Btnmin texto="Guardar" color="#182B57" tipo="submit"/>
+                    </div>
+                </div>
+            </form>
+        </div>
+        
+        {showMessage && createPortal(
+        <MensajeCorrecto onClose={closeModal} />,
+        document.body
+        )}
+        </>
     );
 };

@@ -1,5 +1,5 @@
 import "./mensaje.css"
-import {MdClose, MdCheckCircleOutline} from "react-icons/md"
+import { MdCheckCircleOutline} from "react-icons/md"
 
 export function MensajeCorrecto({ onClose }){
     return (

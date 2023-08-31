@@ -1,23 +1,27 @@
 .modal {
     width: 100%;
-    height: 100%;
+    height: 100vh;
     position: fixed;
     top:0;
     left: 0;
     background: rgba(0, 0, 0, .3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
 }
 
 .contModal{
-    
-    width: 700px;
+    position: absolute;
+    top: 50% ;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60%;
     min-height: 200px;
     box-shadow: rgba(100, 100, 111, 0.3) 0px 7px 29px 0px;
     background-color: white;
     border-radius: 15px;
+    text-align: center;
+}
+
+#modalPrivado{
+    top:calc(env(safe-area-inset-top) + 50% );
 }
 
 .ttlModal{
@@ -114,10 +118,3 @@
     margin-top: -8px;
 }
 
-.contComent{
-    text-align: left;
-    background-color: #E7E7E7;
-    border-top: 2px solid black;
-    border-radius: 0 0 15px 15px;
-    padding: 1% 4%;
-}
