@@ -204,14 +204,13 @@ router.get('/planesEstudios/:idPrograma/:estado', (req, res) => {
         }
 });
 
-router.post('/planesEstudios/:idPrograma', async (req, res) => { 
+router.post('/crearPlan/:idPrograma', async (req, res) => { 
         const idPrograma = req.params.idPrograma;
-        const { nombreUsuario } = req.body;
-        console.log("nombre:"+nombreUsuario);
+        const { idUsuario } = req.body;
         var fechaActual = new Date();
         try {
-                pool.query( 'INSERT INTO planestudios (pro_id, pln_estado, pln_fechaCreacion, pln_usuCambio) VALUES (?,?,?,?)',
-                [ idPrograma, "En desarrollo", fechaActual, nombreUsuario ],
+                pool.query( 'INSERT INTO planestudios (pro_id, pln_estado, pln_fechaCreacion, usuCambio_id) VALUES (?,?,?,?)',
+                [ idPrograma, "En desarrollo", fechaActual, idUsuario ],
                 async (err) => {
                         if (err) {
                         console.error('Error registering plan:', err);

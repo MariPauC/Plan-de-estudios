@@ -50,7 +50,7 @@ export function Columna ({ data, progId, progNombre }) {
 
     data.pln_estado === "En desarrollo" 
     ? icono = <Link to={'/datosPlan/'+progNombre +'/'+ progId+'/'+ data.idPlanEstudios}><MdOutlineMode  className="iconTable" /></Link>
-    : icono = <MdOutlineRemoveRedEye  className="iconTable" style={{cursor:"pointer"}} />;
+    : icono = <Link to={'/PlanEstudios/'+ progNombre +'/'+ progId+'/'+ data.idPlanEstudios}><MdOutlineRemoveRedEye  className="iconTable" style={{cursor:"pointer"}} /></Link>;
 
     return (
         <tr key={data.idPlanEstudios}>

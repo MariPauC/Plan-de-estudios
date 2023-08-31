@@ -17,6 +17,7 @@ export function PlanEst({rol}){
     const idPrograma = params.id;
     
     const { usuario } = useContext(AuthContext);
+    const idUsuario = usuario.idUsuario;
     const [planesDesarrollo, setPlanesDesarrollo] = useState([]);
     const [planesActual, setPlanesActual] = useState([]);
     const [planesAntiguo, setPlanesAntiguo] = useState([]);
@@ -53,11 +54,7 @@ export function PlanEst({rol}){
     
     const createPlan = async () => {
         try {
-            const response = await axios.get(`/api/usuNombre/${usuario.idUsuario}`);
-            const nombreUsuario = response.data;
-            const responsePlan = await axios.post(`/api/planesEstudios/${idPrograma}`, { nombreUsuario });
-
-            console.log(responsePlan.data.message); // Muestra el mensaje de éxito
+            const responsePlan = await axios.post(`/api/crearPlan/${idPrograma}`, { idUsuario });
         } catch (error) {
             console.error('Error logging in:', error);
         }
