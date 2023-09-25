@@ -1,6 +1,6 @@
 import "./modal.css"
-import { MdOutlineCancel } from "react-icons/md";
-import { InputSh, SelectSh, TextSh  } from "./CuadrosTexto";
+import { MdOutlineClose } from "react-icons/md";
+import { InputSh, InputLg, SelectSh, TextSh } from "./CuadrosTexto";
 import { Btnmin } from "./Button";
 import { TablaMat } from "./Table"
 import { MensajeCorrecto } from "./Mensaje";
@@ -9,47 +9,82 @@ import { createPortal } from 'react-dom';
 import { AuthContext } from './AuthContext';
 import axios from "axios";
 
-export function MatPubModal({ onClose, nm, cl, hr, cds, cdg }){
+export function MatPubModal({ onClose, idMateria, area, color}){
+    const [valuesMateria, setValuesMateria] = useState({
+        nombre: "",
+        codigo: "",
+        semestre: "",
+        horas: "",
+        tipo: "",
+        creditos: "",
+        descripcion: "",
+    });
+    useEffect(() => {
+            axios.get(`api/materia/${idMateria}`)
+            .then(response => {
+            const dataArray = response.data; // La respuesta es un arreglo
+            if (dataArray.length > 0) {
+                const materia = dataArray[0]; // Obtenemos el primer objeto del arreglo
+                setValuesMateria({
+                    nombre: materia.mat_nombre,
+                    codigo: materia.mat_codigo,
+                    horas: materia.mat_horas,
+                    semestre:  materia.mat_semestre,
+                    tipo:  materia.mat_tipo,
+                    creditos:  materia.mat_creditos,
+                    descripcion:  materia.mat_descripcion,
+                });
+            } 
+        })
+        .catch(error => {
+            console.error('Error fetching materia details:', error);
+        });}, []);
+    
+    
     return (
         <div className="modal">
             <div className="contModal">
                 <div className="ttlModal">
-                    <h3>Semestre 3</h3>
+                    <h3>Semestre { valuesMateria.semestre }</h3>
                     <div> 
-                        <p>Horas: { hr }</p>
+                        <p>Horas: { valuesMateria.horas }</p>
                         <hr className="lateral"/>
-                        <p>Créditos: { cds }</p>
+                        <p>Créditos: { valuesMateria.creditos }</p>
                     </div>
                 </div>
-                <div className="nmModal" style={{backgroundColor: cl}}>
-                    <h1>{nm}</h1>
-                    <p>{ cdg }</p>
+                <div className="nmModal" style={{backgroundColor: color}}>
+                    <h1>{valuesMateria.nombre}</h1>
+                    <p>{ valuesMateria.codigo }</p>
                 </div>
-                <div className="infModal">
+                <div className="infModal" id="matPublica">
                     <div>
-                        <h4>Área del conocimiento:</h4>
-                        <p> wedwqertfasdewr</p>
+                        <h3>Área del conocimiento:</h3>
+                        <p> {area}</p>
+                    </div>
+                    <hr className="lateral"/>
+                    <div>
+                        <h3>Tipo asignatura:</h3>
+                        <p> {valuesMateria.tipo} </p>
                     </div>
                     <div>
-                        <h4>Tipo asignatura:</h4>
-                        <p> wqerfsewdqavreav </p>
-                    </div>
-                    <div>
-                        <h4>Prerequisito:</h4>
+                        <h3>Prerequisito:</h3>
                         <p> 2sdasdddfgdf </p>
                     </div>
+                    <hr className="lateral"/>
                     <div>
-                        <h4>Co-requisito:</h4>
+                        <h3>Co-requisito:</h3>
                         <p> ryresvtybhdfgvsec </p>
                     </div>
+                    
                     <div id="resumen">
-                        <h4>Resumen:</h4>
-                        <p> ryrdsfzaxxsdcfv sd asdasces vtybhdfgvsec ryrdsfzaxxsdcfv sd asdasces vtybhdfgvsecryrdsfzaxxsdcfv sd asdasces vtybhdfgvsecryrdsfzaxxsdcfv sd asdasces vtybhdfgvsec </p>
+                        <hr className="arriba"/>
+                        <h3>Descripción:</h3>
+                        <p> {valuesMateria.descripcion} </p>
                     </div>
                 </div>
-                <button className="btnModal" style={{backgroundColor:cl}} 
+                <button className="btnModal" style={{backgroundColor:color}} 
                     onMouseOver={ e => e.target.style.backgroundColor = "#E7E7E7" }
-                    onMouseLeave={ e => e.target.style.backgroundColor = cl }
+                    onMouseLeave={ e => e.target.style.backgroundColor = color }
                     onClick={onClose}
                 >
                     Cerrar
@@ -134,13 +169,12 @@ export function MatPrivModal({ onClose, idMateria, idPlan, numSemestres, accion,
                 });
                 setIdPlanEstudios(materia.plan_id)
                 
-        } 
-    })
-    .catch(error => {
-        console.error('Error fetching materia details:', error);
-    });}}, [accion]);
-    
-    const closeModal = (e) => {
+            } 
+        })
+        .catch(error => {
+            console.error('Error fetching materia details:', error);
+        });}}, [accion]);
+        const closeModal = (e) => {
         setShowMessage(false);
         onClose(cargar);
         onClose(onClose);
@@ -211,14 +245,11 @@ export function MatPrivModal({ onClose, idMateria, idPlan, numSemestres, accion,
     
     return (
         <>
-        <div className="modal" >
-            {console.log(correquisitos)}
-            {console.log("datosTabla"+tablaCo)}
-        </div>
+        <div className="modal"></div>
         <div className="contModal" id="modalPrivado">
-            <div className="ttlModal">
+            <div className="ttlModal" id="ttlPrivado">
                 <h2>Datos de la materia</h2>
-                <MdOutlineCancel className="btnClose" style={{cursor:"pointer"}} size="30px" onClick={onClose}/>
+                <MdOutlineClose className="btnClose" style={{cursor:"pointer"}} size="30px" onClick={onClose}/>
             </div>
             <form onSubmit={handleFormM}>
                 <div className="infModalPriv">
@@ -241,6 +272,100 @@ export function MatPrivModal({ onClose, idMateria, idPlan, numSemestres, accion,
                     </div>
                 </div>
             </form>
+        </div>
+        
+        {showMessage && createPortal(
+        <MensajeCorrecto onClose={closeModal} />,
+        document.body
+        )}
+        </>
+    );
+};
+
+export function UsuarioModal({ onClose, data }){
+    const { registrar } = useContext(AuthContext);
+    var [valuesRegistro, setvaluesRegistro] = useState({
+        nombre: "",
+        apellido: "",
+        correo:"",
+        contrasena: "",
+        confirmacion: "",
+    });
+
+    const handleInputChangeCon = (e) => {
+        const { name, value } = e.target;
+        setvaluesRegistro({
+            ...valuesRegistro,
+            [name]: value,
+        });
+    };
+    
+    const [contrasenasMatch, setContrasenasMatch] = useState(true);
+
+    const handleSubmit= async (event) => {
+        event.preventDefault();
+
+        if (valuesRegistro.contrasena === valuesRegistro.confirmacion) {
+            registrar(valuesRegistro.nombre, valuesRegistro.apellido,valuesRegistro.correo, valuesRegistro.contrasena);
+            setContrasenasMatch(true);
+        } else {
+            setContrasenasMatch(false);
+        }
+    };
+    
+    return (
+        <>
+        <div className="modal"></div>  
+        <div className="contModal">
+            <div className="ttlModal" id="ttlPrivado">
+                <h2>Datos de la materia</h2>
+                <MdOutlineClose className="btnClose" style={{cursor:"pointer"}} size="30px" onClick={onClose}/>
+            </div>
+            <div className="infModal" id="matPublica">
+                <div className="formUsuario">
+                    <form onSubmit={handleSubmit}>
+                    <h3 className="ttlAdmi">Registro de usuario</h3>
+                    <InputLg 
+                        texto = "Nombres:" 
+                        name="nombre"
+                        value={valuesRegistro.nombre} 
+                        onChange={handleInputChangeCon}
+                    />
+                    <InputLg 
+                        texto = "Apellidos:" 
+                        name="apellido"
+                        value={valuesRegistro.apellido} 
+                        onChange={handleInputChangeCon}
+                    />
+                    <InputLg 
+                        texto = "Correo:" 
+                        tipo="email" 
+                        name="correo"
+                        value={valuesRegistro.correo} 
+                        onChange={handleInputChangeCon}
+                    />
+                    <InputLg 
+                        texto = "Contraseña:" 
+                        tipo="password" 
+                        name="contrasena"
+                        value={valuesRegistro.contrasena} 
+                        onChange={handleInputChangeCon}
+                        autocomplete="new-password"
+                    />
+                    <InputLg 
+                        texto = "Confirmar contraseña:" 
+                        tipo="password" 
+                        name="confirmacion"
+                        value={valuesRegistro.confirmacion} 
+                        onChange={handleInputChangeCon}
+                        autocomplete="new-password"
+                    />
+                    {!contrasenasMatch && <span style={{color:'red'}}>Las contraseñas no coinciden</span>}
+                    <Btnmin tipo="submit" texto="Registrarse" color="#182B57"/>
+                    {mensajeRegistro && <p>{mensajeRegistro}</p>}
+                    </form>
+                </div>
+            </div>
         </div>
         
         {showMessage && createPortal(

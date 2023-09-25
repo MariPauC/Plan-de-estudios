@@ -1,0 +1,33 @@
+.contInfo{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    margin: auto;
+    width: 84%;
+    margin-top: 3%;
+}
+
+.contAreas{
+    width: 45%;
+}
+
+.tblAreas{
+    font-size: 20px;
+    margin-bottom: 10px;
+    border-collapse: separate;
+    border-spacing: 15px;
+}
+
+.areColor{
+    width: 15%;
+}
+
+.totales{
+    width: 45%;
+}
+
+
+.totales p{
+    margin-bottom: 15px;
+    font-size: 20px;
+}

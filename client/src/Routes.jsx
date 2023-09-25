@@ -1,9 +1,9 @@
 
 import { AuthContext } from './AuthContext';
 import { Login } from "./Login"
-import { RegistroUsuario } from "./Registro"
+import { ListaUsuarios } from "./Usuarios"
 import { PublicUser } from "./PublicUser"
-import { InicioProg, InicioDec } from "./Inicio"
+import { InicioProg, InicioPrin } from "./Inicio"
 import { PlanEst } from "./PlanesEstudio"
 import { EditarPlanEst } from "./EditarPlan"
 import { DataProg } from "./DatosPrograma"
@@ -18,7 +18,7 @@ export function UserRoutes(){
     
     const {usuario} = useContext(AuthContext)
     if (usuario){
-        if(usuario.usu_rol === "Decano"){
+        if(usuario.usu_rol === "Decano" || usuario.usu_rol === "Administrador"){
             rol = true;
         }
     }
@@ -27,12 +27,13 @@ export function UserRoutes(){
     return(
         <Routes>
             <Route path="/login" element={<Login/>}/>    
-            <Route path="/registro" element={<RegistroUsuario/>}/>  
-            <Route path="/PlanEstudios/:nombre/:id/:idPlan" element={<PublicUser/>}/>  
+            <Route path="/usuarios" element={<ListaUsuarios/>}/>  
+            <Route path="/PlanEstudios/:nombre/:idPlan" element={<PublicUser rol={rol}/>}/> 
+            <Route path="/datosPlan/:nombre?/:id/:idPlan?" element={<ProtectedRoute><EditarPlanEst rol={rol}/></ProtectedRoute>}/>
             { rol ?  <Route path="/inicioProg/:nombre/:id" element={<ProtectedRoute><InicioProg rol={rol}/></ProtectedRoute>}/>
             : <Route path="/" element={<ProtectedRoute><InicioProg rol={rol} /></ProtectedRoute>}/>}
-            { rol && <Route path="/" element={<ProtectedRoute><InicioDec rol={rol}/></ProtectedRoute>}/>}
-            <Route path="/planesEstudios/:nombre/:id" element={<ProtectedRoute><PlanEst rol={rol}/></ProtectedRoute>}/>
+            { rol && <Route path="/" element={<ProtectedRoute><InicioPrin rol={rol}/></ProtectedRoute>}/>}
+            <Route path="/listadoPlanes/:nombre/:id" element={<ProtectedRoute><PlanEst rol={rol}/></ProtectedRoute>}/>
             <Route path="/datosPlan/:nombre?/:id/:idPlan?" element={<ProtectedRoute><EditarPlanEst rol={rol}/></ProtectedRoute>}/>
             <Route path="/datosPrograma/:accion/:nombre?/:id?" element={<ProtectedRoute><DataProg rol={rol}/></ProtectedRoute>}/>
             <Route path="/directoresPrograma/:nombre/:id" element={<ProtectedRoute><DirctProg/></ProtectedRoute>}/>

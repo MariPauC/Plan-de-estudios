@@ -64,25 +64,6 @@ router.put('/usuario/:idUsuario', upload.single('archivoFirma'), (req, res) => {
         }
 });
 
-router.get('/usuNombre/:idUsuario', (req, res) => {
-        try {
-                const idUsuario = req.params.idUsuario;
-                pool.query('SELECT * FROM usuario WHERE idUsuario = ?', [idUsuario], async (err, results) => {
-                        if (err) {
-                        return res.status(500).json({ error: 'Error retrieving data from the database' });
-                        }
-                        if (results.length > 0) {
-                        const nombreUsuario = results[0].usu_nombre + " " + results[0].usu_apellido;
-                        res.send(nombreUsuario); // Enviar el nombre directamente como respuesta
-                        console.log('Login successful');
-                        }
-                });
-                } catch (error) {
-                console.error('Error identificando usuario:', error);
-                res.status(500).json({ error: 'Ha ocurrido un error identificando el usuario' });
-        }
-});
-
 router.get('/listaProgramas', (req, res) => {
         try{
                 pool.query('SELECT idPrograma, pro_nombre FROM programa', (err, results) => {
@@ -101,7 +82,27 @@ router.get('/listaProgramas', (req, res) => {
 router.get('/semestresProg/:idPrograma', (req, res) => {
         try{
                 const idPrograma = req.params.idPrograma;
-                pool.query('SELECT pro_semestres FROM programa where idPrograma=(?)', [idPrograma], (err, results) => {
+                pool.query('SELECT pro_semestres FROM programa where idPrograma =(?)', [idPrograma], (err, results) => {
+                        if (err) {
+                                return res.status(500).json({ error: 'Error retrieving data from the database' });
+                        }
+                        if (results.length > 0) {
+                                const numSemestres = results[0];
+                                res.send(numSemestres); // Enviar el nombre directamente como respuesta
+                                console.log('Login successful');
+                        }
+                });
+        }
+        catch{
+                console.error('Error identificando programa:', error);
+                res.status(500).json({ error: 'Ha ocurrido un error identificando el programa' });
+        }
+});
+
+router.get('/semestresPlan/:idPlan', (req, res) => {
+        try{
+                const idPlan = req.params.idPlan;
+                pool.query('SELECT pln_semestres FROM planestudios where idPlanEstudios =(?)', [idPlan], (err, results) => {
                         if (err) {
                                 return res.status(500).json({ error: 'Error retrieving data from the database' });
                         }
@@ -137,29 +138,87 @@ router.get('/programa/:idPrograma', (req, res) => {
 router.put('/programa/:idPrograma', (req, res) => {
         const idPrograma = req.params.idPrograma;
         const { valuesProgram } = req.body;
-        if(!valuesProgram.regisfecha){
-                valuesProgram.regisfecha=null;
+
+        if (!valuesProgram.regisfecha) {
+                valuesProgram.regisfecha = null;
         }
-        if(!valuesProgram.acreditafecha){
-                valuesProgram.acreditafecha=null;
+        if (!valuesProgram.acreditafecha) {
+                valuesProgram.acreditafecha = null;
         }
-        try {
-                pool.query('UPDATE programa SET pro_nombre=?, pro_SNIES=?, pro_modalidad=?, pro_jornada=?, pro_regAcreditacion=?, pro_fechaReg=?, pro_altaCalidad=?, pro_fechaCalidad=?, pro_semestres=? WHERE idPrograma = ?;',
-                [valuesProgram.nombreP, valuesProgram.codigoP, valuesProgram.modalidadP, valuesProgram.jornadaP, valuesProgram.regisCal, valuesProgram.regisfecha, valuesProgram.acreditacion, valuesProgram.acreditafecha, valuesProgram.semestresP, idPrograma], (err) => {
+
+        pool.query(
+                'SELECT idPlanEstudios FROM planestudios WHERE pro_id = ? AND pln_estado = "En desarrollo" LIMIT 1',
+                [idPrograma],
+                (err, results) => {
                 if (err) {
-                        console.error('Error al actualizar el programa:', err);
+                        console.error('Error al consultar el plan de estudios en desarrollo:', err);
                         res.status(500).json({ error: 'Ha ocurrido un error al actualizar el programa' });
+                        return;
+                }
+
+                if (results.length > 0) {
+                        const planEnDesarrolloId = results[0].idPlanEstudios;
+
+                        pool.query(
+                        'UPDATE planestudios SET pln_semestres = ? WHERE idPlanEstudios = ?;',
+                        [valuesProgram.semestresP, planEnDesarrolloId],
+                        (err) => {
+                                if (err) {
+                                console.error('Error al actualizar el plan de estudios en desarrollo:', err);
+                                res.status(500).json({ error: 'Ha ocurrido un error al actualizar el programa' });
+                                } else {
+                                
+                                pool.query(
+                                        'UPDATE programa SET pro_nombre=?, pro_SNIES=?, pro_modalidad=?, pro_jornada=?, pro_regAcreditacion=?, pro_fechaReg=?, pro_altaCalidad=?, pro_fechaCalidad=?, pro_semestres=? WHERE idPrograma = ?;',
+                                        [
+                                        valuesProgram.nombreP,
+                                        valuesProgram.codigoP,
+                                        valuesProgram.modalidadP,
+                                        valuesProgram.jornadaP,
+                                        valuesProgram.regisCal,
+                                        valuesProgram.regisfecha,
+                                        valuesProgram.acreditacion,
+                                        valuesProgram.acreditafecha,
+                                        valuesProgram.semestresP, 
+                                        idPrograma,
+                                        ],
+                                        (err) => {
+                                                if (err) {
+                                                console.error('Error al actualizar el programa:', err);
+                                                res.status(500).json({ error: 'Ha ocurrido un error al actualizar el programa' });
+                                                } else {
+                                                res.json({ message: 'Programa actualizado correctamente' });
+                                                }
+                                        }
+                                );
+                        }
+                });
                 } else {
-                        res.json({ message: 'Programa actualizado correctamente' });
+                        pool.query(
+                        'UPDATE programa SET pro_nombre=?, pro_SNIES=?, pro_modalidad=?, pro_jornada=?, pro_regAcreditacion=?, pro_fechaReg=?, pro_altaCalidad=?, pro_fechaCalidad=?, pro_semestres=? WHERE idPrograma = ?;',
+                        [
+                                valuesProgram.nombreP,
+                                valuesProgram.codigoP,
+                                valuesProgram.modalidadP,
+                                valuesProgram.jornadaP,
+                                valuesProgram.regisCal,
+                                valuesProgram.regisfecha,
+                                valuesProgram.acreditacion,
+                                valuesProgram.acreditafecha,
+                                valuesProgram.semestresP,
+                                idPrograma,
+                        ],
+                        (err) => {
+                                if (err) {
+                                console.error('Error al actualizar el programa:', err);
+                                res.status(500).json({ error: 'Ha ocurrido un error al actualizar el programa' });
+                                } else {
+                                res.json({ message: 'Programa actualizado correctamente' });
+                                }
+                        });
                 }
         });
-                
-        } catch (error) {
-                console.error('Error al actualizar el programa:', error);
-                res.status(500).json({ error: 'Ha ocurrido un error al actualizar el programa' });
-        }
-});
-
+});    
 router.post('/programa', async (req, res) => { //Falta modificar
         const { valuesProgram } = req.body;
         try {
@@ -186,7 +245,7 @@ router.post('/programa', async (req, res) => { //Falta modificar
         }
 });
 
-router.get('/planesEstudios/:idPrograma/:estado', (req, res) => {
+router.get('/estadoPlan/:idPrograma/:estado', (req, res) => {
         const idPrograma = req.params.idPrograma;
         const estado = req.params.estado;
         try{
@@ -204,13 +263,31 @@ router.get('/planesEstudios/:idPrograma/:estado', (req, res) => {
         }
 });
 
+router.get('/programaPlan/:idPlan', (req, res) => {
+        const idPlan = req.params.idPlan;
+        try{
+                pool.query('SELECT idPrograma, pro_nombre FROM planestudios INNER JOIN programa ON idPrograma = pro_id WHERE idPlanEstudios = ?', 
+                [idPlan], (err, results) => {
+                        if (err) {
+                                return res.status(500).json({ error: 'Error retrieving data from the database' });
+                        }
+                        res.json(results);
+                });
+        }
+        catch{
+                console.error('Error identificando plan de estudios:', error);
+                res.status(500).json({ error: 'Ha ocurrido un error identificando el listado de programas' });
+        }
+});
+
 router.post('/crearPlan/:idPrograma', async (req, res) => { 
         const idPrograma = req.params.idPrograma;
-        const { idUsuario } = req.body;
+        const { idUsuario,  numSemestre } = req.body;
         var fechaActual = new Date();
-        try {
-                pool.query( 'INSERT INTO planestudios (pro_id, pln_estado, pln_fechaCreacion, usuCambio_id) VALUES (?,?,?,?)',
-                [ idPrograma, "En desarrollo", fechaActual, idUsuario ],
+        console.log(idUsuario);
+        try {   
+                pool.query( 'INSERT INTO planestudios (pro_id, pln_estado, pln_fechaCreacion, pln_semestres, usuCambio_id) VALUES (?,?,?,?,?)',
+                [ idPrograma, "En desarrollo", fechaActual,  numSemestre, idUsuario ],
                 async (err) => {
                         if (err) {
                         console.error('Error registering plan:', err);
@@ -342,7 +419,7 @@ router.get('/listaAreas', (req, res) => {
 router.get('/listaMaterias/:idPlan', (req, res) => {
         const idPlan = req.params.idPlan;
         try{
-                pool.query('SELECT a.idMateria, a.mat_nombre, a.mat_codigo, a.mat_semestre , a.mat_horas, a.mat_creditos, b.are_iniciales, b.are_color FROM materia a INNER JOIN areaconocimiento b ON  b.idArea = a.area_id WHERE a.plan_id = ?',[idPlan],(err, results) => {
+                pool.query('SELECT a.idMateria, a.mat_nombre, a.mat_codigo, a.mat_semestre , a.mat_horas, a.mat_creditos,  b.are_nombre, b.are_iniciales, b.are_color FROM materia a INNER JOIN areaconocimiento b ON  b.idArea = a.area_id WHERE a.plan_id = ?',[idPlan],(err, results) => {
                         if (err) {
                                 return res.status(500).json({ error: 'Error retrieving data from the database' });
                         }
@@ -434,5 +511,51 @@ router.delete('/materia/:idMateria', async (req, res) => {
         }
 });
 
+router.get('/areasPlan/:idPlan', (req, res) => {
+        const idPlan = req.params.idPlan;
+        try{
+                pool.query('SELECT  DISTINCT idArea, are_nombre, are_color FROM areaconocimiento INNER JOIN materia ON area_id = idArea INNER JOIN planestudios ON idPlanestudios = plan_id WHERE idPlanEstudios = ?',[idPlan],(err, results) => {
+                        if (err) {
+                                return res.status(500).json({ error: 'Error retrieving data from the database' });
+                        }
+                        res.json(results);
+                });
+        }
+        catch{
+                console.error('Error identificando el listado de materias:', error);
+                res.status(500).json({ error: 'Ha ocurrido un error identificando el listado de materias' });
+        }
+});
+
+router.get('/infoPlan/:idPrograma', (req, res) => {
+        const idPrograma = req.params.idPrograma;
+        try{
+                pool.query('SELECT pro_SNIES, pro_modalidad, pro_jornada, pro_regAcreditacion, pro_fechaReg, pro_altaCalidad, pro_fechaCalidad FROM programa WHERE idPrograma = 1 = ?',[idPrograma],(err, results) => {
+                        if (err) {
+                                return res.status(500).json({ error: 'Error retrieving data from the database' });
+                        }
+                        res.json(results);
+                });
+        }
+        catch{
+                console.error('Error identificando el listado de materias:', error);
+                res.status(500).json({ error: 'Ha ocurrido un error identificando el listado de materias' });
+        }
+});
+
+router.get('/listaUsuario', (req, res) => {
+        try{
+                pool.query('SELECT idusuario, usu_correo, usu_nombre, usu_apellido, usu_documento, usu_rol FROM usuario',(err, results) => {
+                        if (err) {
+                                return res.status(500).json({ error: 'Error retrieving data from the database' });
+                        }
+                        res.json(results);
+                });
+        }
+        catch{
+                console.error('Error identificando el listado de materias:', error);
+                res.status(500).json({ error: 'Ha ocurrido un error identificando el listado de materias' });
+        }
+});
 
 module.exports = router;

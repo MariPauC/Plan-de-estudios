@@ -59,6 +59,11 @@
     color: #e5b266;
 }
 
+.tamIcono{
+    width: 10%;
+}
+
+
 .tablaMat{
     border-radius: 5px ;
     min-height: 15px;

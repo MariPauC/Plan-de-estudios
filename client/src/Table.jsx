@@ -1,6 +1,6 @@
 import "./table.css"
 import { MdOutlineRemoveRedEye, MdOutlineMode, MdOutlineDeleteForever } from "react-icons/md";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export function TablaSimple({titulo, contenido}){ 
     return(
@@ -28,14 +28,25 @@ export function Tabla({ estado, accion, progId, progNombre,  data }){
                 </tr>
             </thead>
             <tbody>
-                {data.map((item) => ( <Columna key={item.idPlanEstudios} data={item} progId={progId} progNombre={progNombre}/> ))}
+                {data.map((item) => ( <Fila key={item.idPlanEstudios} data={item} progId={progId} progNombre={progNombre}/> ))}
             </tbody>
         </table>
     )
 }
 
-export function Columna ({ data, progId, progNombre }) {
+export function Fila ({  progId, progNombre, data }) {
     let icono;
+    const nombre = progNombre;
+    const navigate = useNavigate();
+
+    const verPlan = () =>{
+        console.log(progId);
+        navigate(`/planEstudios/${nombre}/${data.idPlanEstudios}`);
+    }
+
+    const editarPlan = () =>{
+        navigate(`/datosPlan/${progNombre}/${progId}/${data.idPlanEstudios}`);
+    }
     
     function ajustarFecha(fecha) {
         if(fecha){
@@ -49,8 +60,8 @@ export function Columna ({ data, progId, progNombre }) {
     }
 
     data.pln_estado === "En desarrollo" 
-    ? icono = <Link to={'/datosPlan/'+progNombre +'/'+ progId+'/'+ data.idPlanEstudios}><MdOutlineMode  className="iconTable" /></Link>
-    : icono = <Link to={'/PlanEstudios/'+ progNombre +'/'+ progId+'/'+ data.idPlanEstudios}><MdOutlineRemoveRedEye  className="iconTable" style={{cursor:"pointer"}} /></Link>;
+    ? icono = <MdOutlineMode  className="iconTable" onClick={editarPlan}/>
+    : icono = <MdOutlineRemoveRedEye  className="iconTable" style={{cursor:"pointer"}} onClick={verPlan}/> ;
 
     return (
         <tr key={data.idPlanEstudios}>
@@ -67,17 +78,57 @@ export function TablaMat({ data, onclick }){
     return(
         <table className="tablaMat">
             <tbody>
-                {data.map((item) => ( <ColumnaMT key={item.idPlanEstudios} data={item} onclick={onclick} /> ))}
+                {data.map((item) => ( <FilaMT key={item.idPlanEstudios} data={item} onclick={onclick} /> ))}
             </tbody>
         </table>
     )
 }
 
-export function ColumnaMT ({ data, onclick  }) {
+export function FilaMT ({ data, onclick  }) {
     return (
         <tr key={data.idPlanEstudios}>
             <td>{data.nombre}</td>
             <td onclick ={onclick} id="eliminarMat"> <MdOutlineDeleteForever /> </td>
         </tr>
+    );
+};
+
+
+export function AutoTabla({ titulos, data, tipo }){ 
+    const ttl = [];
+
+    for (let i = 0; i < titulos.length; i++) {
+        ttl.push(
+            <th>{titulos[i]}</th>
+        );
+        
+    }
+
+    return(
+        <table className="tabla">
+            <thead className="tablaTtl">
+                <tr>
+                    {ttl}
+                    
+                </tr>
+            </thead>
+            <tbody>
+                {tipo === "usuario" &&  < FilaUsuarios data={data}/> }
+            </tbody>
+        </table>
+    )
+}
+
+export function FilaUsuarios ({ data }) {
+    console.log(data);
+    return (
+        <> {data.map((item) => ( 
+            <tr key={item.idUsuario}>
+                <td>{item.usu_nombre+" "+item.usu_apellido}</td>
+                <td>{item.usu_correo}</td>
+                <td>{item.usu_rol}</td>
+                <td className="tamIcono" > <MdOutlineDeleteForever className="iconTable" /> </td>
+            </tr>
+        ))}</>
     );
 };

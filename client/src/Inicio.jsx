@@ -4,8 +4,9 @@ import { PagAnterior, PagActual} from "./Breadcrumbs"
 import { TitulLine, TitulLineDec } from "./Titulo";
 import { BtnBgIcon, BtnBgSimple, Btnmin } from "./Button"
 import { Link, useParams  } from "react-router-dom";
-import { MdSchool, MdLibraryBooks, MdSupervisorAccount } from "react-icons/md";
-import { useState, useEffect } from "react";
+import { MdSchool, MdLibraryBooks, MdSupervisorAccount, MdOutlineCoPresent, MdOutlineImportContacts, MdOutlineCorporateFare } from "react-icons/md";
+import { useState, useEffect, useContext } from "react";
+import { AuthContext } from './AuthContext';
 import axios from "axios";
 
 export function InicioProg({rol}){
@@ -26,18 +27,21 @@ export function InicioProg({rol}){
         <div className="contAdm">
             <div className="infoAdmi" >
                 <Link to={"/DatosPrograma/editar/"+nombrePrograma+'/'+idPrograma}><BtnBgIcon icon = <MdSchool size="75px"/> texto="Datos del programa"/></Link>
-                <Link to={"/PlanesEstudios/"+nombrePrograma+'/'+idPrograma}><BtnBgIcon icon= <MdLibraryBooks  size="70px" /> texto="Planes de estudio"/></Link>
-                {rol ? <Link to={"/directoresPrograma/"+nombrePrograma+'/'+idPrograma}><BtnBgIcon icon= <MdSupervisorAccount size="75px"/> texto="Directores"/></Link> : ""}
+                <Link to={"/listadoPlanes/"+nombrePrograma+'/'+idPrograma}><BtnBgIcon icon= <MdLibraryBooks  size="70px" /> texto="Planes de estudio"/></Link>
+                {rol && <Link to={"/directoresPrograma/"+nombrePrograma+'/'+idPrograma}><BtnBgIcon icon= <MdSupervisorAccount size="75px"/> texto="Directores"/></Link>}
             </div>
         </div>
         </>
     )
 }
 
-export function InicioDec(){
+export function InicioPrin(){
     const [search, setSearch] = useState("");
     const [programas, setProgramas] = useState([]);
-    
+
+    const { usuario } = useContext(AuthContext);
+    const usuRol = usuario.usu_rol;
+
     useEffect(() => {
         axios.get(`/api/listaProgramas`)
         .then(response => {
@@ -64,8 +68,11 @@ export function InicioDec(){
     return(
         <>
         <HeaderPriv/>
-        <TitulLineDec titulo="Programas académicos" subt="Facultad ingeniería" />
+        {usuRol === "Decano" ? <TitulLineDec titulo="Programas académicos" subt="Facultad ingeniería" />
+        : <TitulLineDec titulo="Configuración del sistema" subt="Administrador" />
+        }
         <div className="contAdm">
+            {usuRol === "Decano" &&  <>
             <div className="barraBusqueda">
                 <input 
                     type="search"
@@ -79,11 +86,20 @@ export function InicioDec(){
             <div className="contBoton">
                 <Link to={"/DatosPrograma/crear"} ><Btnmin texto="Crear programa" color="#182B57"/></Link>
             </div>
+            </>}
             
             <div className="infoAdmi">
-                {resultBusqueda.map((item) => ( <Link to={"/InicioProg/"+item.pro_nombre.replace(/ /g, '-')+'/'+item.idPrograma} key={item.idPrograma}><BtnBgSimple  key={item.idPrograma} texto={item.pro_nombre}/></Link>))}
-            </div>
+                {usuRol === "Decano" 
+                ? resultBusqueda.map((item) => ( <Link to={"/InicioProg/"+item.pro_nombre.replace(/ /g, '-')+'/'+item.idPrograma} key={item.idPrograma}><BtnBgSimple  key={item.idPrograma} texto={item.pro_nombre}/></Link>))
                 
+                : <>
+                <Link to={"/usuarios"}><BtnBgIcon icon= <MdSupervisorAccount size="75px"/> texto="Lista de usuarios"/></Link>
+                <Link to={""}><BtnBgIcon icon= <MdOutlineCorporateFare size="70px"/> texto="Facultades"/></Link>
+                <Link to={""}><BtnBgIcon icon= <MdOutlineCoPresent size="70px"/> texto="Directores"/></Link>
+                <Link to={""}><BtnBgIcon icon= <MdOutlineImportContacts size="70px"/> texto="Áreas del conocimiento"/></Link>
+                </>}
+
+            </div>
         </div>
         </>
     )
