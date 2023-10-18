@@ -31,7 +31,7 @@
 }
 
 .cont_md input, .cont_lg input, .cont_sh input {
-    border: 2px black solid;
+    border: 2px rgb(199, 197, 197) solid;
     border-radius: 7px;
     height: 32px;
     width: 100%;
@@ -41,10 +41,9 @@
 }
 
 .cont_sh textarea{
-    border: 2px black solid;
+    border: 2px rgb(199, 197, 197) solid;
     border-radius: 7px;
     width: 100%;
-    
     padding: 5px 10px;
     font-size: 16px;
     box-sizing: border-box;
@@ -71,7 +70,7 @@
 }
 
 .cont_md select, .cont_lg select, .cont_sh select{
-    border: 2px black solid;
+    border: 2px rgb(199, 197, 197) solid;
     border-radius: 7px;
     width: 100%;
     padding-left: 5px;

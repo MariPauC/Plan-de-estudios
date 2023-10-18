@@ -1,6 +1,9 @@
 import "./table.css"
 import { MdOutlineRemoveRedEye, MdOutlineMode, MdOutlineDeleteForever } from "react-icons/md";
-import { Link, useNavigate } from "react-router-dom";
+import { UsuarioModal, AreaModal } from "./Modal"
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { createPortal } from 'react-dom';
 
 export function TablaSimple({titulo, contenido}){ 
     return(
@@ -15,7 +18,7 @@ export function TablaSimple({titulo, contenido}){
     )
 }
 
-export function Tabla({ estado, accion, progId, progNombre,  data }){ 
+export function Tabla({ estado, accion, progId, progNombre, data }){ 
     return(
         <table className="tabla">
             <thead className="tablaTtl">
@@ -34,7 +37,7 @@ export function Tabla({ estado, accion, progId, progNombre,  data }){
     )
 }
 
-export function Fila ({  progId, progNombre, data }) {
+export function Fila ({ progId, progNombre, data }) {
     let icono;
     const nombre = progNombre;
     const navigate = useNavigate();
@@ -94,7 +97,7 @@ export function FilaMT ({ data, onclick  }) {
 };
 
 
-export function AutoTabla({ titulos, data, tipo }){ 
+export function AutoTabla({ titulos, data, tipo, cargar }){ 
     const ttl = [];
 
     for (let i = 0; i < titulos.length; i++) {
@@ -105,6 +108,7 @@ export function AutoTabla({ titulos, data, tipo }){
     }
 
     return(
+        <div className="contTabla">
         <table className="tabla">
             <thead className="tablaTtl">
                 <tr>
@@ -113,22 +117,65 @@ export function AutoTabla({ titulos, data, tipo }){
                 </tr>
             </thead>
             <tbody>
-                {tipo === "usuario" &&  < FilaUsuarios data={data}/> }
+                {tipo === "usuario" &&  < FilaUsuarios data={data} cargar={cargar}/> }
+                {tipo === "area" &&  < FilaAreas data={data} cargar={cargar}/> }
             </tbody>
         </table>
+        </div>
     )
 }
 
-export function FilaUsuarios ({ data }) {
-    console.log(data);
+export function FilaUsuarios ({ data, cargar }) {
+    const [showModal, setShowModal] = useState(false);
+    const [selectedUserId, setSelectedUserId] = useState(null);
+
+    const mostrarModal = (userId) => {
+        setSelectedUserId(userId);
+        setShowModal(true);
+        document.body.scrollTop = 0; // Para Safari
+        document.documentElement.scrollTop = 0; // Para Chrome, Firefox, IE y Opera
+    };
+
     return (
         <> {data.map((item) => ( 
-            <tr key={item.idUsuario}>
+            <tr key={item.idusuario}>
                 <td>{item.usu_nombre+" "+item.usu_apellido}</td>
                 <td>{item.usu_correo}</td>
                 <td>{item.usu_rol}</td>
-                <td className="tamIcono" > <MdOutlineDeleteForever className="iconTable" /> </td>
+                <td className="tamIcono" onClick={() => mostrarModal(item.idusuario)}> <MdOutlineMode className="iconTable" style={{cursor:"pointer"}} /> </td>
             </tr>
-        ))}</>
+            ))}
+            {showModal && createPortal(
+                <UsuarioModal onClose={() => setShowModal(false)} idUsuario={selectedUserId} cargar={cargar}/>,
+                document.body
+            )}
+        </>
+    );
+};
+
+export function FilaAreas ({ data, cargar }) {
+    const [showModal, setShowModal] = useState(false);
+    const [selectedAreaId, setSelectedAreaId] = useState(null);
+    
+    const mostrarModal = (areaId) => {
+        setSelectedAreaId(areaId);
+        setShowModal(true);
+        document.body.scrollTop = 0; // Para Safari
+        document.documentElement.scrollTop = 0; // Para Chrome, Firefox, IE y Opera
+    };
+    return (
+        <> {data.map((item) => ( 
+            <tr key={item.idArea}>
+                <td>{item.are_nombre}</td>
+                <td>{item.are_iniciales}</td>
+                <td style={{backgroundColor:item.are_color}} >{item.are_color}</td>
+                <td onClick={() => mostrarModal(item.idArea)} className="tamIcono" > <MdOutlineMode className="iconTable" style={{cursor:"pointer"}} /> </td>
+            </tr>
+            ))}
+            {showModal && createPortal(
+                <AreaModal onClose={() => setShowModal(false)} idArea={selectedAreaId} cargar={cargar}/>,
+                document.body
+            )}
+        </>
     );
 };

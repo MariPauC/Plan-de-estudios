@@ -23,9 +23,9 @@ const AuthProvider = ({ children }) => {
         }
     };
 
-    const registrar = async (nombre, apellido, correo, contrasena) => {
+    const registrar = async (nombre, apellido, correo, contrasena, documento, rol) => {
         try {
-            const response = await axios.post('/api/auth/registro', { nombre, apellido, correo, contrasena }); // Replace with your backend login route
+            const response = await axios.post('/api/auth/registro', { nombre, apellido, correo, contrasena, documento, rol}); // Replace with your backend login route
         } catch (error) {
             console.error('Error logging in:', error);
             setUsuario(null);

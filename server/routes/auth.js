@@ -7,10 +7,11 @@ const router = express.Router();
 // Registro
 router.post('/registro', async (req, res) => {
     try {
-        const { nombre, apellido, correo, contrasena } = req.body;
+        const { nombre, apellido, correo, contrasena, documento, rol } = req.body;
         const hashedContrasena = await bcrypt.hash(contrasena, 10);
-        pool.query( 'INSERT INTO usuario (usu_correo, usu_contrasena, usu_nombre, usu_apellido) VALUES (?,?,?,?)',
-            [correo, hashedContrasena, nombre, apellido],
+
+        pool.query( 'INSERT INTO usuario (usu_correo, usu_contrasena, usu_nombre, usu_apellido, usu_documento, usu_rol) VALUES (?,?,?,?,?,?)',
+            [correo, hashedContrasena, nombre, apellido, documento, rol],
             async (err) => {
                 if (err) {
                     console.error('Error registering user:', err);
@@ -21,6 +22,7 @@ router.post('/registro', async (req, res) => {
                 res.status(200).json({ message: 'Usuario registrado exitosamente' });
             }
         );
+        
     } catch (error) {
         console.error('Error registering user:', error);
         res.status(500).json({ error: 'An error occurred while registering user' });

@@ -10,16 +10,6 @@ export function TitulLine( {titulo, subt} ){
     )
 }
 
-export function TitulLineDec( {titulo, subt} ){
-    return(
-        <div className="contTitulLDec">
-            <h1> {titulo} </h1>
-            <h2> {subt} </h2>
-            <hr/>
-        </div>
-    )
-}
-
 export function Titul( {titulo, subt} ){
     return(
         <div className="contTitul">

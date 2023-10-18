@@ -2,6 +2,7 @@
 import { AuthContext } from './AuthContext';
 import { Login } from "./Login"
 import { ListaUsuarios } from "./Usuarios"
+import { ListaAreas } from "./Areas"
 import { PublicUser } from "./PublicUser"
 import { InicioProg, InicioPrin } from "./Inicio"
 import { PlanEst } from "./PlanesEstudio"
@@ -26,9 +27,10 @@ export function UserRoutes(){
     
     return(
         <Routes>
-            <Route path="/login" element={<Login/>}/>    
-            <Route path="/usuarios" element={<ListaUsuarios/>}/>  
+            <Route path="/login" element={<Login/>}/>   
             <Route path="/PlanEstudios/:nombre/:idPlan" element={<PublicUser rol={rol}/>}/> 
+            <Route path="/usuarios" element={<ProtectedRoute><ListaUsuarios/></ProtectedRoute>}/> 
+            <Route path="/areasConocimiento" element={<ProtectedRoute><ListaAreas/></ProtectedRoute>}/>  
             <Route path="/datosPlan/:nombre?/:id/:idPlan?" element={<ProtectedRoute><EditarPlanEst rol={rol}/></ProtectedRoute>}/>
             { rol ?  <Route path="/inicioProg/:nombre/:id" element={<ProtectedRoute><InicioProg rol={rol}/></ProtectedRoute>}/>
             : <Route path="/" element={<ProtectedRoute><InicioProg rol={rol} /></ProtectedRoute>}/>}

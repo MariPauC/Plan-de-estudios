@@ -1,7 +1,7 @@
 import "./privateUser.css"
 import { HeaderPriv } from "./Header";
 import { PagAnterior, PagActual} from "./Breadcrumbs"
-import { TitulLine, TitulLineDec } from "./Titulo";
+import { TitulLine } from "./Titulo";
 import { BtnBgIcon, BtnBgSimple, Btnmin } from "./Button"
 import { Link, useParams  } from "react-router-dom";
 import { MdSchool, MdLibraryBooks, MdSupervisorAccount, MdOutlineCoPresent, MdOutlineImportContacts, MdOutlineCorporateFare } from "react-icons/md";
@@ -13,16 +13,23 @@ export function InicioProg({rol}){
     const params = useParams();
     const nombrePrograma = params.nombre;
     const idPrograma = params.id;
+
+    if(rol){
+
+    }
+    else{
+        
+    }
     
     return(
         <>
         <HeaderPriv/>
-        {rol ?<><div className="contBread">
+        {rol ? <><div className="contBread">
                 <PagAnterior ruta="/" pagina="Menú principal"/> 
                 <PagActual pagina="Programa"/>
                 </div><TitulLine titulo={nombrePrograma.replace(/-/g,' ')} subt="Facultad ingeniería"/>
             </>
-        : <TitulLineDec titulo="Ingeniería en Multimedia" subt="Facultad ingeniería"/>}
+        : <><div className="contBread"><PagActual pagina="Menú principal"/></div><TitulLine titulo="Ingeniería en Multimedia" subt="Facultad ingeniería"/></>}
         
         <div className="contAdm">
             <div className="infoAdmi" >
@@ -68,8 +75,11 @@ export function InicioPrin(){
     return(
         <>
         <HeaderPriv/>
-        {usuRol === "Decano" ? <TitulLineDec titulo="Programas académicos" subt="Facultad ingeniería" />
-        : <TitulLineDec titulo="Configuración del sistema" subt="Administrador" />
+        <div className="contBread">
+                <PagActual pagina="Menú principal"/> 
+        </div>
+        {usuRol === "Decano" ? <TitulLine titulo="Programas académicos" subt="Facultad ingeniería" />
+        : <TitulLine titulo="Configuración" subt="Elementos del sistema"/>
         }
         <div className="contAdm">
             {usuRol === "Decano" &&  <>
@@ -95,8 +105,7 @@ export function InicioPrin(){
                 : <>
                 <Link to={"/usuarios"}><BtnBgIcon icon= <MdSupervisorAccount size="75px"/> texto="Lista de usuarios"/></Link>
                 <Link to={""}><BtnBgIcon icon= <MdOutlineCorporateFare size="70px"/> texto="Facultades"/></Link>
-                <Link to={""}><BtnBgIcon icon= <MdOutlineCoPresent size="70px"/> texto="Directores"/></Link>
-                <Link to={""}><BtnBgIcon icon= <MdOutlineImportContacts size="70px"/> texto="Áreas del conocimiento"/></Link>
+                <Link to={"/areasConocimiento"}><BtnBgIcon icon= <MdOutlineImportContacts size="70px"/> texto="Áreas del conocimiento"/></Link>
                 </>}
 
             </div>

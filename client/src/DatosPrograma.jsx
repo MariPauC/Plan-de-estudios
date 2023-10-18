@@ -150,8 +150,8 @@ export function DataProg({rol}){
                 />
                 <TablaSimple titulo="Registro calificado"
                     contenido = {<>
-                        <InputMd texto = "Resolución:" name="regisCal" info={valuesProgram.regisCal} onChange={handleInputChangeD}/>
-                        <InputMd texto = "Fecha:" tipo="date" name="regisfecha" info={valuesProgram.regisfecha} onChange={handleInputChangeD}/>
+                        <InputMd texto = "Resolución:" name="regisCal" info={valuesProgram.regisCal} onChange={handleInputChangeD} required = {"required"}/>
+                        <InputMd texto = "Fecha:" tipo="date" name="regisfecha" info={valuesProgram.regisfecha} onChange={handleInputChangeD} required = {"required"}/>
                     </>
                     }
                 />

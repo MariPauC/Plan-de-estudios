@@ -27,12 +27,10 @@ router.get('/usuario/:idUsuario', (req, res) => {
 
 router.put('/usuario/:idUsuario', upload.single('archivoFirma'), (req, res) => {
         const idUsuario = req.params.idUsuario;
-        const { nombre, apellido, documento, archivoActual } = req.body;
+        const { nombre, apellido, documento, archivoActual, rol } = req.body;
         try {
-                console.log(archivoActual);
                 if (req.file) {
                         const archivoNuevo = req.file.filename; 
-                        console.log(req.file.filename)
                         const sql = 'UPDATE usuario SET usu_nombre = ?, usu_apellido = ?, usu_documento = ?, usu_firma = ? WHERE idUsuario = ?';
                         pool.query(sql, [nombre, apellido, documento, archivoNuevo, idUsuario], (err, result) => {
                         if (err) {
@@ -43,24 +41,51 @@ router.put('/usuario/:idUsuario', upload.single('archivoFirma'), (req, res) => {
                                 if(archivoActual){
                                         fs.unlinkSync("./uploads/"+archivoActual);
                                 }
-                                console.log("Guarddado con imagen");
                         }
                         });
                 } else {
-                        const sql = 'UPDATE usuario SET usu_nombre = ?, usu_apellido = ?, usu_documento = ? WHERE idUsuario = ?';
-                        pool.query(sql, [nombre, apellido, documento, idUsuario], (err, result) => {
-                        if (err) {
-                                console.error('Error al actualizar el usuario:', err);
-                                res.status(500).json({ error: 'Ha ocurrido un error al actualizar el usuario' });
-                        } else {
-                                res.json({ message: 'Usuario actualizado correctamente (sin imagen)' });
-                                console.log("Guardado sin imagen");
+                        if(rol){
+                                const sql = 'UPDATE usuario SET usu_nombre = ?, usu_apellido = ?, usu_documento = ?, usu_rol = ? WHERE idUsuario = ?';
+                                pool.query(sql, [nombre, apellido, documento, rol, idUsuario], (err, result) => {
+                                if (err) {
+                                        console.error('Error al actualizar el usuario:', err);
+                                        res.status(500).json({ error: 'Ha ocurrido un error al actualizar el usuario' });
+                                } else {
+                                        res.json({ message: 'Usuario actualizado correctamente (sin imagen)' });
+                                }
+                                });
                         }
-                        });
+                        else{
+                                const sql = 'UPDATE usuario SET usu_nombre = ?, usu_apellido = ?, usu_documento = ? WHERE idUsuario = ?';
+                                pool.query(sql, [nombre, apellido, documento, idUsuario], (err, result) => {
+                                if (err) {
+                                        console.error('Error al actualizar el usuario:', err);
+                                        res.status(500).json({ error: 'Ha ocurrido un error al actualizar el usuario' });
+                                } else {
+                                        res.json({ message: 'Usuario actualizado correctamente (sin imagen)' });
+                                }
+                                });
+                        }
                 }
         } catch (error) {
                 console.error('Error al actualizar el usuario:', error);
                 res.status(500).json({ error: 'Ha ocurrido un error al actualizar el usuario' });
+        }
+});
+
+router.delete('/usuario/:idUsuario', (req, res) => {
+        try{
+                const idUsuario = req.params.idUsuario;
+                pool.query('DELETE FROM usuario WHERE idUsuario = ?', [idUsuario], async (err, results) => {
+                        if (err) {
+                                return res.status(500).json({ error: 'Error retrieving data from the database' });
+                        }
+                        res.json(results);
+                });
+        }
+        catch{
+                console.error('Error identificando usuario:', error);
+                res.status(500).json({ error: 'Ha ocurrido un error identificando el usuario' });
         }
 });
 
@@ -89,7 +114,6 @@ router.get('/semestresProg/:idPrograma', (req, res) => {
                         if (results.length > 0) {
                                 const numSemestres = results[0];
                                 res.send(numSemestres); // Enviar el nombre directamente como respuesta
-                                console.log('Login successful');
                         }
                 });
         }
@@ -109,7 +133,6 @@ router.get('/semestresPlan/:idPlan', (req, res) => {
                         if (results.length > 0) {
                                 const numSemestres = results[0];
                                 res.send(numSemestres); // Enviar el nombre directamente como respuesta
-                                console.log('Login successful');
                         }
                 });
         }
@@ -235,8 +258,6 @@ router.post('/programa', async (req, res) => { //Falta modificar
                         console.error('Error registering program:', err);
                         return res.status(500).json({ error: 'Error registering program' });
                         }
-                        console.log('Programa registrado');
-                        // Envía una respuesta de éxito al cliente
                         res.status(200).json({ message: 'Programa registrado exitosamente' });
                 });
         } catch (error) {
@@ -284,7 +305,6 @@ router.post('/crearPlan/:idPrograma', async (req, res) => {
         const idPrograma = req.params.idPrograma;
         const { idUsuario,  numSemestre } = req.body;
         var fechaActual = new Date();
-        console.log(idUsuario);
         try {   
                 pool.query( 'INSERT INTO planestudios (pro_id, pln_estado, pln_fechaCreacion, pln_semestres, usuCambio_id) VALUES (?,?,?,?,?)',
                 [ idPrograma, "En desarrollo", fechaActual,  numSemestre, idUsuario ],
@@ -293,7 +313,6 @@ router.post('/crearPlan/:idPrograma', async (req, res) => {
                         console.error('Error registering plan:', err);
                         return res.status(500).json({ error: 'Error registering plan' });
                         }
-                        console.log('Plan de estudios registrado');
                         // Envía una respuesta de éxito al cliente
                         res.status(200).json({ message: 'Plan de estudios registrado exitosamente' });
                 });
@@ -382,7 +401,6 @@ router.post('/comentar/:idPlan', async (req, res) => {
         const idPlan = req.params.idPlan;
         const { valueComment, idUsuario } = req.body;
         var fechaActual = new Date();
-        console.log("comentario:"+valueComment+"/n usurioid: "+idUsuario)
         try {
                 pool.query( 'INSERT INTO comentario (com_fecha, com_detalle, id_usuario, id_plan) VALUES (?,?,?,?)',
                 [ fechaActual, valueComment, idUsuario, idPlan ],
@@ -391,7 +409,6 @@ router.post('/comentar/:idPlan', async (req, res) => {
                         console.error('Error registering plan:', err);
                         return res.status(500).json({ error: 'Error registering plan' });
                         }
-                        console.log('Plan de estudios registrado');
                         // Envía una respuesta de éxito al cliente
                         res.status(200).json({ message: 'Plan de estudios registrado exitosamente' });
                 });
@@ -401,9 +418,42 @@ router.post('/comentar/:idPlan', async (req, res) => {
         }
 });
 
+router.get('/area/:idArea', (req, res) => {
+        const idArea = req.params.idArea;
+        console.log(idArea);
+        try{
+                pool.query('SELECT * FROM areaconocimiento WHERE idArea = ?', [idArea], (err, results) => {
+                        if (err) {
+                                return res.status(500).json({ error: 'Error retrieving data from the database' });
+                        }
+                        res.json(results);
+                });
+        }
+        catch{
+                console.error('Error identificando plan de estudios:', error);
+                res.status(500).json({ error: 'Ha ocurrido un error identificando el listado de programas' });
+        }
+});
+
+router.delete('/area/:idArea', (req, res) => {
+        const idArea = req.params.idPlan;
+        try{
+                pool.query('DELETE FROM areaconocimiento WHERE idArea = ?', [idArea], async (err, results) => {
+                        if (err) {
+                                return res.status(500).json({ error: 'Error retrieving data from the database' });
+                        }
+                        res.json(results);
+                });
+        }
+        catch{
+                console.error('Error identificando area:', error);
+                res.status(500).json({ error: 'Ha ocurrido un error identificando el area' });
+        }
+});
+
 router.get('/listaAreas', (req, res) => {
         try{
-                pool.query('SELECT idArea, are_nombre FROM areaconocimiento', (err, results) => {
+                pool.query('SELECT * FROM areaconocimiento', (err, results) => {
                         if (err) {
                                 return res.status(500).json({ error: 'Error retrieving data from the database' });
                         }
@@ -440,7 +490,6 @@ router.get('/materia/:idPlan', (req, res) => {
                                 return res.status(500).json({ error: 'Error retrieving data from the database' });
                         }
                         res.json(results);
-                        console.log(results);
                 });
         }
         catch{
@@ -481,10 +530,7 @@ router.post('/materia/:idPlan', async (req, res) => { //Falta modificar
                         console.error('Error registering materia:', err);
                         return res.status(500).json({ error: 'Error registering materia' });
                         }
-
                         const idMateria = results.idMateria;
-                        console.log(idMateria);
-                        console.log('Materia registrada');
                         // Envía una respuesta de éxito al cliente
                         res.status(200).json({ message: 'Materia registrada exitosamente' });
                 });

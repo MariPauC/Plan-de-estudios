@@ -1,5 +1,5 @@
 import "./mensaje.css"
-import { MdCheckCircleOutline} from "react-icons/md"
+import { MdCheckCircleOutline, MdDeleteOutline } from "react-icons/md"
 
 export function MensajeCorrecto({ onClose }){
     return (
@@ -13,4 +13,15 @@ export function MensajeCorrecto({ onClose }){
         </div>
     );
 };
-
+export function MensajeEliminado({ onClose }){
+    return (
+        <div className="modalMessage" onClick={onClose}>
+            <div className="contMessage" id="Eliminar">
+                <div className="infMessage">
+                    <MdDeleteOutline className="iconGrande"/>
+                    <h2>DATOS ELIMINADOS <br/> CORRECTAMENTE</h2>
+                </div>
+            </div>
+        </div>
+    );
+};

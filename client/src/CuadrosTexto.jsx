@@ -10,13 +10,27 @@ export function TextMd({ texto, info}){
 
 export function InputSh({ name, texto, tipo, info, onChange, id, required }){
     return <div className="cont_sh" id={id}>
-        <label name={name}> {texto} </label>
+        <label name={name}> {texto} {required && "(*)"} </label>
         <input 
             name={name} 
             type={tipo} 
             value={info} 
             onChange = {onChange}
             required = {required}
+        />
+    </div>
+}
+
+export function InputShBlock({ name, texto, tipo, info,  id, required }){
+    return <div className="cont_sh" id={id}>
+        <label name={name}> {texto} {required && "(*)"} </label>
+        <input 
+            name={name} 
+            type={tipo} 
+            value={info} 
+            required = {required}
+            style={{backgroundColor:"#E5E5E5", cursor:"no-drop"}}
+            readOnly
         />
     </div>
 }
@@ -39,7 +53,7 @@ export function TextSh({ id, name, texto, tipo, info, onChange, row, cursor, req
 
 export function SelectSh({ name, texto, data, selectedValue, onChange, id, valueid, required }){
     return <div className="cont_sh" id={id}>
-        <label> {texto} </label>
+        <label> {texto} {required && "(*)"} </label>
         <select 
             name={name} 
             onChange = {onChange}

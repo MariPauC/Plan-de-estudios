@@ -1,39 +1,38 @@
 import { useState } from "react";
 import { MatPubModal, MatPrivModal } from "./Modal"
 import { createPortal } from 'react-dom';
-import { MdInsertComment } from "react-icons/md";
 import "./materia.css"
 
 //Materia publica
-export function MatPublica({ area, horas, creditos, nombreMat, codigo, color}){
+export function MatPublica({ data, style }){
     const [showModal, setShowModal] = useState(false);
 
     return (<>
-    <div className="mat_pub" onClick={() => setShowModal(true)}>
+    <div className="mat_pub" onClick={() => setShowModal(true)} >
         <div className="titulo_materia"> 
             <div>
                 <h4>Área:</h4> 
-                <p>{ area }</p>
+                <p>{ data.are_iniciales }</p>
             </div>
             <hr className="lateral"/>
             <div>
                 <h4>Horas:</h4>
-                <p>{ horas }</p>
+                <p>{ data.mat_horas }</p>
             </div>
             <hr className="lateral"/>
             <div>
                 <h4>Créditos:</h4>
-                <p>{ creditos }</p>
+                <p>{  data.mat_creditos }</p>
             </div>
         </div>
-        <div className="info_materia"  style={{backgroundColor: color}}>
-            <h3>{ nombreMat }</h3>
-            <p>{ codigo }</p>
+        <div className="info_materia"  style={{backgroundColor: data.are_color}}>
+            <h3>{ data.mat_nombre }</h3>
+            <p>{ data.mat_codigo }</p>
         </div>
     </div>
 
     {showModal && createPortal(
-    <MatPubModal onClose={() => setShowModal(false)} hr= {horas} cds={creditos} nm={nombreMat} cl={color} cdg={codigo}/>,
+    <MatPubModal onClose={() => setShowModal(false)} idMateria={data.idMateria} color={data.are_color} area={data.are_nombre}/>,
     document.body
     )}
 

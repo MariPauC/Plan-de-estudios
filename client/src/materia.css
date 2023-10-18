@@ -1,6 +1,7 @@
 .contPlan{
     margin: auto;
-    max-width: 1220px;
+    height: auto;
+    max-width: 83%;
     text-align: center;
     overflow-x: scroll;
 }
@@ -20,6 +21,12 @@
     border-radius: 15px;
 }
 
+.contTitulo{
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 14px;
+}
+
 .contMaterias{
     display: flex;
     flex-wrap: wrap;
@@ -27,8 +34,14 @@
     margin-top: 5px;
 }
 
+.contMateriasPublicas{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
 .contSemestre{
-    width: 280px;
+    width: 30%;
     padding: 1%;
 }
 

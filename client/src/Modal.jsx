@@ -1,12 +1,14 @@
 import "./modal.css"
 import { MdOutlineClose } from "react-icons/md";
-import { InputSh, InputLg, SelectSh, TextSh } from "./CuadrosTexto";
+import { InputSh, InputShBlock, SelectSh, TextSh } from "./CuadrosTexto";
 import { Btnmin } from "./Button";
 import { TablaMat } from "./Table"
-import { MensajeCorrecto } from "./Mensaje";
+import { MensajeCorrecto, MensajeEliminado } from "./Mensaje";
 import { useState, useEffect, useContext } from "react";
 import { createPortal } from 'react-dom';
+import { ChromePicker } from 'react-color';
 import { AuthContext } from './AuthContext';
+import { MdSettingsBackupRestore } from "react-icons/md";
 import axios from "axios";
 
 export function MatPubModal({ onClose, idMateria, area, color}){
@@ -136,7 +138,6 @@ export function MatPrivModal({ onClose, idMateria, idPlan, numSemestres, accion,
         { id: 5, nombre: "Socio-Humanistica" },
         { id: 6, nombre: "Complementaria" },
     ]
-
     const prueba = [
         { id: 1, nombre: "jeje" },
         { id: 2, nombre: "de" },
@@ -147,8 +148,6 @@ export function MatPrivModal({ onClose, idMateria, idPlan, numSemestres, accion,
         { id: 2, nombre: "de" },
 
     ]
-
-   
     
     useEffect(() => {
         if (accion === "editar") {
@@ -173,8 +172,8 @@ export function MatPrivModal({ onClose, idMateria, idPlan, numSemestres, accion,
         })
         .catch(error => {
             console.error('Error fetching materia details:', error);
-        });}}, [accion]);
-        const closeModal = (e) => {
+    });}}, [accion]);
+    const closeModal = (e) => {
         setShowMessage(false);
         onClose(cargar);
         onClose(onClose);
@@ -198,9 +197,6 @@ export function MatPrivModal({ onClose, idMateria, idPlan, numSemestres, accion,
         setCorrequisitos(correquisitos.concat(value))
         
         tablaCo = listadoCo.filter((materia) => correquisitos.includes(materia.id));
-
-        
-        
     };
 
     const handleFormM = async (e) =>{
@@ -208,7 +204,6 @@ export function MatPrivModal({ onClose, idMateria, idPlan, numSemestres, accion,
         if(accion === "editar"){
             try {
                 const response = await axios.put(`/api/materia/${idMateria}`, { valuesMateria });
-                console.log('Materia actualizada con éxito');
                 setShowMessage(true);
             } catch (error) {
                 console.error('Error al actualizar la materia:', error);
@@ -217,7 +212,6 @@ export function MatPrivModal({ onClose, idMateria, idPlan, numSemestres, accion,
         else{
             try {
                 const response = await axios.post(`/api/materia/${idPlanEstudios}`, { valuesMateria });
-                console.log('Materia creada con éxito');
                 setShowMessage(true);
             } catch (error) {
                 console.error('Error al crear la materia:', error);
@@ -225,7 +219,6 @@ export function MatPrivModal({ onClose, idMateria, idPlan, numSemestres, accion,
         }
         try {
             const response = await axios.put(`/api/modificarPlan/${idPlanEstudios}`, { idUsuario });
-            console.log('Plan actualizado con éxito');
         } catch (error) {
             console.error('Error al actualizar el plan:', error);
         }
@@ -235,7 +228,6 @@ export function MatPrivModal({ onClose, idMateria, idPlan, numSemestres, accion,
         e.preventDefault();
         try {
             const response = await axios.delete(`/api/materia/${idMateria}`);
-            console.log('Materia eliminada con éxito');
         } catch (error) {
             console.error('Error al actualizar el plan:', error);
         }
@@ -268,7 +260,7 @@ export function MatPrivModal({ onClose, idMateria, idPlan, numSemestres, accion,
                     <div className="dobleBtnModal">
                         {accion === "editar" ? <Btnmin texto="Eliminar" tipo="button" color="#BE0416" onClick={deleteMateria}/> 
                         : <Btnmin texto="Cancelar" tipo="button" color="#BE0416" onClick={onClose}/> }
-                    <Btnmin texto="Guardar" color="#182B57" tipo="submit"/>
+                        <Btnmin texto="Guardar" color="#182B57" tipo="submit"/>
                     </div>
                 </div>
             </form>
@@ -282,94 +274,265 @@ export function MatPrivModal({ onClose, idMateria, idPlan, numSemestres, accion,
     );
 };
 
-export function UsuarioModal({ onClose, data }){
+export function UsuarioModal({ onClose, idUsuario, cargar }){
     const { registrar } = useContext(AuthContext);
-    var [valuesRegistro, setvaluesRegistro] = useState({
+    const [showMessage, setShowMessage] = useState(false);
+    const [showMessageErr, setShowMessageErr] = useState(false);
+
+    var [valuesUsu, setvaluesUsu] = useState({
         nombre: "",
         apellido: "",
         correo:"",
+        documento: "",
         contrasena: "",
-        confirmacion: "",
+        rol:"",
     });
+
+    const rol = [
+        { id: "Decano", nombre: "Decano" },
+        { id: "Director", nombre: "Director" },
+        { id: "Administrador", nombre: "Administrador" },
+    ]
+    
+    useEffect(() => {
+        if (idUsuario) {
+            axios.get(`/api/usuario/${idUsuario}`)
+            .then(response => {
+                const data = response.data;
+                setvaluesUsu({
+                    ...valuesUsu,
+                    nombre: data[0].usu_nombre,
+                    apellido: data[0].usu_apellido,
+                    correo: data[0].usu_correo, 
+                    documento: data[0].usu_documento,
+                    rol: data[0].usu_rol, 
+                });
+            })
+            .catch(error => {
+                console.error('Error buscando datos del usuario:', error);
+            });
+        }
+    }, [idUsuario]);
 
     const handleInputChangeCon = (e) => {
         const { name, value } = e.target;
-        setvaluesRegistro({
-            ...valuesRegistro,
+        setvaluesUsu({
+            ...valuesUsu,
             [name]: value,
         });
     };
-    
-    const [contrasenasMatch, setContrasenasMatch] = useState(true);
 
     const handleSubmit= async (event) => {
         event.preventDefault();
-
-        if (valuesRegistro.contrasena === valuesRegistro.confirmacion) {
-            registrar(valuesRegistro.nombre, valuesRegistro.apellido,valuesRegistro.correo, valuesRegistro.contrasena);
-            setContrasenasMatch(true);
-        } else {
-            setContrasenasMatch(false);
+        if(idUsuario){
+            const formData = new FormData();
+            formData.append('nombre', valuesUsu.nombre);
+            formData.append('apellido', valuesUsu.apellido);
+            formData.append('documento', valuesUsu.documento);
+            formData.append('rol', valuesUsu.rol);
+            try {
+                const response = await axios.put(`/api/usuario/${idUsuario}`, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }});
+                setShowMessage(true);
+            } catch (error) {
+                console.error('Error al actualizar el usuario:', error);
+            }
+        }
+        else{
+            registrar(valuesUsu.nombre, valuesUsu.apellido,valuesUsu.correo, valuesUsu.contrasena, valuesUsu.documento, valuesUsu.rol);
+            setShowMessage(true);
         }
     };
+
+    const closeModal = (e) => {
+        if(showMessage){
+            setShowMessage(false);
+        }
+        if(showMessageErr){
+            setShowMessageErr(false);
+        }
+        onClose(cargar);
+        onClose(onClose);
+    };
+
+    const deleteUsu = async (e) =>{
+        e.preventDefault();
+        try {
+            const response = await axios.delete(`/api/usuario/${idUsuario}`);
+            setShowMessageErr(true);
+        } catch (error) {
+            console.error('Error eliminar al usuario:', error);
+        }
+    }
     
     return (
         <>
         <div className="modal"></div>  
-        <div className="contModal">
+        <div className="contModal" >
             <div className="ttlModal" id="ttlPrivado">
                 <h2>Datos de la materia</h2>
                 <MdOutlineClose className="btnClose" style={{cursor:"pointer"}} size="30px" onClick={onClose}/>
             </div>
-            <div className="infModal" id="matPublica">
-                <div className="formUsuario">
-                    <form onSubmit={handleSubmit}>
-                    <h3 className="ttlAdmi">Registro de usuario</h3>
-                    <InputLg 
-                        texto = "Nombres:" 
-                        name="nombre"
-                        value={valuesRegistro.nombre} 
-                        onChange={handleInputChangeCon}
-                    />
-                    <InputLg 
-                        texto = "Apellidos:" 
-                        name="apellido"
-                        value={valuesRegistro.apellido} 
-                        onChange={handleInputChangeCon}
-                    />
-                    <InputLg 
-                        texto = "Correo:" 
-                        tipo="email" 
-                        name="correo"
-                        value={valuesRegistro.correo} 
-                        onChange={handleInputChangeCon}
-                    />
-                    <InputLg 
-                        texto = "Contraseña:" 
-                        tipo="password" 
-                        name="contrasena"
-                        value={valuesRegistro.contrasena} 
-                        onChange={handleInputChangeCon}
-                        autocomplete="new-password"
-                    />
-                    <InputLg 
-                        texto = "Confirmar contraseña:" 
-                        tipo="password" 
-                        name="confirmacion"
-                        value={valuesRegistro.confirmacion} 
-                        onChange={handleInputChangeCon}
-                        autocomplete="new-password"
-                    />
-                    {!contrasenasMatch && <span style={{color:'red'}}>Las contraseñas no coinciden</span>}
-                    <Btnmin tipo="submit" texto="Registrarse" color="#182B57"/>
-                    {mensajeRegistro && <p>{mensajeRegistro}</p>}
-                    </form>
+
+            <form onSubmit={handleSubmit}>
+            <div className="infModalPriv">
+                <InputSh texto = "Nombres:" name="nombre" info={valuesUsu.nombre} onChange={handleInputChangeCon} required = {"required"}/>
+                <InputSh texto = "Apellidos:" name="apellido" info={valuesUsu.apellido} onChange={handleInputChangeCon} required = {"required"}/>
+                {idUsuario ?<InputShBlock texto = "Correo:" tipo="email" name="correo" info={valuesUsu.correo} onChange={handleInputChangeCon} required = {"required"}/>
+                : <InputSh texto = "Correo:" tipo="email" name="correo" info={valuesUsu.correo} onChange={handleInputChangeCon} required = {"required"}/>
+                }
+                
+                {!idUsuario &&
+                    <InputSh texto = "Contraseña:"  tipo="password"  name="contrasena" info={valuesUsu.contrasena} onChange={handleInputChangeCon} autocomplete="new-password" required = {"required"}/>
+                }
+                <InputSh texto = "Documento:" name="documento" info={valuesUsu.documento} onChange={handleInputChangeCon} required = {"required"}/>
+                <SelectSh texto = "Rol:" name="rol" data={rol} selectedValue={valuesUsu.rol} onChange={handleInputChangeCon} required = {"required"}/>
+                <div className="dobleBtnModal">
+                    {idUsuario ? <Btnmin texto="Eliminar" tipo="button" color="#BE0416" onClick={deleteUsu}/>
+                    : <Btnmin texto="Cancelar" tipo="button" color="#BE0416" onClick={onClose}/> }
+                    <Btnmin texto="Guardar" color="#182B57" tipo="submit"/>
                 </div>
             </div>
+            </form>
         </div>
-        
         {showMessage && createPortal(
         <MensajeCorrecto onClose={closeModal} />,
+        document.body
+        )}
+        {showMessageErr && createPortal(
+        <MensajeEliminado onClose={closeModal} />,
+        document.body
+        )}
+        </>
+    );
+};
+
+export function AreaModal({ onClose, idArea, cargar }){
+    const [showMessage, setShowMessage] = useState(false);
+    const [showMessageErr, setShowMessageErr] = useState(false);
+    const [color, setColor] = useState('#FFFFFF');
+    const [colorbs, setColorbs] = useState('#FFFFFF');
+
+
+    var [valuesArea, setvaluesArea] = useState({
+        nombre: "",
+        iniciales: "",
+    });
+
+    useEffect(() => {
+        if (idArea) {
+            axios.get(`/api/area/${idArea}`)
+            .then(response => {
+                const data = response.data;
+                setvaluesArea({
+                    ...valuesArea,
+                    nombre: data[0].are_nombre,
+                    iniciales: data[0].are_iniciales,
+                });
+                setColor(data[0].are_color);
+                setColorbs (data[0].are_color);
+            })
+            .catch(error => {
+                console.error('Error buscando datos del area:', error);
+            });
+        }
+    }, [idArea]);
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setvaluesArea({
+            ...valuesArea,
+            [name]: value,
+        });
+    };
+
+    function restablecer() {
+        setColor(colorbs);
+    }
+
+    function handleChange(newColor) {
+        setColor(newColor.hex);
+    }
+
+    const handleSubmit= async (event) => {
+        event.preventDefault();
+        if(idArea){
+            console.log(valuesArea);
+            try {
+                const response = await axios.put(`/api/area/${idArea}`,  {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }});
+                setShowMessage(true);
+            } catch (error) {
+                console.error('Error al actualizar el area:', error);
+            }
+        }
+        else{
+            setShowMessage(true);
+        }
+    };
+
+    const closeModal = (e) => {
+        if(showMessage){
+            setShowMessage(false);
+        }
+        if(showMessageErr){
+            setShowMessageErr(false);
+        }
+        onClose(cargar);
+        onClose(onClose);
+    };
+
+    const deleteArea = async (e) =>{
+        e.preventDefault();
+        try {
+            const response = await axios.delete(`/api/area/${idArea}`);
+            setShowMessageErr(true);
+        } catch (error) {
+            console.error('Error eliminar el area:', error);
+        }
+    }
+    
+    return (
+        <>
+        <div className="modal"></div>  
+        <div className="contModal" >
+            <div className="ttlModal" id="ttlPrivado">
+                <h2>Datos del área de conocimiento</h2>
+                <MdOutlineClose className="btnClose" style={{cursor:"pointer"}} size="30px" onClick={onClose}/>
+            </div>
+
+            <form onSubmit={handleSubmit}>
+            <div className="infModalPriv">
+                <InputSh texto = "Nombre:" name="nombre" info={valuesArea.nombre} onChange={handleInputChange} required = {"required"}/>
+                <InputSh texto = "Iniciales:" name="iniciales" info={valuesArea.iniciales} onChange={handleInputChange} required = {"required"}/>
+                
+                <ChromePicker color={color} onChange={handleChange} width="47%" disableAlpha={true} colorFormat={"hex"}/>
+                <div className="cuadroColor" >
+                    <label> Color: (*) </label>
+                    <div className="contCol">
+                    <p >{color}</p>
+                    <div style={{backgroundColor:color}} className="colorBG" ></div>
+                    {idArea && <div className="restor" onClick={restablecer}> <h5>Retablecer color</h5> <MdSettingsBackupRestore/></div>}
+                    </div>
+                </div>
+                <div className="dobleBtnModal">
+                    {idArea ? <Btnmin texto="Eliminar" tipo="button" color="#BE0416" onClick={deleteArea}/>
+                    : <Btnmin texto="Cancelar" tipo="button" color="#BE0416" onClick={onClose}/> }
+                    <Btnmin texto="Guardar" color="#182B57" tipo="submit"/>
+                </div>
+            </div>
+            </form>
+        </div>
+        {showMessage && createPortal(
+        <MensajeCorrecto onClose={closeModal} />,
+        document.body
+        )}
+        {showMessageErr && createPortal(
+        <MensajeEliminado onClose={closeModal} />,
         document.body
         )}
         </>

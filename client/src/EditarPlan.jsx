@@ -17,7 +17,7 @@ export function EditarPlanEst({rol}){
     const params = useParams();
     const nombrePrograma = params.nombre;
     const idPrograma = params.id;
-    const idPlan = params.idPlan;
+    const idPlan = params.idPlan || false;
     const navigate = useNavigate();
 
     const { usuario } = useContext(AuthContext);
@@ -30,19 +30,30 @@ export function EditarPlanEst({rol}){
     const [valueComment, setValueComment] = useState("");
     const [planesActual, setPlanesActual] = useState([]);
 
-
-
     useEffect(() => {
-        axios.get(`/api/semestresProg/${idPrograma}`)
-        .then(response => {
-            const data = response.data;
-            setNumSemestres (data.pro_semestres);
-        })
-        .catch(error => {
-            console.error('Error buscando planes en desarrollo:', error);
-            
-        });
-        axios.get(`/api/planesEstudios/${idPrograma}/actual`)
+        if(idPlan){
+            axios.get(`/api/semestresPlan/${idPlan}`)
+            .then(response => {
+                const data = response.data;
+                setNumSemestres (data.pln_semestres);
+            })
+            .catch(error => {
+                console.error('Error buscando planes en desarrollo:', error);
+                
+            });
+        }
+        else{
+            axios.get(`/api/semestresProg/${idPrograma}`)
+            .then(response => {
+                const data = response.data;
+                setNumSemestres (data.pro_semestres);
+            })
+            .catch(error => {
+                console.error('Error buscando planes en desarrollo:', error);
+                
+            });
+        }
+        axios.get(`/api/estadoPlan/${idPrograma}/actual`)
         .then(response => {
             const data = response.data;
             setPlanesActual(data);
@@ -54,7 +65,7 @@ export function EditarPlanEst({rol}){
         cargarMaterias();
         cargarComentarios();
 
-    }, [idPrograma]);
+    }, [idPrograma, idPlan]);
 
     const cargarComentarios = async () => {
         try {
@@ -71,7 +82,7 @@ export function EditarPlanEst({rol}){
             setMaterias(response.data)
             
         } catch (error) {
-            
+            console.error('Error cargando materias:', error);
         }
     }
     
@@ -133,7 +144,7 @@ export function EditarPlanEst({rol}){
         <div className="contBread">
             <PagAnterior ruta="/" pagina="Menú principal"/>
             {rol && <PagAnterior ruta={"/InicioProg/"+nombrePrograma+'/'+idPrograma}  pagina="Programa"/>}
-            <PagAnterior ruta={"/PlanesEstudios/"+nombrePrograma+'/'+idPrograma}pagina="Planes de estudio"/>
+            <PagAnterior ruta={"/listadoPlanes/"+nombrePrograma+'/'+idPrograma}pagina="Planes de estudio"/>
             <PagActual pagina="Datos del plan"/>
         </div>
         <Titul titulo="Edición: Plan de estudios" subt={nombrePrograma.replace(/-/g,' ')}  />
@@ -163,13 +174,13 @@ export function EditarPlanEst({rol}){
                     </div>
                 </form>
                 <div className="dobleBtn">
-                <Link to={'/planesEstudios/'+nombrePrograma+'/'+idPrograma}><Btnmin texto="Atrás" color="#707070"/></Link>
-                { materias.length > 10 ? <Btnmin texto="Aprobar" color="#182B57" onClick={validar}/>
+                <Link to={'/listadoPlanes/'+nombrePrograma+'/'+idPrograma}><Btnmin texto="Atrás" color="#707070"/></Link>
+                { materias.length > 0 ? <Btnmin texto="Aprobar" color="#182B57" onClick={validar}/>
                 : <BtnminDis texto="Aprobar" color="#182B57" />}
                 
                 </div>
                 </>
-                : <><Link to={'/planesEstudios/'+nombrePrograma+'/'+idPrograma}><Btnmin texto="Atrás" color="#707070"/></Link></>
+                : <><Link to={'/listadoPlanes/'+nombrePrograma+'/'+idPrograma}><Btnmin texto="Atrás" color="#707070"/></Link></>
             }
         </div>
         {showModal && createPortal(

@@ -5,25 +5,27 @@ import { Tabla }from "./Table"
 import { BtnMdIcon,Btnmin } from "./Button"
 import { PagAnterior, PagActual} from "./Breadcrumbs"
 import { MdAddCircleOutline } from "react-icons/md";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect, useContext } from "react";
 import { AuthContext } from './AuthContext';
 import axios from "axios";
 
 
 export function PlanEst({rol}){ 
+    const navigate = useNavigate();
     const params = useParams();
     const nombrePrograma = params.nombre;
     const idPrograma = params.id;
     
     const { usuario } = useContext(AuthContext);
     const idUsuario = usuario.idUsuario;
+    const [numSemestre, setNumSemestres] = useState(1)
     const [planesDesarrollo, setPlanesDesarrollo] = useState([]);
     const [planesActual, setPlanesActual] = useState([]);
     const [planesAntiguo, setPlanesAntiguo] = useState([]);
 
     useEffect(() => {
-        axios.get(`/api/planesEstudios/${idPrograma}/desa`)
+        axios.get(`/api/estadoPlan/${idPrograma}/desa`)
         .then(response => {
             const data = response.data;
             setPlanesDesarrollo(data);
@@ -33,7 +35,7 @@ export function PlanEst({rol}){
             
         });
         
-        axios.get(`/api/planesEstudios/${idPrograma}/actual`)
+        axios.get(`/api/estadoPlan/${idPrograma}/actual`)
                 .then(response => {
                     const data = response.data;
                     setPlanesActual(data);
@@ -41,8 +43,15 @@ export function PlanEst({rol}){
                 .catch(error => {
                     console.error('Error buscando planes en actuales:', error);
                 });
-        
-        axios.get(`/api/planesEstudios/${idPrograma}/antiguo`)
+        axios.get(`/api/semestresProg/${idPrograma}`)
+        .then(response => {
+            const data = response.data;
+            setNumSemestres (data.pro_semestres);
+        })
+        .catch(error => {
+            console.error('Error buscando numero de semestres:', error);
+        });
+        axios.get(`/api/estadoPlan/${idPrograma}/antiguo`)
         .then(response => {
             const data = response.data;
             setPlanesAntiguo(data);
@@ -52,11 +61,12 @@ export function PlanEst({rol}){
         });
     }, []);
     
-    const createPlan = async () => {
+    const createPlan = () => {
         try {
-            const responsePlan = await axios.post(`/api/crearPlan/${idPrograma}`, { idUsuario });
+            const responsePlan = axios.post(`/api/crearPlan/${idPrograma}`, { idUsuario, numSemestre });
+            navigate(`/datosPlan/${nombrePrograma}/${idPrograma}`);
         } catch (error) {
-            console.error('Error logging in:', error);
+            console.error('Error creando plan:', error);
         }
     };
 
@@ -72,18 +82,16 @@ export function PlanEst({rol}){
         <div className="contAdm">
             <h3 className="ttlAdmi">En desarrollo</h3>
             {planesDesarrollo.length > 0 ? <Tabla data= {planesDesarrollo} progId={idPrograma} progNombre={nombrePrograma} estado="Modificado por" accion="Editar"/> 
-                        : <div className="btnPlace">
-                            <Link to={"/datosPlan/"+nombrePrograma+'/'+idPrograma}>
-                                <BtnMdIcon icon=<MdAddCircleOutline size="60px"/> texto="Crear plan" onClick={createPlan}/>
-                            </Link>
+                        : <div className="btnPlace">                           
+                            <BtnMdIcon icon=<MdAddCircleOutline size="60px"/> texto="Crear plan" onClick={createPlan}/>
                         </div>
             }
             <h3 className="ttlAdmi">Actual</h3>
-            {planesActual.length > 0 ? <Tabla data= {planesActual} estado="Aprobado por" accion="Ver"/>
+            {planesActual.length > 0 ? <Tabla data= {planesActual} progId={idPrograma} progNombre={nombrePrograma} estado="Aprobado por" accion="Ver"/>
             : <div className="mnsPlan"><p>No hay ningún plan activo en este momento</p></div>}
             
             <h3 className="ttlAdmi">Versiones anteriores</h3>
-            {planesAntiguo.length > 0 ? <Tabla data= {planesAntiguo} estado="Aprobado por" accion="Ver"/>
+            {planesAntiguo.length > 0 ? <Tabla data= {planesAntiguo} progId={idPrograma} progNombre={nombrePrograma} estado="Aprobado por" accion="Ver"/>
             : <div className="mnsPlan"><p>No hay ningún plan de estudios en esta categoria</p></div>}
             
             {rol ? <Link to={"/InicioProg/"+nombrePrograma+'/'+idPrograma}><Btnmin texto="Atrás" color="#707070"/></Link>
