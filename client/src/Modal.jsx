@@ -101,6 +101,12 @@ export function MatPrivModal({ onClose, idMateria, idPlan, numSemestres, accion,
     const [idPlanEstudios, setIdPlanEstudios] = useState(idPlan);
     const [prerequisitos, setPrerequisitos] = useState([]);
     const [correquisitos, setCorrequisitos] = useState([]);
+    const [preOriginal, setPreOriginal] = useState([]);
+    const [correOriginal, setCorreOriginal] = useState([]);
+    const [addpre, setAddPre] = useState([]);
+    const [addcorre, setAddCorre] = useState([]);
+    const [delpre, setDelPre] = useState([]);
+    const [delcorre, setDelCorre] = useState([]);
     const [valuesMateria, setValuesMateria] = useState({
         nombre: "",
         codigo: "",
@@ -116,11 +122,11 @@ export function MatPrivModal({ onClose, idMateria, idPlan, numSemestres, accion,
     const idUsuario = usuario.idUsuario;
 
     const semestres = [];
-    const listadoPre = materias.map((materia) => ({ id: materia.idMateria, nombre: materia.mat_nombre }));;
-    const listadoCo = materias.map((materia) => ({ id: materia.idMateria, nombre: materia.mat_nombre }));;
-    var tablaPre = []
-    var tablaCo= [];
-
+    const listadoPre = materias.filter((materia) => materia.idMateria !== idMateria)
+    .map((materia) => ({ id: materia.idMateria, nombre: materia.mat_nombre }));
+    const listadoCo = materias.filter((materia) => materia.idMateria !== idMateria)
+    .map((materia) => ({ id: materia.idMateria, nombre: materia.mat_nombre }));
+    
     for (let i = 1; i <= numSemestres; i++) {
     semestres.push({ id: i, nombre: i });
     }
@@ -138,16 +144,6 @@ export function MatPrivModal({ onClose, idMateria, idPlan, numSemestres, accion,
         { id: 5, nombre: "Socio-Humanistica" },
         { id: 6, nombre: "Complementaria" },
     ]
-    const prueba = [
-        { id: 1, nombre: "jeje" },
-        { id: 2, nombre: "de" },
-
-    ]
-    const prueba2 = [
-        { id: 1, nombre: "jeje" },
-        { id: 2, nombre: "de" },
-
-    ]
     
     useEffect(() => {
         if (accion === "editar") {
@@ -162,17 +158,36 @@ export function MatPrivModal({ onClose, idMateria, idPlan, numSemestres, accion,
                     horas: materia.mat_horas,
                     semestre:  materia.mat_semestre,
                     tipo:  materia.mat_tipo,
-                    creditos:  materia.mat_creditos,
-                    descripcion:  materia.mat_descripcion,
+                    creditos: materia.mat_creditos,
+                    descripcion: materia.mat_descripcion,
                     area: materia.area_id,
                 });
                 setIdPlanEstudios(materia.plan_id)
-                
             } 
-        })
-        .catch(error => {
-            console.error('Error fetching materia details:', error);
-    });}}, [accion]);
+            })
+            .catch(error => {
+                console.error('Error fetching materia details:', error);
+            });
+            axios.get(`api/relacion/Prerequisito/${idMateria}`)
+            .then(response => {
+                setPrerequisitos(response.data); 
+                setPreOriginal(response.data);
+            })
+            .catch(error => {
+                console.error('Error fetching materia details:', error);
+            });
+            axios.get(`api/relacion/Correquisito/${idMateria}`)
+            .then(response => {
+                setCorrequisitos(response.data); 
+                setCorreOriginal(response.data);
+            })
+            .catch(error => {
+                console.error('Error fetching materia details:', error);
+            });
+        }
+    
+    }, [accion]);
+    
     const closeModal = (e) => {
         setShowMessage(false);
         onClose(cargar);
@@ -189,25 +204,82 @@ export function MatPrivModal({ onClose, idMateria, idPlan, numSemestres, accion,
 
     const handleSelectPre = (e) => {
         const { value } = e.target;
-        console.log(value);
+        if (value !== "") {
+            const idValue = parseInt(value, 10);
+            const elementoEspecifico = listadoPre.find((materia) => materia.id === idValue);
+            if (!prerequisitos.some((materia) => materia.id === idValue)) {
+                setAddPre([...addpre, idValue]);
+                setPrerequisitos([...prerequisitos, elementoEspecifico]);
+            }
+            if (delpre.includes(idValue)) {
+                const nuevosPre = delpre.filter((materiaId) => materiaId !== idValue);
+                setDelPre(nuevosPre);
+            }
+        }
     };
 
     const handleSelectCo = (e) => {
         const { value } = e.target;
-        setCorrequisitos(correquisitos.concat(value))
-        
-        tablaCo = listadoCo.filter((materia) => correquisitos.includes(materia.id));
+        if (value !== "") {
+            const idValue = parseInt(value, 10);
+            const elementoEspecifico = listadoPre.find((materia) => materia.id === idValue); 
+
+            if (!correquisitos.some((materia) => materia.id === idValue)) {
+                setAddCorre([...addcorre, idValue]);
+                setCorrequisitos([...correquisitos, elementoEspecifico]);
+            } 
+            if (delcorre.includes(idValue)) {
+                const nuevosCorre = delcorre.filter((materiaId) => materiaId !== idValue);
+                setDelCorre(nuevosCorre);
+            }
+        }
     };
 
     const handleFormM = async (e) =>{
         e.preventDefault();
         if(accion === "editar"){
             try {
-                const response = await axios.put(`/api/materia/${idMateria}`, { valuesMateria });
+                axios.put(`/api/materia/${idMateria}`, { valuesMateria });
                 setShowMessage(true);
             } catch (error) {
                 console.error('Error al actualizar la materia:', error);
             }
+            if(addcorre.length !== 0 || addpre.length !== 0){
+                
+                try {
+                    for (const matRel of addpre) {
+                        if(!preOriginal.some((materia) => materia.id === matRel)){
+                            axios.post(`/api/relacion/${idMateria}`, { tipo: "Prerequisito", matRel });
+                        }
+                    }
+            
+                    for (const matRel of addcorre) {
+                        if(!correOriginal.some((materia) => materia.id === matRel)){    
+                            axios.post(`/api/relacion/${idMateria}`, { tipo: "Correquisito", matRel });
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error al añadir los requisitos:', error);
+                }
+            }
+            if (delcorre.length !== 0 || delpre.length !== 0) {
+                try {
+                    for (const matRel of delpre) {
+                        axios.delete(`/api/relacion/${idMateria}`, {
+                            params: { tipo: "Prerequisito", matRel },
+                        });
+                    }
+            
+                    for (const matRel of delcorre) {
+                        axios.delete(`/api/relacion/${idMateria}`, {
+                            params: { tipo: "Correquisito", matRel },
+                        });
+                    }
+                } catch (error) {
+                    console.error('Error al eliminar los requisitos:', error);
+                }
+            }
+            
         }
         else{
             try {
@@ -226,6 +298,7 @@ export function MatPrivModal({ onClose, idMateria, idPlan, numSemestres, accion,
 
     const deleteMateria = async (e) =>{
         e.preventDefault();
+        
         try {
             const response = await axios.delete(`/api/materia/${idMateria}`);
         } catch (error) {
@@ -233,6 +306,26 @@ export function MatPrivModal({ onClose, idMateria, idPlan, numSemestres, accion,
         }
         onClose(cargar);
         onClose(onClose);
+    }
+
+    const deletePre = (id) => {
+        const nuevasPrerequisitos = prerequisitos.filter((materia) => materia.id !== id);
+        setPrerequisitos(nuevasPrerequisitos);
+        const nuevosAddPre = addpre.filter((materiaId) => materiaId !== id);
+        setAddPre(nuevosAddPre);
+        if (!delpre.includes(id)) {
+            setDelPre([...delpre, id]);
+        }
+    }
+
+    const deleteCo = (id) => {
+        const nuevosCorrequisitos = correquisitos.filter((materia) => materia.id !== id);
+        setCorrequisitos(nuevosCorrequisitos);
+        const nuevosAddCorre = addpre.filter((materiaId) => materiaId !== id);
+        setAddCorre(nuevosAddCorre);
+        if (!delcorre.includes(id)) {
+            setDelCorre([...delcorre, id]);
+        }
     }
     
     return (
@@ -251,10 +344,10 @@ export function MatPrivModal({ onClose, idMateria, idPlan, numSemestres, accion,
                     <SelectSh texto = "Semestre:" name="semestre" data={semestres} selectedValue={valuesMateria.semestre} onChange={handleInputChangeM} required = {"required"}/>
                     <InputSh texto = "Créditos:" name="creditos" info={valuesMateria.creditos} onChange={handleInputChangeM} tipo="number" required = {"required"}/>
                     <InputSh texto = "Horas:" name="horas" info={valuesMateria.horas} onChange={handleInputChangeM} tipo="number" required = {"required"}/>
-                    <SelectSh valueid={true} texto = "Prerequisito:"  name="pre" data={listadoPre} onChange={handleSelectPre} />
-                    <SelectSh valueid={true} texto = "Correquisito:"  name="co" data={listadoCo} onChange={handleSelectCo}/>
-                    <TablaMat data={prueba}/>
-                    <TablaMat data={tablaCo}/>
+                    <SelectSh valueid={true} texto = "Prerequisito:" btn={true} name="pre" data={listadoPre} onChange={handleSelectPre} tipo="button"/>
+                    <SelectSh valueid={true} texto = "Correquisito:" btn={true} name="co" data={listadoCo} onChange={handleSelectCo} tipo="button"/>
+                    <TablaMat data={prerequisitos} onclick={deletePre}/>
+                    <TablaMat data={correquisitos} onclick={deleteCo}/>
                     <SelectSh valueid={true} texto = "Área conocimientos:" id="big" name="area" data={area} selectedValue={valuesMateria.area} onChange={handleInputChangeM} required = {"required"}/>
                     <TextSh texto = "Descripción:" id="big" row="3" name="descripcion" info={valuesMateria.descripcion} onChange={handleInputChangeM} required = {"required"}/>
                     <div className="dobleBtnModal">
@@ -274,7 +367,7 @@ export function MatPrivModal({ onClose, idMateria, idPlan, numSemestres, accion,
     );
 };
 
-export function UsuarioModal({ onClose, idUsuario, cargar }){
+export function UsuarioModal({ onClose, idUsuario, cargar}){
     const { registrar } = useContext(AuthContext);
     const [showMessage, setShowMessage] = useState(false);
     const [showMessageErr, setShowMessageErr] = useState(false);
@@ -290,7 +383,6 @@ export function UsuarioModal({ onClose, idUsuario, cargar }){
 
     const rol = [
         { id: "Decano", nombre: "Decano" },
-        { id: "Director", nombre: "Director" },
         { id: "Administrador", nombre: "Administrador" },
     ]
     
@@ -353,8 +445,8 @@ export function UsuarioModal({ onClose, idUsuario, cargar }){
         if(showMessageErr){
             setShowMessageErr(false);
         }
-        onClose(cargar);
         onClose(onClose);
+        cargar();
     };
 
     const deleteUsu = async (e) =>{
@@ -366,13 +458,13 @@ export function UsuarioModal({ onClose, idUsuario, cargar }){
             console.error('Error eliminar al usuario:', error);
         }
     }
-    
+
     return (
         <>
         <div className="modal"></div>  
         <div className="contModal" >
             <div className="ttlModal" id="ttlPrivado">
-                <h2>Datos de la materia</h2>
+                <h2>Datos del usuario</h2>
                 <MdOutlineClose className="btnClose" style={{cursor:"pointer"}} size="30px" onClick={onClose}/>
             </div>
 
@@ -456,22 +548,23 @@ export function AreaModal({ onClose, idArea, cargar }){
         setColor(newColor.hex);
     }
 
-    const handleSubmit= async (event) => {
-        event.preventDefault();
+    const handleSubmit= async (e) => {
+        e.preventDefault();
         if(idArea){
-            console.log(valuesArea);
             try {
-                const response = await axios.put(`/api/area/${idArea}`,  {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }});
+                const response = await axios.put(`/api/area/${idArea}`, { valuesArea, color });
                 setShowMessage(true);
             } catch (error) {
                 console.error('Error al actualizar el area:', error);
             }
         }
         else{
-            setShowMessage(true);
+            try {
+                const response = await axios.post(`/api/area/${idArea}`, { valuesArea, color });
+                setShowMessage(true);
+            } catch (error) {
+                console.error('Error al actualizar el area:', error);
+            }
         }
     };
 
@@ -482,8 +575,8 @@ export function AreaModal({ onClose, idArea, cargar }){
         if(showMessageErr){
             setShowMessageErr(false);
         }
-        onClose(cargar);
         onClose(onClose);
+        cargar();
     };
 
     const deleteArea = async (e) =>{
@@ -533,6 +626,86 @@ export function AreaModal({ onClose, idArea, cargar }){
         )}
         {showMessageErr && createPortal(
         <MensajeEliminado onClose={closeModal} />,
+        document.body
+        )}
+        </>
+    );
+};
+
+export function DirectorModal({ onClose, cargar, idPrograma}){
+    const [showMessage, setShowMessage] = useState(false);
+    const [showMessageErr, setShowMessageErr] = useState(false);
+    const { registrar } = useContext(AuthContext);
+
+    var [valuesDirec, setvaluesDirec] = useState({
+        nombre: "",
+        apellido: "",
+        correo:"",
+        documento: "",
+        contrasena: "",
+        sede:"",
+        rol:"Director",
+        facultad:"",
+    });
+
+    const handleInputChangeCon = (e) => {
+        const { name, value } = e.target;
+        setvaluesDirec({
+            ...valuesDirec,
+            [name]: value,
+        });
+    };
+
+    const handleSubmit= async (event) => {
+        event.preventDefault();
+        try {
+            await registrar(valuesDirec.nombre, valuesDirec.apellido, valuesDirec.correo, valuesDirec.contrasena, valuesDirec.documento, valuesDirec.rol);
+            
+            const response = await axios.post(`/api/director/${idPrograma}`, { valuesDirec });
+            setShowMessage(true);
+        } catch (error) {
+            console.error('Error al actualizar el director:', error);
+        }
+    };
+
+    const closeModal = (e) => {
+        if(showMessage){
+            setShowMessage(false);
+        }
+        if(showMessageErr){
+            setShowMessageErr(false);
+        }
+        onClose(onClose);
+        cargar();
+    };
+    
+    return (
+        <>
+        <div className="modal"></div>  
+        <div className="contModal" >
+            <div className="ttlModal" id="ttlPrivado">
+                <h2>Datos del director</h2>
+                <MdOutlineClose className="btnClose" style={{cursor:"pointer"}} size="30px" onClick={onClose}/>
+            </div>
+
+            <form onSubmit={handleSubmit}>
+            <div className="infModalPriv">
+                <InputSh texto = "Nombres:" name="nombre" info={valuesDirec.nombre} onChange={handleInputChangeCon} required = {"required"}/>
+                <InputSh texto = "Apellidos:" name="apellido" info={valuesDirec.apellido} onChange={handleInputChangeCon} required = {"required"}/>
+                <InputSh texto = "Correo:" tipo="email" name="correo" info={valuesDirec.correo} onChange={handleInputChangeCon} required = {"required"}/>
+                <InputSh texto = "Documento:" name="documento" info={valuesDirec.documento} onChange={handleInputChangeCon} required = {"required"}/>
+                <InputSh texto = "Contraseña:" name="contrasena" info={valuesDirec.documento} onChange={handleInputChangeCon} required = {"required"}/>
+                <span style={{color:"orange", width:"47%", marginTop:"2.5%"}}> Recomendación: Dejar la contraseña igual al número de documento</span>
+                
+                <div className="dobleBtnModal">
+                    <Btnmin texto="Cancelar" tipo="button" color="#BE0416" onClick={onClose}/> 
+                    <Btnmin texto="Guardar" color="#182B57" tipo="submit"/>
+                </div>
+            </div>
+            </form>
+        </div>
+        {showMessage && createPortal(
+        <MensajeCorrecto onClose={closeModal} />,
         document.body
         )}
         </>

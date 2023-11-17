@@ -1,9 +1,9 @@
 import "./cuadroTexto.css"
-import { MdOutlineCancel, MdAddCircleOutline } from "react-icons/md";
+import { MdAddCircleOutline } from "react-icons/md";
 
-export function TextMd({ texto, info}){
+export function TextMd({ texto, info, required}){
     return <div className="cont_md">
-        <label> {texto} </label>
+        <label> {texto} {required && "(*)"} </label>
         <p>{info}</p>
     </div>
 }
@@ -51,24 +51,26 @@ export function TextSh({ id, name, texto, tipo, info, onChange, row, cursor, req
     </div>
 }
 
-export function SelectSh({ name, texto, data, selectedValue, onChange, id, valueid, required }){
+export function SelectSh({ name, texto, data, selectedValue, onChange, id, idselect, valueid, required }){
     return <div className="cont_sh" id={id}>
         <label> {texto} {required && "(*)"} </label>
         <select 
             name={name} 
             onChange = {onChange}
             required = {required}
+            id = {idselect}
         >
                 <option className="opcionSelect" value="">Selecciona una opción</option>
                 { valueid ? data.map((item) => ( <OpcionNumber key={item.id} data={item} selectedValue={selectedValue}/> )) 
                 : data.map((item) => ( <Opcion key={item.id} data={item} selectedValue={selectedValue}/> ))}
+                
         </select>
     </div>
 }
 
 export function InputMd({ name, texto, tipo, info, onChange, required }){
     return <div className="cont_md">
-        <label name={name}> {texto} </label>
+        <label name={name}> {texto} {required && "(*)"}  </label>
         <input 
             name={name} 
             type={tipo} 
@@ -79,9 +81,9 @@ export function InputMd({ name, texto, tipo, info, onChange, required }){
     </div>
 }
 
-export function InputMdBlock({name, texto, tipo, info }){
+export function InputMdBlock({name, texto, tipo, info, required }){
     return <div className="cont_md">
-        <label> {texto} </label>
+        <label> {texto} {required && "(*)"}</label>
         <input 
             name={name} 
             type = {tipo} 
@@ -92,9 +94,9 @@ export function InputMdBlock({name, texto, tipo, info }){
     </div>
 }
 
-export function SelectMd({ name, texto, data, selectedValue, onChange  }){
+export function SelectMd({ name, texto, data, selectedValue, onChange, required }){
     return <div className="cont_md">
-        <label> {texto} </label>
+        <label> {texto} {required && "(*)"} </label>
         <select 
             name={name} 
             onChange = {onChange}
@@ -105,16 +107,16 @@ export function SelectMd({ name, texto, data, selectedValue, onChange  }){
     </div>
 }
 
-export function TextLg({texto, info}){
+export function TextLg({texto, info, required}){
     return <div className="cont_lg" >
-        <label> {texto} </label>
+        <label> {texto} {required && "(*)"} </label>
         <p>{info}</p>
     </div>
 }
 
 export function InputLg({name, texto, tipo, info, onChange, autocomplete, required}){
     return <div className="cont_lg">
-        <label> {texto} </label>
+        <label> {texto} {required && "(*)"} </label>
         <input 
             name={name} 
             type = {tipo} 
@@ -126,9 +128,9 @@ export function InputLg({name, texto, tipo, info, onChange, autocomplete, requir
     </div>
 }
 
-export function InputLgBlock({name, texto, tipo, info }){
+export function InputLgBlock({name, texto, tipo, info, required }){
     return <div className="cont_lg">
-        <label> {texto} </label>
+        <label> {texto} {required && "(*)"}</label>
         <input 
             name={name} 
             type = {tipo} 
@@ -152,9 +154,9 @@ export function InputLgArch({name, texto, tipo, info, accept, onChange}){
     </div>
 }
 
-export function SelectLg({ name, texto, data, onChange, selectedValue }){
+export function SelectLg({ name, texto, data, onChange, selectedValue, required }){
     return <div className="cont_lg">
-        <label> {texto} </label>
+        <label> {texto} {required && "(*)"}</label>
         <select 
             name={name}
             onChange = {onChange}

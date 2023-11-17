@@ -22,6 +22,10 @@
     min-height: 346px;
 }
 
+#conbtn{
+    min-height: 254px;
+}
+
 .tabla{
     border: 2px solid #182B57;
     background-color: #182B57;
@@ -72,13 +76,13 @@
     border-radius: 5px ;
     min-height: 15px;
     width: 47%;
-    margin:  2px 0;
+    margin: -6px 0 7px 0;
     border-collapse: separate;
     border-spacing: 0 5px;
 }
 
 .tablaMat td  {
-    border: 2px solid black;
+    border: 2px rgb(199, 197, 197) solid;
     border-radius: 5px;
     padding-left: 10px;
     height: 30px;
@@ -86,9 +90,11 @@
 
 #eliminarMat{
     background-color:rgba(211, 90, 90, 0.564);
+    border: 2px #c65353 solid;
     cursor: pointer;
     text-align: center;
     padding-left: 0;
     width: 12%;
+    color: #c65353;
     font-size: 22px;
 }

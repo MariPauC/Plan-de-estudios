@@ -20,6 +20,7 @@ export function UserPerfil(){
     const [modoEdicion, setModoEdicion] = useState(false);
     const [showMessage, setShowMessage] = useState(false);
     const [user, setUser] = useState([]);
+    const [detalle, setDetalle] = useState([]);
 
     useEffect(() => {
         if (!modoEdicion) {
@@ -33,7 +34,27 @@ export function UserPerfil(){
                 console.error('Error buscando datos del usuario:', error);
             });
         }
-    }, [modoEdicion]);
+        if(usuario.usu_rol === "Decano"){
+            axios.get(`/api/decano/${usuario.idUsuario}`)
+            .then(response => {
+                const data = response.data;
+                setDetalle(data);
+            })
+            .catch(error => {
+                console.error('Error buscando datos del decano:', error);
+            });
+        }else{
+            axios.get(`/api/director/${usuario.idUsuario}`)
+            .then(response => {
+                const data = response.data;
+                setDetalle(data);
+            })
+            .catch(error => {
+                console.error('Error buscando datos del director:', error);
+            });
+        }
+
+    }, [modoEdicion, usuario]);
 
     return <>
         <HeaderPriv/>
@@ -43,7 +64,7 @@ export function UserPerfil(){
         </div>
         <div className="contAdmDoble">
             <div className="contBtnUsuario">
-                <h3 className="ttlAdmi">Perfil del usuario</h3>
+                <h3 className="ttlAdmi">{detalle.fac_nombre}</h3>
                 <MdAccountCircle size="155px" style={{color:"#707070"}}/>
                 <div>
                 {!modoEdicion && <Btnmin texto="Editar perfil" color="#182B57" onClick={() => setModoEdicion(!modoEdicion)}/>}
@@ -60,7 +81,7 @@ export function UserPerfil(){
                                         modoEdicion={modoEdicion} setModoEdicion={setModoEdicion}
                                         showMessage= {showMessage} setShowMessage={setShowMessage}
                                     /> ))
-                : user.map((item) => ( <Informacion key={item.idUsuario} data={item} /> ))}
+                : user.map((item) => ( <Informacion key={item.idUsuario} data={item} detalle={detalle} /> ))}
             </div>
         </div>
         {showMessage && createPortal(
@@ -72,7 +93,8 @@ export function UserPerfil(){
     
 }
 
-export function Informacion ({ data }) {
+export function Informacion ({ data, detalle }) {
+
     return (
         <>
             <h3 className="ttlAdmi">Información Principal</h3>
@@ -80,15 +102,16 @@ export function Informacion ({ data }) {
             <TextLg texto="Apellidos:" info={data.usu_apellido}/>
             <TextLg texto="Correo:" info={data.usu_correo}/>
             <TextLg texto="Documento:" info={data.usu_documento}/>    
-
+            {data.usu_rol != "Administrador"&& <>
             <h3 className="ttlAdmi">Datos del {data.usu_rol}</h3>
-            <TextLg texto="Facultad:"/>
-            {data.usu_rol === "Director" && <TextLg texto="Programa:" info={data.programa}/> }
-            <TextLg texto="Sede:" info={data.sede}/> 
-
+            <TextLg texto="Facultad:" info={detalle.fac_nombre}/>
+            {data.usu_rol === "Director" && <TextLg texto="Programa:" info={detalle.pro_nombre}/> }
+            <TextLg texto="Sede:" info={detalle.fac_sede}/> 
             <h3 className="ttlAdmi">Firma</h3>
             {data.usu_firma ?  <div className="imgFirma"><MostrarImagen archivoFirma={data.usu_firma}/></div>
             :<div className="imgFirma"><MdOutlineImageNotSupported size="50px"/></div>}
+            </>}
+            
         </>
     );
 }
@@ -151,7 +174,6 @@ export function FormularioUsuario ({ data, modoEdicion, setModoEdicion, setShowM
             console.error('Error al actualizar el usuario:', error);
         }
     };
-    
     
     return (
         <form onSubmit={handleFormU}>

@@ -81,34 +81,35 @@ export function TablaMat({ data, onclick }){
     return(
         <table className="tablaMat">
             <tbody>
-                {data.map((item) => ( <FilaMT key={item.idPlanEstudios} data={item} onclick={onclick} /> ))}
+                {data.map((item) => ( <FilaMT key={item.id} data={item} onclick={onclick} /> ))}
             </tbody>
         </table>
     )
 }
 
-export function FilaMT ({ data, onclick  }) {
+export function FilaMT ({ data, onclick }) {
     return (
-        <tr key={data.idPlanEstudios}>
-            <td>{data.nombre}</td>
-            <td onclick ={onclick} id="eliminarMat"> <MdOutlineDeleteForever /> </td>
-        </tr>
+        <tr key={data.id}>
+        <td>{data.nombre}</td>
+        <td onClick={() => onclick(data.id)} id="eliminarMat">
+            <MdOutlineDeleteForever style={{marginTop:"10%"}} />
+        </td>
+    </tr>
     );
 };
 
 
-export function AutoTabla({ titulos, data, tipo, cargar }){ 
+export function AutoTabla({ titulos, data, tipo, cargar, id }){ 
     const ttl = [];
 
     for (let i = 0; i < titulos.length; i++) {
         ttl.push(
             <th>{titulos[i]}</th>
         );
-        
     }
 
     return(
-        <div className="contTabla">
+        <div className="contTabla" id={id}>
         <table className="tabla">
             <thead className="tablaTtl">
                 <tr>
@@ -119,6 +120,7 @@ export function AutoTabla({ titulos, data, tipo, cargar }){
             <tbody>
                 {tipo === "usuario" &&  < FilaUsuarios data={data} cargar={cargar}/> }
                 {tipo === "area" &&  < FilaAreas data={data} cargar={cargar}/> }
+                {tipo === "director" &&  < FilaDirectores data={data} /> }
             </tbody>
         </table>
         </div>
@@ -138,11 +140,13 @@ export function FilaUsuarios ({ data, cargar }) {
 
     return (
         <> {data.map((item) => ( 
-            <tr key={item.idusuario}>
+            <tr key={item.idUsuario}>
                 <td>{item.usu_nombre+" "+item.usu_apellido}</td>
                 <td>{item.usu_correo}</td>
                 <td>{item.usu_rol}</td>
-                <td className="tamIcono" onClick={() => mostrarModal(item.idusuario)}> <MdOutlineMode className="iconTable" style={{cursor:"pointer"}} /> </td>
+                <td className="tamIcono" onClick={() => mostrarModal(item.idusuario)}>
+                    <MdOutlineMode className="iconTable" style={{cursor:"pointer"}} />
+                </td>
             </tr>
             ))}
             {showModal && createPortal(
@@ -176,6 +180,20 @@ export function FilaAreas ({ data, cargar }) {
                 <AreaModal onClose={() => setShowModal(false)} idArea={selectedAreaId} cargar={cargar}/>,
                 document.body
             )}
+        </>
+    );
+};
+
+export function FilaDirectores ({ data }) {
+    return (
+        <> {data.map((item) => ( 
+            <tr key={item.idUsuario}>
+                <td>{item.usu_nombre}</td>
+                <td>{item.usu_apellido}</td>
+                <td>{item.usu_correo}</td>
+                <td>{item.fac_sede}</td>
+            </tr>
+            ))}
         </>
     );
 };

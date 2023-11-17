@@ -22,14 +22,20 @@ export function ListaAreas(){
     }
 
     useEffect(() => {
-        cargarArea();
+        axios.get(`/api/listaAreas`)
+            .then(response => {
+                setAreas(response.data) ;
+            })
+            .catch(error => {
+                console.error('Error cargando usuarios:', error);
+            });
     }, []);
 
     const cargarArea = async () =>{
         try {
             const response = await axios.get(`/api/listaAreas`);
             setAreas(response.data)
-            
+            console.log("carga");
         } catch (error) {
             console.error('Error cargando areas:', error);
         }
@@ -48,10 +54,10 @@ export function ListaAreas(){
             <div className="contBoton">
                 <Btnmin texto="Añadir área" color="#182B57" onClick={openModal}/>
             </div>
-            <AutoTabla titulos={titulos} data={areas} tipo="area" onclick={openModal} cargar={cargarArea()}/>
+            <AutoTabla titulos={titulos} data={areas} tipo="area" onclick={openModal} cargar={cargarArea}/>
         </div>
         {showModal && createPortal(
-        <AreaModal onClose={() => {setShowModal(false);}} cargar={cargarArea()} />,
+        <AreaModal onClose={() => {setShowModal(false);}} cargar={cargarArea} />,
         document.body
         )}
     </>

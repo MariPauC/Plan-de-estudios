@@ -16,8 +16,6 @@ export function PublicUser( {rol} ){
     var fechaRegistro;
     var fechaCalidad;
     
-    const [numSemestres, setNumSemestres] = useState(1);
-    const [dataPlan, setDataPlan] = useState([]);
     const [programa, setPrograma] = useState([]);
     const [areas, setAreas] = useState([]);
     const [materias, setMaterias] = useState([]);
@@ -54,26 +52,9 @@ export function PublicUser( {rol} ){
         .then(response => {
             const data = response.data;
             setPrograma(data[0]);
-            axios.get(`/api/infoPlan/${programa.idPrograma}`)
-            .then(response => {
-                const data1 = response.data;
-                setDataPlan(data1[0]);
-            })
-            .catch(error => {
-                console.error('Error buscando planes en desarrollo:', error);
-            });
         })
         .catch(error => {
             console.error('Error buscando planes en desarrollo:', error);
-        });
-        axios.get(`/api/semestresPlan/${idPlan}`)
-        .then(response => {
-            const data = response.data;
-            setNumSemestres (data.pln_semestres);
-        })
-        .catch(error => {
-            console.error('Error buscando planes en desarrollo:', error);
-            
         });
         axios.get(`/api/areasPlan/${idPlan}`)
         .then(response => {
@@ -93,11 +74,13 @@ export function PublicUser( {rol} ){
         });
     }, [idPlan]);
 
-    if(dataPlan.pro_fechaReg){
-        fechaRegistro = ajustarFecha(dataPlan.pro_fechaReg);
+
+    console.log(programa);
+    if(programa.pro_fechaReg){
+        fechaRegistro = ajustarFecha(programa.pro_fechaReg);
     }
-    if(dataPlan.pro_fechaCalidad){
-        fechaCalidad = ajustarFecha(dataPlan.pro_fechaCalidad);
+    if(programa.pro_fechaCalidad){
+        fechaCalidad = ajustarFecha(programa.pro_fechaCalidad);
     }
 
     const sumTtlCreditos = materias.reduce((acumulador, materias) => acumulador + parseInt(materias.mat_creditos), 0);
@@ -107,7 +90,7 @@ export function PublicUser( {rol} ){
     const contTotales = [];
     const contAreas = [];
     var materiasFiltradas =[];
-    for (let i = 0; i < numSemestres; i++) {
+    for (let i = 0; i < programa.pln_semestres; i++) {
         materiasFiltradas = materias.filter(materia => materia.mat_semestre === (i + 1))
         const sumCreditos = materiasFiltradas.reduce((acumulador, materiasFiltradas) => acumulador + parseInt(materiasFiltradas.mat_creditos), 0);
         const sumHoras = materiasFiltradas.reduce((acumulador, materiasFiltradas) => acumulador + parseInt(materiasFiltradas.mat_horas), 0);
@@ -156,9 +139,9 @@ export function PublicUser( {rol} ){
         }
         <div className="contTitulo">
             <p>FACULTAD DE {"INGENIERIA"}</p>
-            <p>RESOLUCIÓN DE REGISTRO CALIFICADO {dataPlan.pro_regAcreditacion} DE {fechaRegistro}</p>
-            {dataPlan.pro_altaCalidad && <p>RESOLUCIÓN DE ACREDITADO DE ALTA CALIDAD {dataPlan.pro_altaCalidad} DE {fechaCalidad}</p>}
-            <p>CÓDIGO SINIES {dataPlan.pro_SNIES}</p>
+            <p>RESOLUCIÓN DE REGISTRO CALIFICADO {programa.pro_regAcreditacion} DE {fechaRegistro}</p>
+            {programa.pro_altaCalidad && <p>RESOLUCIÓN DE ACREDITADO DE ALTA CALIDAD {programa.pro_altaCalidad} DE {fechaCalidad}</p>}
+            <p>CÓDIGO SINIES {programa.pro_SNIES}</p>
         </div>
         <button onClick={aumentarEscala}>Aumentar Escala</button>
         <button onClick={disminuirEscala}>Disminuir Escala</button>
@@ -184,8 +167,8 @@ export function PublicUser( {rol} ){
             </div>
            
             <div className='totales'>
-                <p> <b>Modalidad:</b> {dataPlan.pro_modalidad}  </p>
-                <p> <b>Jornada:</b> {dataPlan.pro_jornada}  </p>
+                <p> <b>Modalidad:</b> {programa.pro_modalidad}  </p>
+                <p> <b>Jornada:</b> {programa.pro_jornada}  </p>
                 <p> <b>Total créditos:</b> {sumTtlCreditos}  </p>
                 <p> <b>Total horas:</b> {sumTtlHoras}  </p>
                 <p> <b>Total materias:</b> {materias.length}</p>

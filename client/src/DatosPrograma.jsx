@@ -6,13 +6,14 @@ import { TablaSimple } from "./Table"
 import { InputMd, SelectMd, InputMdBlock } from "./CuadrosTexto"
 import { Btnmin } from "./Button"
 import { MensajeCorrecto } from "./Mensaje";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate  } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { createPortal } from 'react-dom';
 import axios from "axios";
 
 export function DataProg({rol}){
     const params = useParams();
+    const navigate = useNavigate();
     const accion = params.accion;
     const nombrePrograma = params.nombre;
     const idPrograma = params.id;
@@ -87,35 +88,41 @@ export function DataProg({rol}){
                 acreditacion:data.pro_altaCalidad,
                 acreditafecha:fechaCalidad,
             });
-        } else {
+            } else {
             console.log('No se encontraron datos para el programa con ese id.');
-        }
-    })
-    .catch(error => {
+            }
+            })
+            .catch(error => {
         console.error('Error fetching programa details:', error);
-    });}}, [accion, idPrograma]);
+        });}
+        console.log("carga");
+    }, [accion, idPrograma]);
 
     const handleFormD = async (e) =>{
         e.preventDefault();
         if(accion === "editar"){
             try {
                 const response = await axios.put(`/api/programa/${idPrograma}`, { valuesProgram });
-                console.log('Programa actualizado con éxito');
                 setShowMessage(true);
             } catch (error) {
                 console.error('Error al actualizar el programa:', error);
             }
         }
-        else{
+        else {
             try {
                 const response = await axios.post(`/api/programa`, { valuesProgram });
-                console.log('Programa creado con éxito');
+                const { idPrograma, pro_nombre } = response.data;
                 setShowMessage(true);
+                navigate(`/directoresPrograma/${pro_nombre.replace(/ /g, '-')}/${idPrograma}/crear`);
             } catch (error) {
                 console.error('Error al crear el programa:', error);
             }
         }
     };
+
+    const closeModal = async (e) => {
+        setShowMessage(false);
+    }
     
     return(
         <>
@@ -170,7 +177,7 @@ export function DataProg({rol}){
             </form>
         </div>
         {showMessage && createPortal(
-        <MensajeCorrecto onClose={() => setShowMessage(false)} />,
+        <MensajeCorrecto onClose={closeModal} />,
         document.body
         )}
         </>

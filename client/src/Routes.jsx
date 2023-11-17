@@ -24,7 +24,6 @@ export function UserRoutes(){
         }
     }
     
-    
     return(
         <Routes>
             <Route path="/login" element={<Login/>}/>   
@@ -32,13 +31,12 @@ export function UserRoutes(){
             <Route path="/usuarios" element={<ProtectedRoute><ListaUsuarios/></ProtectedRoute>}/> 
             <Route path="/areasConocimiento" element={<ProtectedRoute><ListaAreas/></ProtectedRoute>}/>  
             <Route path="/datosPlan/:nombre?/:id/:idPlan?" element={<ProtectedRoute><EditarPlanEst rol={rol}/></ProtectedRoute>}/>
-            { rol ?  <Route path="/inicioProg/:nombre/:id" element={<ProtectedRoute><InicioProg rol={rol}/></ProtectedRoute>}/>
-            : <Route path="/" element={<ProtectedRoute><InicioProg rol={rol} /></ProtectedRoute>}/>}
-            { rol && <Route path="/" element={<ProtectedRoute><InicioPrin rol={rol}/></ProtectedRoute>}/>}
+            <Route path="/inicioProg/:nombre?/:id?" element={<ProtectedRoute><InicioProg rol={rol}/></ProtectedRoute>}/>
+            <Route path="/" element={<ProtectedRoute><InicioPrin/></ProtectedRoute>}/>
             <Route path="/listadoPlanes/:nombre/:id" element={<ProtectedRoute><PlanEst rol={rol}/></ProtectedRoute>}/>
             <Route path="/datosPlan/:nombre?/:id/:idPlan?" element={<ProtectedRoute><EditarPlanEst rol={rol}/></ProtectedRoute>}/>
             <Route path="/datosPrograma/:accion/:nombre?/:id?" element={<ProtectedRoute><DataProg rol={rol}/></ProtectedRoute>}/>
-            <Route path="/directoresPrograma/:nombre/:id" element={<ProtectedRoute><DirctProg/></ProtectedRoute>}/>
+            <Route path="/directoresPrograma/:nombre/:id/:accion?" element={<ProtectedRoute><DirctProg/></ProtectedRoute>}/>
             <Route path="/perfil" element={<ProtectedRoute><UserPerfil rol={rol}/></ProtectedRoute>}/>
         </Routes>
     );

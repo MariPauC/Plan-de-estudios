@@ -23,7 +23,7 @@
 .cont_md label, .cont_lg label, .cont_lgArch label, .cont_sh label {
     display: inline-block;
     font-weight: bold;
-    min-width: 100px; 
+    min-width: 115px; 
 }
 
 .cont_sh label{
@@ -80,8 +80,28 @@
 	color: black;
 }
 
+.flex{
+    display: flex;
+}
+
 #big{
     width: 100% !important;
 }
 
+#selectBtn{
+    width: 96% !important;
+}
 
+.addMat{
+    background-color:#adf8b5b4;
+    border: 2px #61B369 solid;
+    color: #61B369;;
+    border-radius: 5px;
+    padding-left: 10px;
+    height: 30px;
+    cursor: pointer;
+    text-align: center;
+    padding-left: 0;
+    width: 12%;
+    font-size: 22px;
+}
