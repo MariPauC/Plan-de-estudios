@@ -4,7 +4,7 @@ import { Titul } from "./Titulo";
 import { Tabla }from "./Table"
 import { BtnMdIcon,Btnmin } from "./Button"
 import { PagAnterior, PagActual} from "./Breadcrumbs"
-import { MdAddCircleOutline } from "react-icons/md";
+import { MdAddCircleOutline, MdOutlineContentCopy } from "react-icons/md";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect, useContext } from "react";
 import { AuthContext } from './AuthContext';
@@ -63,8 +63,19 @@ export function PlanEst({rol}){
     
     const createPlan = () => {
         try {
-            const responsePlan = axios.post(`/api/crearPlan/${idPrograma}`, { idUsuario, numSemestre });
+            axios.post(`/api/crearPlan/nuevo/${idPrograma}`, { idUsuario, numSemestre });
             navigate(`/datosPlan/${nombrePrograma}/${idPrograma}`);
+        } catch (error) {
+            console.error('Error creando plan:', error);
+        }
+    };
+
+    const duplicarPlan = async () => {
+        try {
+            const responsePlan = await axios.post(`/api/crearPlan/duplicar/${idPrograma}`, { idUsuario, numSemestre });
+            const nuevoPlanId = responsePlan.data.nuevoPlanId;
+            console.log(nuevoPlanId);
+            navigate(`/datosPlan/${nombrePrograma}/${idPrograma}/${nuevoPlanId}`);
         } catch (error) {
             console.error('Error creando plan:', error);
         }
@@ -83,7 +94,8 @@ export function PlanEst({rol}){
             <h3 className="ttlAdmi">En desarrollo</h3>
             {planesDesarrollo.length > 0 ? <Tabla data= {planesDesarrollo} progId={idPrograma} progNombre={nombrePrograma} estado="Modificado por" accion="Editar"/> 
                         : <div className="btnPlace">                           
-                            <BtnMdIcon icon=<MdAddCircleOutline size="60px"/> texto="Crear plan" onClick={createPlan}/>
+                            <BtnMdIcon icon=<MdAddCircleOutline size="60px"/> texto="Crear nuevo plan" onClick={createPlan}/>
+                            {planesActual.length > 0 && <BtnMdIcon icon=<MdOutlineContentCopy size="60px"/> texto="Duplicar plan actual" onClick={duplicarPlan}/>}
                         </div>
             }
             <h3 className="ttlAdmi">Actual</h3>

@@ -37,23 +37,28 @@ export function UserPerfil(){
         if(usuario.usu_rol === "Decano"){
             axios.get(`/api/decano/${usuario.idUsuario}`)
             .then(response => {
-                const data = response.data;
-                setDetalle(data);
+                const dataArray = response.data; // La respuesta es un arreglo
+                if (dataArray.length > 0) {
+                const info = dataArray[0]; // Obtenemos el primer objeto del arreglo
+                setDetalle(info);
+            } 
             })
             .catch(error => {
                 console.error('Error buscando datos del decano:', error);
             });
         }else{
-            axios.get(`/api/director/${usuario.idUsuario}`)
+            axios.get(`/api/findDirector/${usuario.idUsuario}`)
             .then(response => {
-                const data = response.data;
-                setDetalle(data);
+                const dataArray = response.data; // La respuesta es un arreglo
+                if (dataArray.length > 0) {
+                const info = dataArray[0]; // Obtenemos el primer objeto del arreglo
+                setDetalle(info);
+            }
             })
             .catch(error => {
                 console.error('Error buscando datos del director:', error);
             });
         }
-
     }, [modoEdicion, usuario]);
 
     return <>
@@ -77,7 +82,7 @@ export function UserPerfil(){
             <div className="formUsuario">
                 {modoEdicion ? 
                 user.map((item) => ( <FormularioUsuario 
-                                        key={item.idUsuario} data={item} 
+                                        key={item.idUsuario} data={item} detalle={detalle}
                                         modoEdicion={modoEdicion} setModoEdicion={setModoEdicion}
                                         showMessage= {showMessage} setShowMessage={setShowMessage}
                                     /> ))
@@ -89,7 +94,7 @@ export function UserPerfil(){
         document.body
         )}
     </>
-
+    
     
 }
 
@@ -116,7 +121,7 @@ export function Informacion ({ data, detalle }) {
     );
 }
 
-export function FormularioUsuario ({ data, modoEdicion, setModoEdicion, setShowMessage }){
+export function FormularioUsuario ({ data, modoEdicion, setModoEdicion, setShowMessage, detalle }){
     var [valuesUser, setValuesUser] = useState({
         nombre: data.usu_nombre,
         apellido: data.usu_apellido,
@@ -167,7 +172,6 @@ export function FormularioUsuario ({ data, modoEdicion, setModoEdicion, setShowM
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }});
-            console.log('Usuario actualizado con éxito:');
             setModoEdicion(false);
             setShowMessage(true);
         } catch (error) {
@@ -184,9 +188,9 @@ export function FormularioUsuario ({ data, modoEdicion, setModoEdicion, setShowM
             <InputLg name="documento" texto = "Documento:" tipo="number" required={"required"} info={valuesUser.documento} onChange={handleInputChangeU} />
 
             <h3 className="ttlAdmi">Datos del {data.usu_rol}</h3>
-            <TextLg texto="Facultad:"/>
-            {data.usu_rol === "Director" && <TextLg texto="Programa:" info={data.programa}/> }
-            <TextLg texto="Sede:" info={data.sede}/> 
+            <TextLg texto="Facultad:" info={detalle.fac_nombre}/>
+            {data.usu_rol === "Director" && <TextLg texto="Programa:" info={detalle.pro_nombre}/> }
+            <TextLg texto="Sede:" info={detalle.fac_sede}/> 
 
             <h3 className="ttlAdmi">Firma</h3>
             <InputLgArch name="archivoFirma"  texto = "Archivo:" tipo="file" accept="image/png, image/jpg, image/jpeg" onChange={handleFileChange}/>

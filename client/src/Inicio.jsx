@@ -146,14 +146,13 @@ export function InOtros({idUsuario, rol}){
                     setIdPrograma(data.idPrograma);
                     setNombrePrograma(data.pro_nombre);
                     setFacultad(data.fac_nombre);
-                    console.log("ingresa director");
                 }
             })
             .catch(error => {
                 console.error('Error buscando datos del director:', error);
             });
         }
-    }, []);    
+    }, [rol]);    
 
     return(
         <>

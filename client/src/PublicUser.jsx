@@ -6,6 +6,7 @@ import { PagAnterior, PagActual} from "./Breadcrumbs"
 import { useParams } from "react-router-dom";
 import { useState, useEffect, useContext } from "react";
 import { AuthContext } from './AuthContext';
+import { MdArrowBackIos, MdArrowForwardIos, MdOutlineImageNotSupported } from "react-icons/md";
 import "./publicUser.css"
 import axios from "axios";
 
@@ -19,6 +20,8 @@ export function PublicUser( {rol} ){
     const [programa, setPrograma] = useState([]);
     const [areas, setAreas] = useState([]);
     const [materias, setMaterias] = useState([]);
+    const [decanos, setDecanos] = useState([]);
+    const [directores, setDirectores] = useState([]);
 
     const { usuario } = useContext(AuthContext);
 
@@ -46,7 +49,6 @@ export function PublicUser( {rol} ){
         setMargen(nuevoMargen);
     };
 
-
     useEffect(() => {
         axios.get(`/api/programaPlan/${idPlan}`)
         .then(response => {
@@ -54,7 +56,7 @@ export function PublicUser( {rol} ){
             setPrograma(data[0]);
         })
         .catch(error => {
-            console.error('Error buscando planes en desarrollo:', error);
+            console.error('Error buscando información del programa:', error);
         });
         axios.get(`/api/areasPlan/${idPlan}`)
         .then(response => {
@@ -62,7 +64,7 @@ export function PublicUser( {rol} ){
             setAreas (data);
         })
         .catch(error => {
-            console.error('Error buscando planes en desarrollo:', error);
+            console.error('Error buscando areas del plan:', error);
             
         });
         axios.get(`/api/listaMaterias/${idPlan}`)
@@ -70,12 +72,25 @@ export function PublicUser( {rol} ){
             setMaterias(response.data)
         })
         .catch(error => {
-            console.error('Error buscando planes en desarrollo:', error);
+            console.error('Error buscando lista de materias:', error);
+        });
+        axios.get(`api/firmasDecanos/${idPlan}`)
+            .then(response => {
+                setDecanos(response.data); 
+            })
+            .catch(error => {
+                console.error('Error buscando firmas decanos:', error);
+            });
+        axios.get(`api/firmasDirectores/${idPlan}`)
+        .then(response => {
+            setDirectores(response.data); 
+            console.log(directores);
+        })
+        .catch(error => {
+            console.error('Error buscando firmas directores:', error);
         });
     }, [idPlan]);
 
-
-    console.log(programa);
     if(programa.pro_fechaReg){
         fechaRegistro = ajustarFecha(programa.pro_fechaReg);
     }
@@ -120,6 +135,44 @@ export function PublicUser( {rol} ){
         );
     }
 
+    const handleScroll = (direction) => {
+        const contPlan = document.querySelector('.contPlan');
+        const step = 320; // Puedes ajustar esto según tus necesidades
+    
+        if (direction === 'left') {
+            contPlan.scrollTo({
+                left: contPlan.scrollLeft - step,
+                behavior: 'smooth',
+        });
+        } else {
+            contPlan.scrollTo({
+                left: contPlan.scrollLeft + step,
+                behavior: 'smooth',
+        });
+        }
+    };
+    
+    const imprimir = async () => {
+        // Cambiar a la hoja de estilo de impresión
+        const link = document.createElement('link');
+        link.href = './publicUserDownload.css';
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        document.head.appendChild(link);
+        
+        // Esperar a que se carguen los estilos antes de imprimir
+        await new Promise((resolve) => {
+            link.onload = resolve;
+            document.head.appendChild(link);
+        });
+        
+        // Imprimir la página
+        window.print();
+        
+        // Remover la hoja de estilo de impresión después de imprimir
+        document.head.removeChild(link);
+      };
+
     return <>
         <HeaderPub programa={nombrePrograma.replace(/-/g,' ')}/>
         {usuario && 
@@ -132,7 +185,7 @@ export function PublicUser( {rol} ){
             </div>
             <div className="contAdm" id="unqBtn">
                 <div className="contBoton">
-                    <Btnmin texto="Imprimir" color="#182B57" />
+                    <Btnmin texto="Imprimir" color="#182B57" onClick={imprimir}/>
                 </div>
             </div>
             </>
@@ -143,9 +196,10 @@ export function PublicUser( {rol} ){
             {programa.pro_altaCalidad && <p>RESOLUCIÓN DE ACREDITADO DE ALTA CALIDAD {programa.pro_altaCalidad} DE {fechaCalidad}</p>}
             <p>CÓDIGO SINIES {programa.pro_SNIES}</p>
         </div>
-        <button onClick={aumentarEscala}>Aumentar Escala</button>
-        <button onClick={disminuirEscala}>Disminuir Escala</button>
-        
+        {/*<button onClick={aumentarEscala}>Aumentar Escala</button>
+        <button onClick={disminuirEscala}>Disminuir Escala</button>*/}
+        <div className='planes'>
+            <button className='iconArrow' title="Deslizar a la izquierda" onClick={() => handleScroll('left')}><MdArrowBackIos /></button>
             <div className='contPlan' style={{ transform: `scaley(${escala})`, transformOrigin: 'left top '}} >
                 <div style={{ transform: `scalex(${escala})`, transformOrigin: 'left top' }}>
                 <div className='contMateriasPublicas'> 
@@ -156,7 +210,9 @@ export function PublicUser( {rol} ){
                 </div>
                 </div>
             </div>
-            <div className='contInfo' >
+            <button className='iconArrow' title="Deslizar a la derecha" onClick={() => handleScroll('right')}><MdArrowForwardIos/></button>
+        </div>
+        <div className='contInfo' id="detalles">
             <div className='contAreas'>
                 <h3>Áreas del conocimiento</h3>
                 <table className='tblAreas'>
@@ -165,7 +221,6 @@ export function PublicUser( {rol} ){
                     </tbody>
                 </table>
             </div>
-           
             <div className='totales'>
                 <p> <b>Modalidad:</b> {programa.pro_modalidad}  </p>
                 <p> <b>Jornada:</b> {programa.pro_jornada}  </p>
@@ -174,8 +229,39 @@ export function PublicUser( {rol} ){
                 <p> <b>Total materias:</b> {materias.length}</p>
             </div>
         </div>
+        <div className='contInfo' >
+            <div className='contAreas'>
+                <h3>Elaborado por</h3>
+                {directores.map((item) => ( <Firmas key={item.id}  data={item} nombrePrograma={nombrePrograma} tipoUsu="Director"/> ))}
+            </div>
+            <div className='contAreas'>
+                <h3>Revisado por</h3>
+                {decanos.map((item) => ( <Firmas key={item.id}  data={item} nombrePrograma={nombrePrograma} tipoUsu="Decano"/> ))}
+            </div>
+        </div>
         
         <FootLg/>
     </>
 }
 
+export function Firmas(key, data, nombrePrograma, tipoUsu){
+    return(<div key={key}>
+        <p>{tipoUsu}</p>
+        {data.usu_firma ?  <div className="imgFirma"><Imagen archivoFirma={data.usu_firma}/></div>
+        :<div className="imgFirma"><MdOutlineImageNotSupported size="50px"/></div>}
+        <p>{data.usu_nombre} {data.usu_apellido}</p>
+        
+        {tipoUsu === "Director" && <p>Director programa de {nombrePrograma}, sede {data.fac_sede}</p>}
+        {tipoUsu === "Decano" && <p>Decano facultad de {data.fac_nombre}, sede {data.fac_sede}</p>}
+    </div>
+    )
+}
+
+function Imagen({ archivoFirma }) {
+    const baseUrl = "http://localhost:5000/uploads/"; // Cambia esto a la URL real de tu servidor
+    const imageUrl = baseUrl + archivoFirma;
+
+    return (
+        <img className="foto" src={imageUrl} alt="Firma del usuario" />
+    );
+}

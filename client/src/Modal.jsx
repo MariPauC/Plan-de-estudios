@@ -21,6 +21,8 @@ export function MatPubModal({ onClose, idMateria, area, color}){
         creditos: "",
         descripcion: "",
     });
+    const [prerequisitos, setPrerequisitos] = useState([]);
+    const [correquisitos, setCorrequisitos] = useState([]);
     useEffect(() => {
             axios.get(`api/materia/${idMateria}`)
             .then(response => {
@@ -37,12 +39,24 @@ export function MatPubModal({ onClose, idMateria, area, color}){
                     descripcion:  materia.mat_descripcion,
                 });
             } 
-        })
-        .catch(error => {
-            console.error('Error fetching materia details:', error);
-        });}, []);
-    
-    
+            })
+            .catch(error => {
+                console.error('Error fetching materia details:', error);
+            });}, []);
+            axios.get(`api/relacion/Prerequisito/${idMateria}`)
+            .then(response => {
+                setPrerequisitos(response.data); 
+            })
+            .catch(error => {
+                console.error('Error fetching materia details:', error);
+            });
+            axios.get(`api/relacion/Correquisito/${idMateria}`)
+            .then(response => {
+                setCorrequisitos(response.data); 
+            })
+            .catch(error => {
+                console.error('Error fetching materia details:', error);
+            });
     return (
         <div className="modal">
             <div className="contModal">
@@ -70,12 +84,14 @@ export function MatPubModal({ onClose, idMateria, area, color}){
                     </div>
                     <div>
                         <h3>Prerequisito:</h3>
-                        <p> 2sdasdddfgdf </p>
+                        {prerequisitos.length > 0 ? <>{prerequisitos.map((item) => ( <p key={item.id} > {item.nombre} </p> ))}</>
+                        : <p>No existen en esta materia</p>}
                     </div>
                     <hr className="lateral"/>
                     <div>
-                        <h3>Co-requisito:</h3>
-                        <p> ryresvtybhdfgvsec </p>
+                    <h3>Co-requisito:</h3>
+                        {correquisitos.length > 0 ? <>{correquisitos.map((item) => ( <p key={item.id} > {item.nombre} </p> ))}</>
+                        : <p>No existen en esta materia</p>}
                     </div>
                     
                     <div id="resumen">
@@ -149,9 +165,9 @@ export function MatPrivModal({ onClose, idMateria, idPlan, numSemestres, accion,
         if (accion === "editar") {
             axios.get(`api/materia/${idMateria}`)
             .then(response => {
-            const dataArray = response.data; // La respuesta es un arreglo
+            const dataArray = response.data; 
             if (dataArray.length > 0) {
-                const materia = dataArray[0]; // Obtenemos el primer objeto del arreglo
+                const materia = dataArray[0]; 
                 setValuesMateria({
                     nombre: materia.mat_nombre,
                     codigo: materia.mat_codigo,
@@ -284,13 +300,27 @@ export function MatPrivModal({ onClose, idMateria, idPlan, numSemestres, accion,
         else{
             try {
                 const response = await axios.post(`/api/materia/${idPlanEstudios}`, { valuesMateria });
+                const idMateriaCreada = response.data.idMateria;
+                if(addcorre.length !== 0 || addpre.length !== 0){
+                    try {
+                        for (const matRel of addpre) {
+                            axios.post(`/api/relacion/${idMateriaCreada}`, { tipo: "Prerequisito", matRel });
+                        }
+                        for (const matRel of addcorre) {
+                            axios.post(`/api/relacion/${idMateriaCreada}`, { tipo: "Correquisito", matRel });
+                        }
+                    } catch (error) {
+                        console.error('Error al añadir los requisitos:', error);
+                    }
+                }
                 setShowMessage(true);
             } catch (error) {
                 console.error('Error al crear la materia:', error);
             }
+            
         }
         try {
-            const response = await axios.put(`/api/modificarPlan/${idPlanEstudios}`, { idUsuario });
+            await axios.put(`/api/modificarPlan/${idPlanEstudios}`, { idUsuario });
         } catch (error) {
             console.error('Error al actualizar el plan:', error);
         }

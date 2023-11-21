@@ -222,8 +222,9 @@ router.put('/programa/:idPrograma', (req, res) => {
                         });
                 }
         });
-});    
-router.post('/programa', async (req, res) => { //Falta modificar
+});  
+
+router.post('/programa', async (req, res) => {
         const { valuesProgram } = req.body;
         try {
                 if(!valuesProgram.regisfecha){
@@ -238,10 +239,10 @@ router.post('/programa', async (req, res) => { //Falta modificar
                         async (err, result) => {
                         if (err) {
                                 console.error('Error registering program:', err);
-                            return res.status(500).json({ error: 'Error registering program' });
+                                return res.status(500).json({ error: 'Error registering program' });
                         }
-                          const programaId = result.insertId; // Obten el ID del programa insertado
-                          const programaNombre = valuesProgram.nombreP; // Obten el nombre del programa
+                                const programaId = result.insertId; 
+                                const programaNombre = valuesProgram.nombreP; 
                         res.status(200).json({ message: 'Programa registrado exitosamente', idPrograma: programaId, pro_nombre: programaNombre });
                 }
                 );
@@ -286,21 +287,41 @@ router.get('/programaPlan/:idPlan', (req, res) => {
         }
 });
 
-router.post('/crearPlan/:idPrograma', async (req, res) => { 
+router.post('/crearPlan/:accion/:idPrograma', async (req, res) => { 
         const idPrograma = req.params.idPrograma;
+        const accion = req.params.accion;
         const { idUsuario,  numSemestre } = req.body;
-        var fechaActual = new Date();
         try {   
-                pool.query( 'INSERT INTO planestudios (pro_id, pln_estado, pln_fechaCreacion, pln_semestres, usuCambio_id) VALUES (?,?,?,?,?)',
-                [ idPrograma, "En desarrollo", fechaActual,  numSemestre, idUsuario ],
-                async (err) => {
-                        if (err) {
-                        console.error('Error registering plan:', err);
-                        return res.status(500).json({ error: 'Error registering plan' });
+                pool.query(
+                        `INSERT INTO planestudios (pro_id, pln_estado, pln_fechaCreacion, pln_fechaCambio, pln_semestres, usuCambio_id)
+                        VALUES (?, "En desarrollo", NOW(), NOW(), ?, ?)
+                        `,
+                        [idPrograma, numSemestre, idUsuario],
+                        (error, result) => {
+                                if (error) {
+                                        console.error(error);
+                                        res.status(500).json({ error: 'Error al crear el nuevo plan de estudios' });
+                                } else {
+                                const nuevoPlanId = result.insertId;
+                                
+                                if (accion === "duplicar") {
+                                        pool.query(`SELECT mat_nombre, mat_codigo, mat_semestre, mat_creditos, mat_horas, mat_descripcion, mat_tipo, area_id
+                                        FROM materia INNER JOIN planestudios ON idPlanEstudios = plan_id WHERE pln_estado = "Actual" AND pro_id = ?`, [idPrograma], (error, materias) => {
+                                        if (error) {
+                                                console.error(error);
+                                                res.status(500).json({ error: 'Error al obtener las materias para duplicar' });
+                                        } else {
+                                                for (const materia of materias) {
+                                                pool.query('INSERT INTO materia (mat_nombre, mat_codigo, mat_semestre, mat_creditos, mat_horas, mat_descripcion, mat_tipo, area_id, plan_id) VALUES (?,?,?,?,?,?,?,?,?)',
+                                                [materia.mat_nombre, materia.mat_codigo, materia.mat_semestre, materia.mat_creditos, materia.mat_horas, materia.mat_descripcion, materia.mat_tipo, materia.area_id, nuevoPlanId]
+                                                );}
+                                                res.status(200).json({ message: 'Operación completada exitosamente', nuevoPlanId });
+                                        }
+                                        });
+                                }
                         }
-                        // Envía una respuesta de éxito al cliente
-                        res.status(200).json({ message: 'Plan de estudios registrado exitosamente' });
                 });
+                
         } catch (error) {
                 console.error('Error registering plan:', error);
                 res.status(500).json({ error: 'An error occurred while registering plan' });
@@ -538,7 +559,7 @@ router.put('/materia/:idMateria', (req, res) => {
         }
 });
 
-router.post('/materia/:idPlan', async (req, res) => { //Falta modificar
+router.post('/materia/:idPlan', async (req, res) => { 
         const idPlan = req.params.idPlan;
         const { valuesMateria } = req.body;
         try {
@@ -550,7 +571,7 @@ router.post('/materia/:idPlan', async (req, res) => { //Falta modificar
                         return res.status(500).json({ error: 'Error registering materia' });
                         }
                         const idMateria = results.idMateria;
-                        // Envía una respuesta de éxito al cliente
+
                         res.status(200).json({ message: 'Materia registrada exitosamente' });
                 });
         } catch (error) {
@@ -639,6 +660,38 @@ router.get('/listaDirectores/:idPrograma', (req, res) => {
         }
 });
 
+router.get('/firmasDirectores/:idPlan', (req, res) => {
+        const idPlan = req.params.idPlan;
+        try{ 
+                pool.query('SELECT idUsuario, usu_nombre, usu_apellido, usu_firma, fac_sede FROM usuario INNER JOIN director ON director_id = idUsuario INNER JOIN facultad ON idfacultad = fac_id INNER JOIN planestudios ON planestudios.pro_id = director.pro_id WHERE idPlanEstudios = ?', [idPlan], (err, results) => {
+                        if (err) {
+                                return res.status(500).json({ error: 'Error retrieving data from the database' });
+                        }
+                        res.json(results);
+                });
+        }
+        catch{
+                console.error('Error identificando la firma de los directores:', error);
+                res.status(500).json({ error: 'Ha ocurrido un error identificando la firma de los directores' });
+        }
+});
+
+router.get('/firmasDecanos/:idPlan', (req, res) => {
+        const idPlan = req.params.idPlan;
+        try{ 
+                pool.query('SELECT idUsuario, usu_nombre, usu_apellido, usu_firma, fac_nombre, fac_sede FROM usuario INNER JOIN facultad ON usu_id = idUsuario INNER JOIN director ON fac_id = idFacultad INNER JOIN planestudios ON planestudios.pro_id = director.pro_id WHERE idPlanEstudios = ?', [idPlan], (err, results) => {
+                        if (err) {
+                                return res.status(500).json({ error: 'Error retrieving data from the database' });
+                        }
+                        res.json(results);
+                });
+        }
+        catch{
+                console.error('Error identificando la firma de los decanos:', error);
+                res.status(500).json({ error: 'Ha ocurrido un error identificando la firma de los decanos' });
+        }
+});
+
 router.get('/listaProgramas/:idUsuario', (req, res) => {
         const idUsuario = req.params.idUsuario;
         try{
@@ -671,7 +724,6 @@ router.get('/decano/:idUsuario', (req, res) => {
         }
 });
 
-
 router.get('/idsDirector/:idUsuario', (req, res) => {
         const idUsuario = req.params.idUsuario;
         try{ 
@@ -688,10 +740,11 @@ router.get('/idsDirector/:idUsuario', (req, res) => {
                 res.status(500).json({ error: 'Ha ocurrido un error identificando la información del director' });
         }
 });
+
 router.get('/findDirector/:idUsuario', (req, res) => {
         const idUsuario = req.params.idUsuario;
         try{ 
-                pool.query('SELECT idPrograma, pro_nombre, fac_nombre FROM programa INNER JOIN director ON idprograma = pro_id INNER JOIN facultad ON idfacultad = fac_id WHERE director_id = ?', [idUsuario], (err, results) => {
+                pool.query('SELECT idPrograma, pro_nombre, fac_sede, fac_nombre FROM programa INNER JOIN director ON idprograma = pro_id INNER JOIN facultad ON idfacultad = fac_id WHERE director_id = ?', [idUsuario], (err, results) => {
                         if (err) {
                                 return res.status(500).json({ error: 'Error retrieving data from the database' });
                         }

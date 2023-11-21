@@ -138,7 +138,7 @@
 
 .btnClose:hover{
     color:rgb(190, 4, 22);
-    scale: 1.2;
+    transform: scale(1.2);
 }
 
 .dobleBtnModal{

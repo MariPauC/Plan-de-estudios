@@ -43,7 +43,6 @@ export function Fila ({ progId, progNombre, data }) {
     const navigate = useNavigate();
 
     const verPlan = () =>{
-        console.log(progId);
         navigate(`/planEstudios/${nombre}/${data.idPlanEstudios}`);
     }
 

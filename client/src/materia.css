@@ -1,32 +1,3 @@
-.contPlan{
-    margin: auto;
-    height: auto;
-    max-width: 83%;
-    text-align: center;
-    overflow-x: scroll;
-}
-
-.contPlan::-webkit-scrollbar {
-    height: 30px;
-}
-
-.contPlan::-webkit-scrollbar-track {
-    background: #E7E7E7;
-    border-radius: 15px;
-
-}
-
-.contPlan::-webkit-scrollbar-thumb {
-    background-color: #A9A9A9;
-    border-radius: 15px;
-}
-
-.contTitulo{
-    text-align: center;
-    margin-bottom: 25px;
-    font-size: 14px;
-}
-
 .contMaterias{
     display: flex;
     flex-wrap: wrap;
@@ -37,12 +8,6 @@
 .contMateriasPublicas{
     display: flex;
     justify-content: space-between;
-    margin-bottom: 20px;
-}
-
-.contSemestre{
-    width: 30%;
-    padding: 1%;
 }
 
 .contTotales{
@@ -58,7 +23,7 @@
     align-items: center;
 }
 
-.mat_pub ,.mat_priv{
+.mat_priv{
     width: 280px;
     margin-top: 20px;
     cursor: pointer;
@@ -109,24 +74,13 @@
 }
 
 .total_materia{
-    width: 280px;
-    height: 37px;
     padding: 3% 0 3% 0;
     display: flex;
     background-color: #E7E7E7;
-    border-radius: 15px;
 }
 
 .total_materia div{
     width: 100%;
-}
-
-.total_materia h3{
-    margin-top: 5%;
-}
-
-.total_materia h4{
-    font-size: 11px;
 }
 
 .contIconComent{
@@ -152,3 +106,9 @@
     width: 35px;
     height: 35px;
 }
+
+.mat_pub{
+    cursor: pointer;
+    position:relative;
+}
+

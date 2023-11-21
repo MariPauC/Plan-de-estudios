@@ -30,6 +30,70 @@ export function EditarPlanEst({rol}){
     const [valueComment, setValueComment] = useState("");
     const [planesActual, setPlanesActual] = useState([]);
 
+    const cargarComentarios = async () => {
+        try {
+            const response = await axios.get(`/api/listaComentarios/${idPlan}`);
+            setComentarios(response.data);
+        } catch (error) {
+            console.error('Error cargando comentarios:', error);
+        }
+    };
+
+    const cargarMaterias = async () =>{
+        try {
+            const response = await axios.get(`/api/listaMaterias/${idPlan}`);
+            setMaterias(response.data)
+            
+        } catch (error) {
+            console.error('Error cargando materias:', error);
+        }
+    }
+    
+    const comentar = async (e) =>{
+        e.preventDefault();
+        if(valueComment){
+            try {
+                await axios.post(`/api/comentar/${idPlan}`, { valueComment, idUsuario });
+                setValueComment("");
+                cargarComentarios();
+            } catch (error) {
+                console.error('Error al actualizar el programa:', error);
+            }
+        }
+    };
+
+    const validar = async (e) =>{
+        e.preventDefault();
+        var estado;
+        
+        if(planesActual.length > 0){
+            estado="Antiguo"
+            try {
+                await axios.put(`/api/modificarPlan/${planesActual[0].idPlanEstudios}`, { estado });
+            } catch (error) {
+                console.error('Error al actualizar el plan:', error);
+            }
+        }
+        estado="Actual"
+        try {
+            await axios.put(`/api/modificarPlan/${idPlan}`, {idUsuario, estado });
+        } catch (error) {
+            console.error('Error al actualizar el plan:', error);
+        }
+        navigate(`/planesEstudios/${nombrePrograma}/${idPrograma}`)
+    };
+
+    function openModal() {
+        setShowModal(true)
+        document.body.scrollTop = 0; // Para Safari
+        document.documentElement.scrollTop = 0; // Para Chrome, Firefox, IE y Opera
+    }
+
+    const closeModal = (e) => {
+        setShowModal(false);
+        cargarMaterias();
+    };
+
     useEffect(() => {
         if(idPlan){
             axios.get(`/api/semestresPlan/${idPlan}`)
@@ -66,78 +130,6 @@ export function EditarPlanEst({rol}){
         cargarComentarios();
 
     }, [idPrograma, idPlan]);
-
-    const cargarComentarios = async () => {
-        try {
-            const response = await axios.get(`/api/listaComentarios/${idPlan}`);
-            setComentarios(response.data);
-        } catch (error) {
-            console.error('Error cargando comentarios:', error);
-        }
-    };
-
-    const cargarMaterias = async () =>{
-        try {
-            const response = await axios.get(`/api/listaMaterias/${idPlan}`);
-            setMaterias(response.data)
-            
-        } catch (error) {
-            console.error('Error cargando materias:', error);
-        }
-    }
-    
-    const comentar = async (e) =>{
-        e.preventDefault();
-        if(valueComment){
-            try {
-                const response = await axios.post(`/api/comentar/${idPlan}`, { valueComment, idUsuario });
-                setValueComment("");
-                cargarComentarios();
-                console.log('Comentario realizado con éxito');
-            } catch (error) {
-                console.error('Error al actualizar el programa:', error);
-            }
-        }
-    };
-
-    const validar = async (e) =>{
-        e.preventDefault();
-        var estado;
-        
-        console.log(planesActual);
-        
-        if(planesActual.length > 0){
-            estado="Antiguo"
-            try {
-                const response = await axios.put(`/api/modificarPlan/${planesActual[0].idPlanEstudios}`, { estado });
-                console.log('Plan actualizado con éxito');
-            } catch (error) {
-                console.error('Error al actualizar el plan:', error);
-            }
-            console.log("hay anterior");
-            console.log(planesActual[0].idPlanEstudios);
-        }
-        estado="Actual"
-        try {
-            const response = await axios.put(`/api/modificarPlan/${idPlan}`, {idUsuario, estado });
-            console.log('Plan actualizado con éxito');
-        } catch (error) {
-            console.error('Error al actualizar el plan:', error);
-        }
-        navigate(`/planesEstudios/${nombrePrograma}/${idPrograma}`)
-    };
-
-    function openModal() {
-        setShowModal(true)
-        document.body.scrollTop = 0; // Para Safari
-        document.documentElement.scrollTop = 0; // Para Chrome, Firefox, IE y Opera
-    }
-
-    const closeModal = (e) => {
-        setShowModal(false);
-        cargarMaterias();
-    };
-
     return(
         <>
         <HeaderPriv/>
