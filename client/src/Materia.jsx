@@ -1,39 +1,38 @@
 import { useState } from "react";
 import { MatPubModal, MatPrivModal } from "./Modal"
 import { createPortal } from 'react-dom';
-import { MdInsertComment } from "react-icons/md";
 import "./materia.css"
 
 //Materia publica
-export function MatPublica({ area, horas, creditos, nombreMat, codigo, color}){
+export function MatPublica({ data, style }){
     const [showModal, setShowModal] = useState(false);
 
     return (<>
-    <div className="mat_pub" onClick={() => setShowModal(true)}>
+    <div className="mat_pub" onClick={() => setShowModal(true)} >
         <div className="titulo_materia"> 
             <div>
                 <h4>Área:</h4> 
-                <p>{ area }</p>
+                <p>{ data.are_iniciales }</p>
             </div>
             <hr className="lateral"/>
             <div>
                 <h4>Horas:</h4>
-                <p>{ horas }</p>
+                <p>{ data.mat_horas }</p>
             </div>
             <hr className="lateral"/>
             <div>
                 <h4>Créditos:</h4>
-                <p>{ creditos }</p>
+                <p>{  data.mat_creditos }</p>
             </div>
         </div>
-        <div className="info_materia"  style={{backgroundColor: color}}>
-            <h2>{ nombreMat }</h2>
-            <p>{ codigo }</p>
+        <div className="info_materia"  style={{backgroundColor: data.are_color}}>
+            <h3>{ data.mat_nombre }</h3>
+            <p>{ data.mat_codigo }</p>
         </div>
     </div>
 
     {showModal && createPortal(
-    <MatPubModal onClose={() => setShowModal(false)} hr= {horas} cds={creditos} nm={nombreMat} cl={color} cdg={codigo}/>,
+    <MatPubModal onClose={() => setShowModal(false)} idMateria={data.idMateria} color={data.are_color} area={data.are_nombre}/>,
     document.body
     )}
 
@@ -59,37 +58,48 @@ export function MatTotal({horas, creditos}){
 }
 
 //Materia privada
-export function MatPrivada({ data }){
+export function MatPrivada({ data, cargar, numSemestres, materias }){
     const [showModal, setShowModal] = useState(false);
+
+    function openModal() {
+        setShowModal(true)
+        document.body.scrollTop = 0; // Para Safari
+        document.documentElement.scrollTop = 0; // Para Chrome, Firefox, IE y Opera
+    }
+
+    const closeModal = (e) => {
+        setShowModal(false);
+        cargar();
+    };
+
     return (<>
     <div className="contMat_priv">
-        <div className="mat_priv" onClick={() => setShowModal(true)}>
-            {data.comentario != null ? <div className="contIconComent"> <div className="iconComent">< MdInsertComment size="20px"/></div></div> : <></>}
+        <div className="mat_priv" onClick={openModal}>
             <div className="titulo_materia"> 
                 <div>
                     <h4>Área:</h4> 
-                    <p>{ data.area }</p>
+                    <p>{ data.are_iniciales }</p>
                 </div>
                 <hr className="lateral"/>
                 <div>
                     <h4>Horas:</h4>
-                    <p>{ data.horas }</p>
+                    <p>{ data.mat_horas }</p>
                 </div>
                 <hr className="lateral"/>
                 <div>
                     <h4>Créditos:</h4>
-                    <p>{ data.creditos }</p>
+                    <p>{ data.mat_creditos }</p>
                 </div>
             </div>
-            <div className="info_materia"  style={{backgroundColor: data.color}}>
-                <h2>{ data.nombre }</h2>
-                <p>{ data.codigo }</p>
+            <div className="info_materia"  style={{backgroundColor: data.are_color}}>
+                <h3>{ data.mat_nombre }</h3>
+                <p>{ data.mat_codigo}</p>
             </div>
         </div>
     </div>
-
+       
     {showModal && createPortal(
-    <MatPrivModal onClose={() => setShowModal(false)} data={data}/>,
+    <MatPrivModal onClose={closeModal} cargar={cargar} numSemestres={numSemestres} idMateria={data.idMateria} accion= "editar" materias={materias}/>,
     document.body
     )}
 

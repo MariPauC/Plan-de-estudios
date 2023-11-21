@@ -3,13 +3,24 @@ import { HeaderPriv } from "./Header";
 import { Titul } from "./Titulo";
 import { PagActual, PagAnterior } from "./Breadcrumbs"
 import { TablaSimple } from "./Table"
-import { InputMd, SelectMd } from "./CuadrosTexto"
+import { InputMd, SelectMd, InputMdBlock } from "./CuadrosTexto"
 import { Btnmin } from "./Button"
-import { Link } from "react-router-dom";
-import { useState } from "react";
+import { MensajeCorrecto } from "./Mensaje";
+import { Link, useParams, useNavigate  } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { createPortal } from 'react-dom';
+import axios from "axios";
 
-export function DataProg(){
-    var rol = true;
+export function DataProg({rol}){
+    const params = useParams();
+    const navigate = useNavigate();
+    const accion = params.accion;
+    const nombrePrograma = params.nombre;
+    const idPrograma = params.id;
+    var fechaRegistro = "";
+    var fechaCalidad = "";
+    
+    const [showMessage, setShowMessage] = useState(false);
 
     const jornada = [
         { id: 1, nombre: "Diurna" },
@@ -30,14 +41,12 @@ export function DataProg(){
     var [valuesProgram, setValuesProgram] = useState({
         nombreP: "",
         codigoP: "",
-        semestreP: "",
         modalidadP: "",
-        horasP: "",
-        creditosP: "",
+        jornadaP:"",
         regisCal: "",
-        regisfecha:"",
-        acreditacion:"",
-        acreditafecha:"",
+        regisfecha: "",
+        acreditacion: "",
+        acreditafecha: "",
     });
 
     const handleInputChangeD = (e) => {
@@ -48,41 +57,108 @@ export function DataProg(){
         });
     };
 
-    const handleFormD = (e) =>{
+    function ajustarFecha(fecha) {
+        const ajuste =  new Date(fecha);
+        const fechaModificada = `${ajuste.getFullYear()}-${(ajuste.getMonth() + 1).toString().padStart(2, '0')}-${ajuste.getDate().toString().padStart(2, '0')}`;
+        return fechaModificada;
+    }
+    
+    useEffect(() => {
+        if (accion === "editar") {
+            axios.get(`api/programa/${idPrograma}`)
+            .then(response => {
+            const dataArray = response.data; // La respuesta es un arreglo
+            if (dataArray.length > 0) {
+                const data = dataArray[0]; // Obtenemos el primer objeto del arreglo
+            if(data.pro_fechaReg){
+                fechaRegistro = ajustarFecha(data.pro_fechaReg);
+            }
+            if(data.pro_fechaCalidad){
+                fechaCalidad = ajustarFecha(data.pro_fechaCalidad);
+            }
+            setValuesProgram({
+                ...valuesProgram,
+                nombreP: data.pro_nombre,
+                codigoP: data.pro_SNIES,
+                modalidadP: data.pro_modalidad,
+                jornadaP:data.pro_jornada,
+                semestresP: data.pro_semestres,
+                regisCal: data.pro_regAcreditacion,
+                regisfecha: fechaRegistro,
+                acreditacion:data.pro_altaCalidad,
+                acreditafecha:fechaCalidad,
+            });
+            } else {
+            console.log('No se encontraron datos para el programa con ese id.');
+            }
+            })
+            .catch(error => {
+        console.error('Error fetching programa details:', error);
+        });}
+        console.log("carga");
+    }, [accion, idPrograma]);
+
+    const handleFormD = async (e) =>{
         e.preventDefault();
-        console.log(valuesProgram)
+        if(accion === "editar"){
+            try {
+                const response = await axios.put(`/api/programa/${idPrograma}`, { valuesProgram });
+                setShowMessage(true);
+            } catch (error) {
+                console.error('Error al actualizar el programa:', error);
+            }
+        }
+        else {
+            try {
+                const response = await axios.post(`/api/programa`, { valuesProgram });
+                const { idPrograma, pro_nombre } = response.data;
+                setShowMessage(true);
+                navigate(`/directoresPrograma/${pro_nombre.replace(/ /g, '-')}/${idPrograma}/crear`);
+            } catch (error) {
+                console.error('Error al crear el programa:', error);
+            }
+        }
     };
+
+    const closeModal = async (e) => {
+        setShowMessage(false);
+    }
     
     return(
         <>
         <HeaderPriv/>
         
         <div className="contBread">
-                <PagAnterior ruta="/Inicio" pagina="Menú principal"/>
-                {rol ? <PagAnterior ruta="/InicioProg" pagina="Programa"/> : ""}
+                <PagAnterior ruta="/" pagina="Menú principal"/>
+                {rol && accion === "editar"  ? <PagAnterior ruta={"/InicioProg/"+nombrePrograma+'/'+idPrograma} pagina="Programa"/> : ""}
                 <PagActual pagina="Datos del programa"/>
             </div>
         
-        <Titul titulo="Datos del progama" subt="Ingeniería en Multimedia" />
+        {accion === "editar" ? <Titul titulo="Datos del progama" subt={nombrePrograma.replace(/-/g,' ')} /> 
+        : <Titul titulo="Datos del programa" subt="Nuevo programa" />}
+        
+        
         <div className="contAdm">
             <form onSubmit={handleFormD} >
                 <TablaSimple titulo="Información basica" 
                     contenido = {<>
-                        <InputMd texto = "Nombre:" name="nombreP" info={valuesProgram.nombreP} onChange={handleInputChangeD}/>
-                        <InputMd texto = "SNIES:" name="codigoP" info={valuesProgram.codigoP} onChange={handleInputChangeD}/>
-                        <SelectMd texto = "Jornada:" name="jornadaP" data={jornada} onChange={handleInputChangeD}/>
-                        <SelectMd texto = "Sede:" name="sedeP" data={sede} onChange={handleInputChangeD}/>
-                        <InputMd texto = "Semestre:" name="semestreP" info={valuesProgram.semestreP} onChange={handleInputChangeD}/>
-                        <SelectMd texto = "Modalidad:" name="modalidadP" data={modalidad} onChange={handleInputChangeD}/>
-                        <InputMd texto = "Horas:" name="horasP" info={valuesProgram.horasP} onChange={handleInputChangeD}/> 
-                        <InputMd texto = "Créditos:" name="creditosP" info={valuesProgram.creditosP} onChange={handleInputChangeD}/>
+                        {accion === "editar" ? <InputMdBlock name="nombreP" texto = "Nombre:"  info={valuesProgram.nombreP} />
+                        : <InputMd texto = "Nombre:" name="nombreP" info={valuesProgram.nombreP} onChange={handleInputChangeD} required = {"required"}/>}
+                        
+                        
+                        {accion === "editar" ? <InputMdBlock name="codigoP" texto = "SNIES:" tipo="number" info={valuesProgram.codigoP} />
+                        : <InputMd texto = "SNIES:" tipo="number" name="codigoP" info={valuesProgram.codigoP} onChange={handleInputChangeD} required = {"required"}/>}
+                        
+                        <SelectMd texto = "Jornada:" name="jornadaP" data={jornada} selectedValue={valuesProgram.jornadaP} onChange={handleInputChangeD} required={"required"}/>
+                        <SelectMd texto = "Modalidad:" name="modalidadP" data={modalidad} selectedValue={valuesProgram.modalidadP} onChange={handleInputChangeD} required = {"required"}/>
+                        <InputMd texto = "Semestres:" tipo="number" name="semestresP" info={valuesProgram.semestresP} onChange={handleInputChangeD} required = {"required"}/>
                     </>
                     }
                 />
                 <TablaSimple titulo="Registro calificado"
                     contenido = {<>
-                        <InputMd texto = "Resolución:" name="regisCal" onChange={handleInputChangeD}/>
-                        <InputMd texto = "Fecha:" tipo="date" name="regisfecha" onChange={handleInputChangeD}/>
+                        <InputMd texto = "Resolución:" name="regisCal" info={valuesProgram.regisCal} onChange={handleInputChangeD} required = {"required"}/>
+                        <InputMd texto = "Fecha:" tipo="date" name="regisfecha" info={valuesProgram.regisfecha} onChange={handleInputChangeD} required = {"required"}/>
                     </>
                     }
                 />
@@ -94,12 +170,16 @@ export function DataProg(){
                 }
                 />
                 <div className="dobleBtn">
-                    {rol ? <Link to='/InicioProg'><Btnmin texto="Atrás" color="#707070"/></Link>
-                        : <Link to='/Inicio'><Btnmin texto="Atrás" color="#707070"/></Link>}
+                    {rol && accion === "editar" ? <Link to={"/InicioProg/"+nombrePrograma+'/'+idPrograma}><Btnmin texto="Atrás" color="#707070"/></Link>
+                        : <Link to='/'><Btnmin texto="Atrás" color="#707070"/></Link>}
                         <Btnmin texto="Guardar" color="#182B57" tipo="submit"/>
                 </div>
             </form>
         </div>
+        {showMessage && createPortal(
+        <MensajeCorrecto onClose={closeModal} />,
+        document.body
+        )}
         </>
     )
 }

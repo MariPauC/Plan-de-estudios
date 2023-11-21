@@ -12,12 +12,10 @@
     border-bottom: black;
     justify-content: center;
     justify-content: space-between;
-    font-size: 10px;
-    padding: 20px 100px 20px 100px;
 }
 
 .cont_footer{
-    width: 100%;
+    width: 70%;
     font-size: 12px;
 }
 
@@ -44,13 +42,12 @@
 }
 
 .foot-mn{
-    height: 50px;
+    width: 100%;
     background-color: #182B57;
     display: flex;
     align-items: center;
     border-bottom: black;
     color:white;
-    font-size: 12px;
     justify-content: center;
 }
 
@@ -58,8 +55,95 @@
     margin-left: 1%;
 }
 
-img{
-    width: 50%;
-    height: auto;
+@media screen and (min-width:1920px) {
+    .barra{
+        margin-top: 50px;
+        height: 5px;
+    }
+    .info{
+        padding: 20px 10% 20px 10%;
+    }
+    
+    .info p, .info h4{
+        font-size: 14px;
+    }
+    .cont_footer{
+        width: 100%;
+        font-size: 12px;
+    }
+    img{
+        width: 50%;
+        height: auto;
+    }
+    .foot-mn{
+        height: 50px;
+        font-size: 13px;
+    }
 }
 
+@media screen and (min-width: 1280px) and (max-width:1919px) {
+    .barra{
+        margin-top: 50px;
+        height: 5px;
+    }
+    .info{
+        font-size: 20px;
+        padding: 20px 150px 20px 150px;
+    }
+    .cont_footer {
+        width: 85%;
+        font-size: 13px;
+    }
+    img{
+        width: 65%;
+        height: auto;
+    }
+    .foot-mn{
+        height: 50px;
+        font-size: 13px;
+    }
+}
+
+@media screen and (min-width: 769px) and (max-width:1279px) {
+    .barra{
+        margin-top: 50px;
+        height: 5px;
+    }
+    .info{
+        font-size: 10px;
+        padding: 20px 100px 20px 100px;
+    }
+    .cont_footer{
+        width: 100%;
+        font-size: 12px;
+    }
+    img{
+        width: 50%;
+        height: auto;
+    }
+    .foot-mn{
+        height: 50px;
+        font-size: 12px;
+    }
+}
+
+@media screen and (min-width: 320px) and (max-width:768px) {
+    .barra{
+        display: none;
+    }
+    .info{
+        display: none;
+    }
+    .cont_footer{
+        width: 100%;
+        font-size: 8px;
+    }
+    img{
+        width: 95%;
+        height: auto;
+    }
+    .foot-mn{
+        height: 40px;
+        font-size: 10px;
+    }
+}

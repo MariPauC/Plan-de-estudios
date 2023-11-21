@@ -19,10 +19,11 @@ export function BtnBgIcon({texto, tipo, icon }){
 }
 
 //Boton mediano con iconos
-export function BtnMdIcon({texto, tipo, icon}){
+export function BtnMdIcon({texto, tipo, icon, onClick}){
     return <button 
                 className="btn_md"
                 type={tipo}
+                onClick={onClick}
             >
         { icon }<p id="txtIcon">{texto}</p>
     </button>
@@ -38,12 +39,25 @@ export function BtnMd({texto, tipo, color}){
     </button>
 }
 
-export function Btnmin({texto, tipo, color, onClick}){
+export function Btnmin({texto, tipo, color, onClick, id}){
     return <button 
                 className="btn_mn" 
+                id={id}
                 type={tipo}
                 style={{backgroundColor: color}} 
                 onClick={onClick} 
+            >
+        <p>{texto}</p>
+    </button>
+}
+
+export function BtnminDis({texto, tipo, color, id}){
+    return <button 
+                className="btn_mn" 
+                id={id}
+                type={tipo}
+                style={{backgroundColor: color, cursor:"no-drop"}}  
+                disabled
             >
         <p>{texto}</p>
     </button>

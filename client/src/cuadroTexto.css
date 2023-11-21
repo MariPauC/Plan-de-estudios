@@ -5,6 +5,12 @@
     width: 45.2%;
     padding: 5px 0;
 }
+.cont_sh{
+    display: flex;
+    flex-direction: column;
+    width: 47%;
+    margin-bottom: 10px;
+}
 
 .cont_lg, .cont_lgArch{
     display: flex;
@@ -14,19 +20,33 @@
     padding: 5px 0;
 }
 
-.cont_md label, .cont_lg label, .cont_lgArch label {
+.cont_md label, .cont_lg label, .cont_lgArch label, .cont_sh label {
     display: inline-block;
     font-weight: bold;
-    min-width: 100px; 
+    min-width: 115px; 
 }
 
-.cont_md input, .cont_lg input{
-    border: 2px black solid;
+.cont_sh label{
+    margin-bottom: 5px;
+}
+
+.cont_md input, .cont_lg input, .cont_sh input {
+    border: 2px rgb(199, 197, 197) solid;
     border-radius: 7px;
     height: 32px;
     width: 100%;
     padding-left: 10px;
     font-size: 16px;
+    box-sizing: border-box;
+}
+
+.cont_sh textarea{
+    border: 2px rgb(199, 197, 197) solid;
+    border-radius: 7px;
+    width: 100%;
+    padding: 5px 10px;
+    font-size: 16px;
+    box-sizing: border-box;
 }
 
 .cont_lg p{
@@ -45,13 +65,12 @@
     font-size: 16px;
 }
 
-
-.cont_md input:hover, .cont_md select:hover, .cont_lg input:hover, .cont_lg select:hover{
+.cont_md input:hover, .cont_md select:hover, .cont_lg input:hover, .cont_lg select:hover, .cont_sh input:hover{
     background-color: #E5E5E5;
 }
 
-.cont_md select, .cont_lg select{
-    border: 2px black solid;
+.cont_md select, .cont_lg select, .cont_sh select{
+    border: 2px rgb(199, 197, 197) solid;
     border-radius: 7px;
     width: 100%;
     padding-left: 5px;
@@ -61,5 +80,28 @@
 	color: black;
 }
 
+.flex{
+    display: flex;
+}
 
+#big{
+    width: 100% !important;
+}
 
+#selectBtn{
+    width: 96% !important;
+}
+
+.addMat{
+    background-color:#adf8b5b4;
+    border: 2px #61B369 solid;
+    color: #61B369;;
+    border-radius: 5px;
+    padding-left: 10px;
+    height: 30px;
+    cursor: pointer;
+    text-align: center;
+    padding-left: 0;
+    width: 12%;
+    font-size: 22px;
+}

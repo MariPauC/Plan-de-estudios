@@ -1,17 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { PublicUser } from "./PublicUser";
-import { PrivateUser } from "./PrivateUser"
-import { Login } from "./Login"
-
+import { App } from "./App"
 import './index.css';
+import axios from 'axios';
+
+// Set the base URL for axios
+axios.defaults.baseURL = 'http://localhost:5000'; 
+
+
 
 const typeUser = true;
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-    <>
-        {/*typeUser ? <PrivateUser/> : <PublicUser/> */}
-        <PrivateUser/>
-    </>
+    <React.StrictMode>
+        <App/>
+    </React.StrictMode>
 );
 

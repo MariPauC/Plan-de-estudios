@@ -11,7 +11,7 @@ export function PagAnterior({ruta, pagina}){
             >
                 <h4>{pagina}</h4>
             </Link>
-            <MdKeyboardArrowRight size="20px" style={{color:"#707070"}}/>
+            <MdKeyboardArrowRight size="19px" style={{color:"#707070"}}/>
         </>
     )
 }

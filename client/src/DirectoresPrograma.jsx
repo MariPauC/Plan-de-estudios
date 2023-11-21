@@ -1,68 +1,74 @@
 import "./privateUser.css"
 import { HeaderPriv } from "./Header"
 import { Titul } from "./Titulo";
-import { TablaSimple }from "./Table"
+import { AutoTabla }from "./Table"
 import { TextMd } from "./CuadrosTexto"
 import { Btnmin } from "./Button"
 import { PagAnterior, PagActual} from "./Breadcrumbs"
-import { Link } from "react-router-dom";
-
+import { DirectorModal } from "./Modal";
+import { createPortal } from 'react-dom';
+import { useState, useEffect } from "react";
+import { Link, useParams } from "react-router-dom";
+import axios from "axios";
 
 
 export function DirctProg(){ 
-    var rol = true;
-    const data = [
-        { id: 1, nombres: "Oscar Esteban", apellidos:"Ortiz Sanchez", correo:"osOrtiz@correo.com", sede:"Calle 100", estado:"Activo"},
-        { id: 17, nombres: "Sandra", apellidos: "Gutierrez", correo: "Martha Lucia Olivero Franco", sede:"Campus cajica", estado:"Inactivo" },
-        ];
+    const params = useParams();
+    const nombrePrograma = params.nombre;
+    const idPrograma = params.id;
+    const accion = params.accion;
+    const [directores, setDirectores] = useState([]);
+    const [showModal, setShowModal] = useState(false);
+    
+    const titulos = ["Nombres", "Apellidos","Correo", "Sede"];
+    
+    useEffect(() => {
+        axios.get(`/api/listaDirectores/${idPrograma}`)
+            .then(response => {
+                setDirectores(response.data) ;
+                console.log("cargar");
+            })
+            .catch(error => {
+                console.error('Error cargando directores:', error);
+            });
+    }, []);
+
+    const cargarDirectores = async () =>{
+        try {
+            const response = await axios.get(`/api/listaDirectores/${idPrograma}`);
+            setDirectores(response.data)
+        } catch (error) {
+            console.error('Error cargando directores:', error);
+        }
+    }
+
     return(
         <>
         <HeaderPriv/>
         <div className="contBread">
-            <PagAnterior ruta="/Inicio" pagina="Menú principal"/>
-            {rol ? <PagAnterior ruta="/InicioProg" pagina="Programa"/> : ""}
+            <PagAnterior ruta="/" pagina="Menú principal"/>
+            <PagAnterior ruta={"/InicioProg/"+nombrePrograma+'/'+idPrograma} pagina="Programa"/> 
             <PagActual pagina="Directores"/>
         </div>
-        <Titul titulo="Directores del programa" subt="Ingeniería en Multimedia" />
+        <Titul titulo="Directores del programa" subt={nombrePrograma.replace(/-/g,' ')} />
         
         
         <div className="contAdm">
             <div className="contBoton">
-                    <Btnmin texto="Añadir director" color="#979191"/>
+                <Btnmin texto="Añadir director" color="#979191" onClick={() => {setShowModal(true)}}/>
             </div>
-            {data.map((item) => ( <InfoDirecto key={item.id} data={item}/> ))}
-
-            {rol ? <Link to='/InicioProg'><Btnmin texto="Atrás" color="#707070"/></Link>
-                : <Link to='/Inicio'><Btnmin texto="Atrás" color="#707070"/></Link>}
+            <AutoTabla titulos={titulos} data={directores} tipo="director" id={accion==="Crear" ? undefined : 'conbtn'}/>
+            {accion !== "crear" && <Link to={"/InicioProg/"+nombrePrograma+'/'+idPrograma}><Btnmin texto="Atrás" color="#707070"/></Link>}
             
         </div>
+        {showModal && createPortal(
+        <DirectorModal onClose={() => {setShowModal(false);}} cargar={cargarDirectores} idPrograma={idPrograma}/>, 
+        document.body
+        )}
         </>
     )
 }
 
-export function InfoDirecto({data}){
-    var tipoBoton = false
-    if (data.estado == "Activo"){
-        tipoBoton = true
-    }
-    
-    return(
-        <TablaSimple titulo= {"Director - "+ data.estado}
-                contenido = {<>
-                    <TextMd texto="Nombres:" info={data.nombres}/>
-                    <TextMd texto="Apellidos:" info={data.apellidos}/>
-                    <TextMd texto="Correo:" info={data.correo}/>
-                    <TextMd texto="Sede:" info={data.sede}/>
-                    <div className="btnDerecha">
-                        {tipoBoton ? <Btnmin texto="Desactivar" color="#BE0416"/> 
-                        : <Btnmin texto="Activar" color="#182B57"/>}
-                    </div>
-                    
-                        
-                </>
-            }
-            />
-    );
-}
+
 
 
