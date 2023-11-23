@@ -1,5 +1,5 @@
 import "./table.css"
-import { MdOutlineRemoveRedEye, MdOutlineMode, MdOutlineDeleteForever } from "react-icons/md";
+import { MdOutlineRemoveRedEye, MdOutlineMode, MdOutlineDeleteForever, MdDeleteOutline } from "react-icons/md";
 import { UsuarioModal, AreaModal } from "./Modal"
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
@@ -18,7 +18,7 @@ export function TablaSimple({titulo, contenido}){
     )
 }
 
-export function Tabla({ estado, accion, progId, progNombre, data }){ 
+export function Tabla({ estado, accion, progId, progNombre, data, eliminar, cargar }){ 
     return(
         <table className="tabla">
             <thead className="tablaTtl">
@@ -28,17 +28,19 @@ export function Tabla({ estado, accion, progId, progNombre, data }){
                     <th>{estado}</th>
                     <th>Estado</th>
                     <th className="clmAccion">{accion}</th>
+                    {eliminar && <th className="clmAccion">Eliminar</th>}
                 </tr>
             </thead>
             <tbody>
-                {data.map((item) => ( <Fila key={item.idPlanEstudios} data={item} progId={progId} progNombre={progNombre}/> ))}
+                {data.map((item) => ( <Fila key={item.idPlanEstudios} data={item} progId={progId} progNombre={progNombre} eliminar={eliminar} cargar={cargar}/> ))}
             </tbody>
         </table>
     )
 }
 
-export function Fila ({ progId, progNombre, data }) {
+export function Fila ({ progId, progNombre, data, eliminar, cargar }) {
     let icono;
+    let del;
     const nombre = progNombre;
     const navigate = useNavigate();
 
@@ -49,7 +51,12 @@ export function Fila ({ progId, progNombre, data }) {
     const editarPlan = () =>{
         navigate(`/datosPlan/${progNombre}/${progId}/${data.idPlanEstudios}`);
     }
-    
+    const eliminarPlanFila = async () => {
+        // Llama a la función eliminarPlan con los parámetros correctos
+        await eliminar(data.idPlanEstudios);
+        await cargar()
+        // Aquí podrías realizar alguna acción adicional después de eliminar el plan, si es necesario
+      };
     function ajustarFecha(fecha) {
         if(fecha){
             const ajuste =  new Date(fecha);
@@ -61,9 +68,13 @@ export function Fila ({ progId, progNombre, data }) {
         }
     }
 
-    data.pln_estado === "En desarrollo" 
+    data.pln_estado === "En desarrollo" || data.pln_estado === "Por aprobar" || data.pln_estado === "En desarrollo/Corregir"
     ? icono = <MdOutlineMode  className="iconTable" onClick={editarPlan}/>
     : icono = <MdOutlineRemoveRedEye  className="iconTable" style={{cursor:"pointer"}} onClick={verPlan}/> ;
+
+    data.pln_estado === "En desarrollo" || data.pln_estado === "En desarrollo/Corregir"
+    ? del = <MdOutlineDeleteForever className="iconTable" onClick={eliminarPlanFila} />
+    : del = <></> ;
 
     return (
         <tr key={data.idPlanEstudios}>
@@ -72,6 +83,7 @@ export function Fila ({ progId, progNombre, data }) {
             <td className="nombColumn">{data.usu_nombre + " " + data.usu_apellido}</td>
             <td className="estadoColumn">{data.pln_estado}</td>
             <td>{icono}</td>
+            <td>{del}</td>
         </tr>
     );
 };

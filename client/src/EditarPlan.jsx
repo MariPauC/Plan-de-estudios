@@ -25,10 +25,16 @@ export function EditarPlanEst({rol}){
 
     const [numSemestre, setNumSemestres] = useState(1)
     const [showModal, setShowModal] = useState(false);
+    const [aprobar, setAprobar] = useState(false);
     const [comentarios, setComentarios] = useState([]);
     const [materias, setMaterias] = useState([]);
     const [valueComment, setValueComment] = useState("");
     const [planesActual, setPlanesActual] = useState([]);
+
+    function handleChange(e) {
+        setAprobar(e.target.checked);
+        
+    }
 
     const cargarComentarios = async () => {
         try {
@@ -65,22 +71,41 @@ export function EditarPlanEst({rol}){
     const validar = async (e) =>{
         e.preventDefault();
         var estado;
-        
-        if(planesActual.length > 0){
-            estado="Antiguo"
+        if(rol){
+            if(aprobar){
+                if(planesActual.length > 0){
+                    estado="Antiguo"
+                    try {
+                        await axios.put(`/api/modificarPlan/${planesActual[0].idPlanEstudios}`, { estado });
+                    } catch (error) {
+                        console.error('Error al actualizar el plan:', error);
+                    }
+                }
+                estado="Actual"
+                try {
+                    await axios.put(`/api/modificarPlan/${idPlan}`, {idUsuario, estado });
+                } catch (error) {
+                    console.error('Error al actualizar el plan:', error);
+                }
+            }else{
+                estado="En desarrollo/Corregir"
             try {
-                await axios.put(`/api/modificarPlan/${planesActual[0].idPlanEstudios}`, { estado });
+                await axios.put(`/api/modificarPlan/${idPlan}`, {idUsuario, estado });
+            } catch (error) {
+                console.error('Error al actualizar el plan:', error);
+            }
+            }
+        }
+        else{
+            estado="Por aprobar"
+            try {
+                await axios.put(`/api/modificarPlan/${idPlan}`, {idUsuario, estado });
             } catch (error) {
                 console.error('Error al actualizar el plan:', error);
             }
         }
-        estado="Actual"
-        try {
-            await axios.put(`/api/modificarPlan/${idPlan}`, {idUsuario, estado });
-        } catch (error) {
-            console.error('Error al actualizar el plan:', error);
-        }
-        navigate(`/planesEstudios/${nombrePrograma}/${idPrograma}`)
+        
+        navigate(`/listadoPlanes/${nombrePrograma}/${idPrograma}`)
     };
 
     function openModal() {
@@ -94,6 +119,7 @@ export function EditarPlanEst({rol}){
         cargarMaterias();
     };
 
+    
     useEffect(() => {
         if(idPlan){
             axios.get(`/api/semestresPlan/${idPlan}`)
@@ -143,36 +169,45 @@ export function EditarPlanEst({rol}){
         
         <div className="contAdm">
             <div className="contBoton">
-                <Btnmin texto="Añadir materia" color="#182B57" onClick={openModal}/>
+            { rol ?
+            <div className="btnAprobar">
+                <p>Aprobado:</p>
+                <label className="checkboxContainer">
+                    <input type="checkbox" checked={aprobar} onChange={handleChange} />
+                    <span className="checkmark"></span>
+                </label>
             </div>
+            : <Btnmin texto="Añadir materia" color="#182B57" onClick={openModal}/> }
+            </div>
+            
             
             <PanelTab tam={numSemestre} materias={materias} cargar={cargarMaterias}/>
 
             {comentarios && comentarios.map((item) => <Comentario key={item.idComentario} data={item} />)}
 
-            {rol ? <>
-                <form className="contComent" onSubmit={comentar} >
-                    <TextSh 
-                        texto = "Comentario:" 
-                        id="big" row="3" 
-                        name="comentario" 
-                        info={valueComment} 
-                        onChange={e => setValueComment(e.target.value) }
-                        cursor = "not-allowed"
-                        readonly
-                    />
-                    <div className="contBoton">
-                        <Btnmin texto="Comentar" id="mgnMN" tipo="submit" color="#707070"/>
-                    </div>
-                </form>
-                <div className="dobleBtn">
-                <Link to={'/listadoPlanes/'+nombrePrograma+'/'+idPrograma}><Btnmin texto="Atrás" color="#707070"/></Link>
-                { materias.length > 0 ? <Btnmin texto="Aprobar" color="#182B57" onClick={validar}/>
-                : <BtnminDis texto="Aprobar" color="#182B57" />}
-                
+            <form className="contComent" onSubmit={comentar} >
+                <TextSh 
+                    texto = "Comentario:" 
+                    id="big" row="3" 
+                    name="comentario" 
+                    info={valueComment} 
+                    onChange={e => setValueComment(e.target.value) }
+                    cursor = "not-allowed"
+                    readonly
+                />
+                <div className="contBoton">
+                    <Btnmin texto="Comentar" id="mgnMN" tipo="submit" color="#707070"/>
                 </div>
-                </>
-                : <><Link to={'/listadoPlanes/'+nombrePrograma+'/'+idPrograma}><Btnmin texto="Atrás" color="#707070"/></Link></>
+            </form>
+            {rol ? 
+                
+                    <div className="dobleBtn">
+                        <Link to={'/listadoPlanes/'+nombrePrograma+'/'+idPrograma}><Btnmin texto="Atrás" color="#707070"/></Link>
+                        { materias.length >= 0 && <Btnmin texto="Enviar" color="#182B57" onClick={validar}/>}
+                    </div>
+                
+                : <div className="dobleBtn"><Link to={'/listadoPlanes/'+nombrePrograma+'/'+idPrograma}><Btnmin texto="Atrás" color="#707070"/></Link>
+                    { materias.length > 0 && <Btnmin texto="A revisión" color="#182B57" onClick={validar}/>} </div>
             }
         </div>
         {showModal && createPortal(

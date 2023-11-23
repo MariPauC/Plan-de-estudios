@@ -164,8 +164,8 @@ export function DataProg({rol}){
                 />
                 <TablaSimple titulo="Acreditación alta calidad"
                     contenido = {<>
-                        <InputMd texto = "Resolución:" name="acreditacion" onChange={handleInputChangeD}/>
-                        <InputMd texto = "Fecha:" tipo="date" name="acreditafecha" onChange={handleInputChangeD}/>
+                        <InputMd texto = "Resolución:" name="acreditacion" info={valuesProgram.acreditacion}  onChange={handleInputChangeD}/>
+                        <InputMd texto = "Fecha:" tipo="date" name="acreditafecha" info={valuesProgram.acreditafecha}  onChange={handleInputChangeD}/>
                     </>
                 }
                 />

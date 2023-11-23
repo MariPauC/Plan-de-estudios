@@ -58,7 +58,8 @@ export function DirctProg(){
                 <Btnmin texto="Añadir director" color="#979191" onClick={() => {setShowModal(true)}}/>
             </div>
             <AutoTabla titulos={titulos} data={directores} tipo="director" id={accion==="Crear" ? undefined : 'conbtn'}/>
-            {accion !== "crear" && <Link to={"/InicioProg/"+nombrePrograma+'/'+idPrograma}><Btnmin texto="Atrás" color="#707070"/></Link>}
+            {accion !== "crear" ? <Link to={"/InicioProg/"+nombrePrograma+'/'+idPrograma}><Btnmin texto="Atrás" color="#707070"/></Link>
+            : <div style={{minHeight:"56px"}}/>}
             
         </div>
         {showModal && createPortal(

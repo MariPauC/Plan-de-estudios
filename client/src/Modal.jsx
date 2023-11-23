@@ -369,7 +369,7 @@ export function MatPrivModal({ onClose, idMateria, idPlan, numSemestres, accion,
             <form onSubmit={handleFormM}>
                 <div className="infModalPriv">
                     <InputSh texto = "Nombre:" name="nombre" info={valuesMateria.nombre} onChange={handleInputChangeM} required = {"required"}/>
-                    <InputSh texto = "Código:" name="codigo" info={valuesMateria.codigo} onChange={handleInputChangeM} tipo="number" required = {"required"}/>
+                    <InputSh texto = "Código:" name="codigo" info={valuesMateria.codigo} onChange={handleInputChangeM} required = {"required"}/>
                     <SelectSh texto = "Tipo asignatura:" name="tipo" data={tipoAsignatura} selectedValue={valuesMateria.tipo} onChange={handleInputChangeM} required = {"required"}/>
                     <SelectSh texto = "Semestre:" name="semestre" data={semestres} selectedValue={valuesMateria.semestre} onChange={handleInputChangeM} required = {"required"}/>
                     <InputSh texto = "Créditos:" name="creditos" info={valuesMateria.creditos} onChange={handleInputChangeM} tipo="number" required = {"required"}/>
@@ -690,7 +690,6 @@ export function DirectorModal({ onClose, cargar, idPrograma}){
         event.preventDefault();
         try {
             await registrar(valuesDirec.nombre, valuesDirec.apellido, valuesDirec.correo, valuesDirec.contrasena, valuesDirec.documento, valuesDirec.rol);
-            
             const response = await axios.post(`/api/director/${idPrograma}`, { valuesDirec });
             setShowMessage(true);
         } catch (error) {
@@ -724,7 +723,7 @@ export function DirectorModal({ onClose, cargar, idPrograma}){
                 <InputSh texto = "Apellidos:" name="apellido" info={valuesDirec.apellido} onChange={handleInputChangeCon} required = {"required"}/>
                 <InputSh texto = "Correo:" tipo="email" name="correo" info={valuesDirec.correo} onChange={handleInputChangeCon} required = {"required"}/>
                 <InputSh texto = "Documento:" name="documento" info={valuesDirec.documento} onChange={handleInputChangeCon} required = {"required"}/>
-                <InputSh texto = "Contraseña:" name="contrasena" info={valuesDirec.documento} onChange={handleInputChangeCon} required = {"required"}/>
+                <InputSh texto = "Contraseña:" name="contrasena" info={valuesDirec.contrasena} onChange={handleInputChangeCon} required = {"required"}/>
                 <span style={{color:"orange", width:"47%", marginTop:"2.5%"}}> Recomendación: Dejar la contraseña igual al número de documento</span>
                 
                 <div className="dobleBtnModal">

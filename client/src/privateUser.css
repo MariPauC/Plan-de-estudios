@@ -1,5 +1,5 @@
 .contAdm{
-    width: 1100px;
+    width: 83%;
     min-height: 380px;
     margin: auto;
     align-items: center;
@@ -12,7 +12,7 @@
 }
 
 .contAdmDoble{
-    width: 1100px;
+    width: 83%;
     min-height: 380px;
     display: flex;
     justify-content: space-around;
@@ -21,7 +21,7 @@
 }
 
 .contBread{
-    width: 1100px;
+    width: 83%;
     margin: auto;
     display: flex;
     align-items: center;
@@ -96,4 +96,48 @@
 
 .ttlComentario{
     margin-bottom: 8px;
+}
+
+.btnAprobar {
+    display: flex;
+    align-items: center; /* Alinea verticalmente el contenido */
+    font-size: 20px;
+}
+
+.checkboxContainer {
+    position: relative;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-left: 5px;
+}
+
+.checkboxContainer input {
+    display: none; /* Oculta el checkbox nativo */
+}
+
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #ccc; /* Borde del checkbox */
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.checkboxContainer input:checked + .checkmark {
+    background-color: #182B57;/* Cambia el color cuando está marcado */
+}
+
+.checkboxContainer input:checked + .checkmark::after {
+    content: "\2713"; /* Caracter Unicode para el símbolo de marca de verificación */
+    color: rgb(255, 255, 255); /* Color del símbolo de marca de verificación */
+    font-size: 18px; /* Tamaño del símbolo de marca de verificación */
+    font-weight: bold;
+    position: absolute;
+    top: 48%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }

@@ -663,7 +663,7 @@ router.get('/listaDirectores/:idPrograma', (req, res) => {
 router.get('/firmasDirectores/:idPlan', (req, res) => {
         const idPlan = req.params.idPlan;
         try{ 
-                pool.query('SELECT idUsuario, usu_nombre, usu_apellido, usu_firma, fac_sede FROM usuario INNER JOIN director ON director_id = idUsuario INNER JOIN facultad ON idfacultad = fac_id INNER JOIN planestudios ON planestudios.pro_id = director.pro_id WHERE idPlanEstudios = ?', [idPlan], (err, results) => {
+                pool.query('SELECT idUsuario, usu_nombre, usu_apellido, usu_firma, fac_sede FROM usuario INNER JOIN director ON director_id = idUsuario INNER JOIN facultad ON idfacultad = fac_id INNER JOIN planestudios ON planestudios.pro_id = director.pro_id WHERE idPlanEstudios = ? GROUP BY idUsuario', [idPlan], (err, results) => {
                         if (err) {
                                 return res.status(500).json({ error: 'Error retrieving data from the database' });
                         }
@@ -679,7 +679,7 @@ router.get('/firmasDirectores/:idPlan', (req, res) => {
 router.get('/firmasDecanos/:idPlan', (req, res) => {
         const idPlan = req.params.idPlan;
         try{ 
-                pool.query('SELECT idUsuario, usu_nombre, usu_apellido, usu_firma, fac_nombre, fac_sede FROM usuario INNER JOIN facultad ON usu_id = idUsuario INNER JOIN director ON fac_id = idFacultad INNER JOIN planestudios ON planestudios.pro_id = director.pro_id WHERE idPlanEstudios = ?', [idPlan], (err, results) => {
+                pool.query('SELECT idUsuario, usu_nombre, usu_apellido, usu_firma, fac_nombre, fac_sede FROM usuario INNER JOIN facultad ON usu_id = idUsuario INNER JOIN director ON fac_id = idFacultad INNER JOIN planestudios ON planestudios.pro_id = director.pro_id WHERE idPlanEstudios = ? GROUP BY idUsuario', [idPlan], (err, results) => {
                         if (err) {
                                 return res.status(500).json({ error: 'Error retrieving data from the database' });
                         }

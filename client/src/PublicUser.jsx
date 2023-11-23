@@ -171,7 +171,7 @@ export function PublicUser( {rol} ){
         
         // Remover la hoja de estilo de impresión después de imprimir
         document.head.removeChild(link);
-      };
+    };
 
     return <>
         <HeaderPub programa={nombrePrograma.replace(/-/g,' ')}/>
@@ -183,11 +183,11 @@ export function PublicUser( {rol} ){
                 <PagAnterior ruta={"/listadoPlanes/"+nombrePrograma+'/'+programa.idPrograma}pagina="Planes de estudio"/>
                 <PagActual pagina="Vista del plan"/>
             </div>
-            <div className="contAdm" id="unqBtn">
+            {/*<div className="contAdm" id="unqBtn">
                 <div className="contBoton">
                     <Btnmin texto="Imprimir" color="#182B57" onClick={imprimir}/>
                 </div>
-            </div>
+            </div>*/}
             </>
         }
         <div className="contTitulo">
@@ -232,11 +232,11 @@ export function PublicUser( {rol} ){
         <div className='contInfo' >
             <div className='contAreas'>
                 <h3>Elaborado por</h3>
-                {directores.map((item) => ( <Firmas key={item.id}  data={item} nombrePrograma={nombrePrograma} tipoUsu="Director"/> ))}
+                {directores.map((item, index) => ( <FirmasPlan key={index} data={item} nombrePrograma={nombrePrograma} tipoUsu="Director" />))}
             </div>
             <div className='contAreas'>
                 <h3>Revisado por</h3>
-                {decanos.map((item) => ( <Firmas key={item.id}  data={item} nombrePrograma={nombrePrograma} tipoUsu="Decano"/> ))}
+                {decanos.map((item, index) => ( <FirmasPlan key={index}  data={item} nombrePrograma={nombrePrograma} tipoUsu="Decano"/> ))}
             </div>
         </div>
         
@@ -244,19 +244,24 @@ export function PublicUser( {rol} ){
     </>
 }
 
-export function Firmas(key, data, nombrePrograma, tipoUsu){
-    return(<div key={key}>
-        <p>{tipoUsu}</p>
-        {data.usu_firma ?  <div className="imgFirma"><Imagen archivoFirma={data.usu_firma}/></div>
-        :<div className="imgFirma"><MdOutlineImageNotSupported size="50px"/></div>}
+export function FirmasPlan({ data, nombrePrograma, tipoUsu }) {
+    return (
+      <div>
+        {data.usu_firma ? (
+          <div className="imgFirma">
+            <Imagen archivoFirma={data.usu_firma} />
+          </div>
+        ) : (
+          <div className="imgFirma">
+            <MdOutlineImageNotSupported size="50px" />
+          </div>
+        )}
         <p>{data.usu_nombre} {data.usu_apellido}</p>
-        
         {tipoUsu === "Director" && <p>Director programa de {nombrePrograma}, sede {data.fac_sede}</p>}
         {tipoUsu === "Decano" && <p>Decano facultad de {data.fac_nombre}, sede {data.fac_sede}</p>}
-    </div>
-    )
-}
-
+      </div>
+    );
+  }
 function Imagen({ archivoFirma }) {
     const baseUrl = "http://localhost:5000/uploads/"; // Cambia esto a la URL real de tu servidor
     const imageUrl = baseUrl + archivoFirma;
