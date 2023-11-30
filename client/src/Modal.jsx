@@ -4,7 +4,7 @@ import { InputSh, InputShBlock, SelectSh, TextSh } from "./CuadrosTexto";
 import { Btnmin } from "./Button";
 import { TablaMat } from "./Table"
 import { MensajeCorrecto, MensajeEliminado } from "./Mensaje";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef  } from "react";
 import { createPortal } from 'react-dom';
 import { ChromePicker } from 'react-color';
 import { AuthContext } from './AuthContext';
@@ -23,6 +23,7 @@ export function MatPubModal({ onClose, idMateria, area, color}){
     });
     const [prerequisitos, setPrerequisitos] = useState([]);
     const [correquisitos, setCorrequisitos] = useState([]);
+    const modalRef = useRef(null);
     useEffect(() => {
             axios.get(`api/materia/${idMateria}`)
             .then(response => {
@@ -42,7 +43,7 @@ export function MatPubModal({ onClose, idMateria, area, color}){
             })
             .catch(error => {
                 console.error('Error fetching materia details:', error);
-            });}, []);
+            });
             axios.get(`api/relacion/Prerequisito/${idMateria}`)
             .then(response => {
                 setPrerequisitos(response.data); 
@@ -57,10 +58,19 @@ export function MatPubModal({ onClose, idMateria, area, color}){
             .catch(error => {
                 console.error('Error fetching materia details:', error);
             });
+            modalRef.current.focus();
+    }, []);
+    
+    const handleKeyDown = (e) => {
+        if (e.key === "Escape") {
+          onClose();
+        }
+      };
+            
     return (
-        <div className="modal">
+        <div className="modal" aria-modal="true" role="dialog" onKeyDown={handleKeyDown} tabIndex="-1" ref={modalRef}>
             <div className="contModal">
-                <div className="ttlModal">
+                <div className="ttlModal" tabIndex="1">
                     <h3>Semestre { valuesMateria.semestre }</h3>
                     <div> 
                         <p>Horas: { valuesMateria.horas }</p>
@@ -68,11 +78,11 @@ export function MatPubModal({ onClose, idMateria, area, color}){
                         <p>Créditos: { valuesMateria.creditos }</p>
                     </div>
                 </div>
-                <div className="nmModal" style={{backgroundColor: color}}>
+                <div className="nmModal" style={{backgroundColor: color}} tabIndex="1" >
                     <h1>{valuesMateria.nombre}</h1>
                     <p>{ valuesMateria.codigo }</p>
                 </div>
-                <div className="infModal" id="matPublica">
+                <div className="infModal" id="matPublica" tabIndex="1">
                     <div>
                         <h3>Área del conocimiento:</h3>
                         <p> {area}</p>
@@ -94,7 +104,7 @@ export function MatPubModal({ onClose, idMateria, area, color}){
                         : <p>No existen en esta materia</p>}
                     </div>
                     
-                    <div id="resumen">
+                    <div id="resumen" >
                         <hr className="arriba"/>
                         <h3>Descripción:</h3>
                         <p> {valuesMateria.descripcion} </p>
@@ -104,6 +114,7 @@ export function MatPubModal({ onClose, idMateria, area, color}){
                     onMouseOver={ e => e.target.style.backgroundColor = "#E7E7E7" }
                     onMouseLeave={ e => e.target.style.backgroundColor = color }
                     onClick={onClose}
+                    tabIndex="1"    
                 >
                     Cerrar
                 </button>

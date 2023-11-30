@@ -56,5 +56,3 @@ export function PanelTab({tam, materias, cargar}) {
         </>
     )
 }  
-
-

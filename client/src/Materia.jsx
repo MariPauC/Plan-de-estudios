@@ -1,14 +1,35 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { MatPubModal, MatPrivModal } from "./Modal"
 import { createPortal } from 'react-dom';
 import "./materia.css"
 
 //Materia publica
-export function MatPublica({ data, style }){
+export function MatPublica({ data }){
     const [showModal, setShowModal] = useState(false);
+    const focusedElementRef = useRef(null);
+
+    const openModal = () => {
+        
+        focusedElementRef.current = document.activeElement;
+        setShowModal(true);
+    };
+
+    const closeModal = () => {
+        setShowModal(false);
+    
+        if (focusedElementRef.current) {
+            focusedElementRef.current.focus();
+        }
+    };
 
     return (<>
-    <div className="mat_pub" onClick={() => setShowModal(true)} >
+    <div className="mat_pub" onClick={openModal} tabindex="0" role="button" id={`Materia_${data.idMateria}`}
+        onKeyDown={(event) => {
+            if (event.key === 'Enter') {
+                setShowModal(true);
+            }
+        }}
+    >
         <div className="titulo_materia"> 
             <div>
                 <h4>Área:</h4> 
@@ -32,7 +53,7 @@ export function MatPublica({ data, style }){
     </div>
 
     {showModal && createPortal(
-    <MatPubModal onClose={() => setShowModal(false)} idMateria={data.idMateria} color={data.are_color} area={data.are_nombre}/>,
+    <MatPubModal onClose={closeModal} idMateria={data.idMateria} color={data.are_color} area={data.are_nombre}/>,
     document.body
     )}
 

@@ -9,10 +9,10 @@ import { useState, useContext } from "react";
 
 //Header para perfiles publicos
 export function HeaderPub({programa}){
-    return <header >
-        <div className="header">
-            <h2>PLAN DE ESTUDIOS</h2>
-            <p className="program">{programa}</p>
+    return <header role="banner" >
+        <div className="header" aria-label="Información" tabindex="0">
+            <h2 tabindex="0">PLAN DE ESTUDIOS</h2>
+            <p className="program" tabindex="0" aria-label={`${programa}`}>{programa}</p>
             <img className="imgA" src={Escudo} alt="Escudo Universidad Militar Nueva Granada"></img>
         </div>
     </header>

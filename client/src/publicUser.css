@@ -1,6 +1,9 @@
 .contTitulo{
     text-align: center;
 }
+.contTitulo h4{
+    font-weight: lighter;
+}
 .contPlan{
     margin: auto;
     height: auto;

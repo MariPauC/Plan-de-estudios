@@ -109,11 +109,11 @@ export function PublicUser( {rol} ){
         materiasFiltradas = materias.filter(materia => materia.mat_semestre === (i + 1))
         const sumCreditos = materiasFiltradas.reduce((acumulador, materiasFiltradas) => acumulador + parseInt(materiasFiltradas.mat_creditos), 0);
         const sumHoras = materiasFiltradas.reduce((acumulador, materiasFiltradas) => acumulador + parseInt(materiasFiltradas.mat_horas), 0);
-        contSemestres.push(
+        contSemestres.push( 
             <div className='contSemestre' >
-                <h3>SEMESTRE {i+1}</h3>
+                <h3 aria-label={`Semestre ${i + 1}`}  tabindex="0">SEMESTRE {i+1}</h3>
                 {materiasFiltradas.map((item) => ( 
-                    <MatPublica key={item.idMateria} data={item} /> 
+                    <MatPublica key={item.idMateria} data={item}  /> 
                 ))}
                 
             </div>
@@ -190,30 +190,30 @@ export function PublicUser( {rol} ){
             </div>*/}
             </>
         }
-        <div className="contTitulo">
-            <p>FACULTAD DE {"INGENIERIA"}</p>
-            <p>RESOLUCIÓN DE REGISTRO CALIFICADO {programa.pro_regAcreditacion} DE {fechaRegistro}</p>
-            {programa.pro_altaCalidad && <p>RESOLUCIÓN DE ACREDITADO DE ALTA CALIDAD {programa.pro_altaCalidad} DE {fechaCalidad}</p>}
-            <p>CÓDIGO SINIES {programa.pro_SNIES}</p>
+        <div className="contTitulo" role="text" tabIndex="0" >
+            <h4 role="text">FACULTAD DE {"INGENIERIA"}</h4>
+            <h4 role="text">RESOLUCIÓN DE REGISTRO CALIFICADO {programa.pro_regAcreditacion} DE {fechaRegistro}</h4>
+            {programa.pro_altaCalidad && <h4 role="text">RESOLUCIÓN DE ACREDITADO DE ALTA CALIDAD {programa.pro_altaCalidad} DE {fechaCalidad}</h4>}
+            <h4 role="text">CÓDIGO SINIES {programa.pro_SNIES}</h4>
         </div>
         {/*<button onClick={aumentarEscala}>Aumentar Escala</button>
         <button onClick={disminuirEscala}>Disminuir Escala</button>*/}
         <div className='planes'>
             <button className='iconArrow' title="Deslizar a la izquierda" onClick={() => handleScroll('left')}><MdArrowBackIos /></button>
-            <div className='contPlan' style={{ transform: `scaley(${escala})`, transformOrigin: 'left top '}} >
+            <div className='contPlan' role="button" style={{ transform: `scaley(${escala})`, transformOrigin: 'left top '}} >
                 <div style={{ transform: `scalex(${escala})`, transformOrigin: 'left top' }}>
-                <div className='contMateriasPublicas'> 
+                <div className='contMateriasPublicas' tabIndex={0}> 
                     {contSemestres}
                 </div>
-                <div className='contTotales'>
+                <div className='contTotales' tabIndex={0}>
                     {contTotales}
                 </div>
                 </div>
             </div>
-            <button className='iconArrow' title="Deslizar a la derecha" onClick={() => handleScroll('right')}><MdArrowForwardIos/></button>
+            <button className='iconArrow' role="button" title="Deslizar a la derecha" onClick={() => handleScroll('right')}><MdArrowForwardIos/></button>
         </div>
         <div className='contInfo' id="detalles">
-            <div className='contAreas'>
+            <div className='contAreas' tabIndex="0">
                 <h3>Áreas del conocimiento</h3>
                 <table className='tblAreas'>
                     <tbody>
@@ -221,7 +221,7 @@ export function PublicUser( {rol} ){
                     </tbody>
                 </table>
             </div>
-            <div className='totales'>
+            <div className='totales' tabIndex="0">
                 <p> <b>Modalidad:</b> {programa.pro_modalidad}  </p>
                 <p> <b>Jornada:</b> {programa.pro_jornada}  </p>
                 <p> <b>Total créditos:</b> {sumTtlCreditos}  </p>
@@ -229,7 +229,7 @@ export function PublicUser( {rol} ){
                 <p> <b>Total materias:</b> {materias.length}</p>
             </div>
         </div>
-        <div className='contInfo' >
+        <div className='contInfo' tabindex="0" >
             <div className='contAreas'>
                 <h3>Elaborado por</h3>
                 {directores.map((item, index) => ( <FirmasPlan key={index} data={item} nombrePrograma={nombrePrograma} tipoUsu="Director" />))}
@@ -249,7 +249,7 @@ export function FirmasPlan({ data, nombrePrograma, tipoUsu }) {
       <div>
         {data.usu_firma ? (
           <div className="imgFirma">
-            <Imagen archivoFirma={data.usu_firma} />
+            <Imagen archivoFirma={data.usu_firma} tipoUsu={tipoUsu} />
           </div>
         ) : (
           <div className="imgFirma">
@@ -262,11 +262,11 @@ export function FirmasPlan({ data, nombrePrograma, tipoUsu }) {
       </div>
     );
   }
-function Imagen({ archivoFirma }) {
+function Imagen({ archivoFirma, tipoUsu }) {
     const baseUrl = "http://localhost:5000/uploads/"; // Cambia esto a la URL real de tu servidor
     const imageUrl = baseUrl + archivoFirma;
 
     return (
-        <img className="foto" src={imageUrl} alt="Firma del usuario" />
+        <img className="foto" src={imageUrl} alt={"Firma del "+tipoUsu} />
     );
 }
